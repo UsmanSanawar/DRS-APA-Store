@@ -231,7 +231,8 @@
    // ----------------------------------------
    // -- .nav-panel, .mobile-header
    // ----------------------------------------
-      $nav-panel-bg:           $accent-color                                                                   !default;
+      $nav-panel-bg:           #E8E8E8                                                                   !default;
+      // $nav-panel-bg:           $accent-color                                                                   !default;
       $nav-panel-shadow:       0 1px rgba(#000, .04), inset 0 -1px rgba(#000, .04)                             !default;
       $nav-panel-stuck-shadow: 0 1px rgba(#000, .04), inset 0 -1px rgba(#000, .04), 0 1px 20px rgba(#000, .15) !default;
       $nav-panel-font-color:   $accent-opposite-color                                                          !default;
@@ -242,7 +243,7 @@
    // ----------------------------------------
    // -- .departments
    // ----------------------------------------
-      $departments-bg:            $dark-color                                !default;
+      $departments-bg:            #ff531a                                !default;
       $departments-shadow:        none                                       !default;
       $departments-font-color:    $dark-opposite-color                       !default;
       $departments-height:        $nav-panel-height - $nav-panel-padding * 2 !default;

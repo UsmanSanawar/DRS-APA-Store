@@ -11,7 +11,7 @@ import NavPanel from './NavPanel';
 import Search from './Search';
 import Topbar from './Topbar';
 import { LogoSvg } from '../../svg';
-
+import logofull from "../../assets/imgs/logo-full.png";
 
 function Header(props) {
     const { layout } = props;
@@ -21,11 +21,17 @@ function Header(props) {
         bannerSection = (
             <div className="site-header__middle container">
                 <div className="site-header__logo">
-                    <Link to="/"><LogoSvg /></Link>
+                    <Link to="/"><img src={logofull}
+                   style={{
+                     height: '55px',
+                     marginLeft: 'auto',
+                     marginRight: 'auto'
+                   }}
+                   alt="react-logo" className="light-logo"/></Link>
                 </div>
                 <div className="site-header__search">
                     <Search />
-                </div>
+              </div>
                 <div className="site-header__phone">
                     <div className="site-header__phone-title">
                         <FormattedMessage id="header.phoneLabel" defaultMessage="Customer Service" />
