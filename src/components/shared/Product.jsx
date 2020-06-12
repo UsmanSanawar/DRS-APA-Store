@@ -304,7 +304,7 @@ class Product extends Component {
 }
 
 Product.propTypes = {
-    /** product object */
+    // /** product object */
     product: PropTypes.object.isRequired,
     /** one of ['standard', 'sidebar', 'columnar', 'quickview'] (default: 'standard') */
     layout: PropTypes.oneOf(['standard', 'sidebar', 'columnar', 'quickview']),
