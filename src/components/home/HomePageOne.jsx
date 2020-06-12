@@ -1,9 +1,7 @@
 // react
 import React from 'react';
-
 // third-party
-import { Helmet } from 'react-helmet';
-
+import {Helmet} from 'react-helmet';
 // blocks
 import BlockBanner from '../blocks/BlockBanner';
 import BlockBrands from '../blocks/BlockBrands';
@@ -14,7 +12,6 @@ import BlockProductColumns from '../blocks/BlockProductColumns';
 import BlockProducts from '../blocks/BlockProducts';
 import BlockSlideShow from '../blocks/BlockSlideShow';
 import BlockTabbedProductsCarousel from '../blocks/BlockTabbedProductsCarousel';
-
 // data stubs
 import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
@@ -44,13 +41,17 @@ function HomePageOne() {
                 <title>{`Home Page One — ${theme.name}`}</title>
             </Helmet>
 
-            <BlockSlideShow withDepartments />
+            <BlockSlideShow
 
-            <BlockFeatures />
+                // withDepartments
+            //above being used as side space for dropdown
+            />
 
-            <BlockTabbedProductsCarousel title="Featured Products" layout="grid-4" />
+            <BlockFeatures/>
 
-            <BlockBanner />
+            <BlockTabbedProductsCarousel title="Featured Products" layout="grid-4"/>
+
+            <BlockBanner/>
 
             <BlockProducts
                 title="Bestsellers"
@@ -59,15 +60,15 @@ function HomePageOne() {
                 products={products.slice(1, 7)}
             />
 
-            <BlockCategories title="Popular Categories" layout="classic" categories={categories} />
+            <BlockCategories title="Popular Categories" layout="classic" categories={categories}/>
 
-            <BlockTabbedProductsCarousel title="New Arrivals" layout="horizontal" rows={2} />
+            <BlockTabbedProductsCarousel title="New Arrivals" layout="horizontal" rows={2}/>
 
-            <BlockPosts title="Latest News" layout="list-sm" posts={posts} />
+            <BlockPosts title="Latest News" layout="list-sm" posts={posts}/>
 
-            <BlockBrands />
+            <BlockBrands/>
 
-            <BlockProductColumns columns={columns} />
+            <BlockProductColumns columns={columns}/>
         </React.Fragment>
     );
 }

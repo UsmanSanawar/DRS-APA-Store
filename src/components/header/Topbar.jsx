@@ -21,19 +21,22 @@ function Topbar() {
     ];
 
     const accountLinks = [
-        { title: 'Dashboard', url: '/account/dashboard' },
-        { title: 'Edit Profile', url: '/account/profile' },
-        { title: 'Order History', url: '/account/orders' },
-        { title: 'Addresses', url: '/account/addresses' },
+        // { title: 'Dashboard', url: '/account/dashboard' },
+        // { title: 'Edit Profile', url: '/account/profile' },
+        // { title: 'Order History', url: '/account/orders' },
+        // { title: 'Addresses', url: '/account/addresses' },
         { title: 'Password', url: '/account/password' },
         { title: 'Logout', url: '/account/login' },
     ];
 
-    const linksList = links.map((item, index) => (
-        <div key={index} className="topbar__item topbar__item--link">
-            <Link className="topbar-link" to={item.url}>{item.title}</Link>
-        </div>
-    ));
+    // const linksList = links.map((item, index) => (
+    //     <div key={index} className="topbar__item topbar__item--link">
+    //         <Link className="topbar-link" to={item.url}>{item.title}</Link>
+    //     </div>
+    // ));
+
+
+    const linksList = <div><span className="pr-2"><i className="fa fa-envelope pr-1"/>  info@a-p-a.co.uk</span> {" | "} <span className="pl-2"><i className="fa fa-phone pr-1"/>  +0845 5198 681</span> </div>
 
     return (
         <div className="site-header__topbar topbar">
@@ -47,12 +50,12 @@ function Topbar() {
                             items={accountLinks}
                         />
                     </div>
-                    <div className="topbar__item">
-                        <DropdownCurrency />
-                    </div>
-                    <div className="topbar__item">
-                        <DropdownLanguage />
-                    </div>
+                    {/*<div className="topbar__item">*/}
+                    {/*    <DropdownCurrency />*/}
+                    {/*</div>*/}
+                    {/*<div className="topbar__item">*/}
+                    {/*    <DropdownLanguage />*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </div>

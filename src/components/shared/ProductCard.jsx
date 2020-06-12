@@ -39,23 +39,23 @@ function ProductCard(props) {
     let image;
     let price;
     let features;
-
-    if (product.badges.includes('sale')) {
-        badges.push(<div key="sale" className="product-card__badge product-card__badge--sale">Sale</div>);
-    }
-    if (product.badges.includes('hot')) {
-        badges.push(<div key="hot" className="product-card__badge product-card__badge--hot">Hot</div>);
-    }
-    if (product.badges.includes('new')) {
-        badges.push(<div key="new" className="product-card__badge product-card__badge--new">New</div>);
-    }
+    //
+    // if (product.badges.includes('sale')) {
+    //     badges.push(<div key="sale" className="product-card__badge product-card__badge--sale">Sale</div>);
+    // }
+    // if (product.badges.includes('hot')) {
+    //     badges.push(<div key="hot" className="product-card__badge product-card__badge--hot">Hot</div>);
+    // }
+    // if (product.badges.includes('new')) {
+    //     badges.push(<div key="new" className="produ ct-card__badge product-card__badge--new">New</div>);
+    // }
 
     badges = badges.length ? <div className="product-card__badges-list">{badges}</div> : null;
 
     if (product.images && product.images.length > 0) {
         image = (
             <div className="product-card__image">
-                <Link to={`/shop/product/${product.id}`}><img src={product.images[0]} alt="" /></Link>
+                <Link to={`/shop/product/${product.id}`}><img style={{borderRadius: "30px"}} src={product.images[0]} alt="" /></Link>
             </div>
         );
     }
@@ -88,24 +88,24 @@ function ProductCard(props) {
 
     return (
         <div className={containerClasses}>
-            <AsyncAction
-                action={() => quickviewOpen(product.id)}
-                render={({ run, loading }) => (
-                    <button
-                        type="button"
-                        onClick={run}
-                        className={classNames('product-card__quickview', {
-                            'product-card__quickview--preload': loading,
-                        })}
-                    >
-                        <Quickview16Svg />
-                    </button>
-                )}
-            />
+            {/*<AsyncAction*/}
+            {/*    action={() => quickviewOpen(product.id)}*/}
+            {/*    render={({ run, loading }) => (*/}
+            {/*        <button*/}
+            {/*            type="button"*/}
+            {/*            onClick={run}*/}
+            {/*            className={classNames('product-card__quickview', {*/}
+            {/*                'product-card__quickview--preload': loading,*/}
+            {/*            })}*/}
+            {/*        >*/}
+            {/*            <Quickview16Svg />*/}
+            {/*        </button>*/}
+            {/*    )}*/}
+            {/*/>*/}
             {badges}
             {image}
             <div className="product-card__info">
-                <div className="product-card__name">
+                <div style={{color: "#ee7647", fontWeight:"bold"}} className="product-card__name">
                     <Link to={`/shop/product/${product.id}`}>{product.name}</Link>
                 </div>
                 <div className="product-card__rating">
@@ -113,13 +113,20 @@ function ProductCard(props) {
                     <div className=" product-card__rating-legend">{`${product.reviews} Reviews`}</div>
                 </div>
                 {features}
+
+
+                {/*//*/}
+
             </div>
             <div className="product-card__actions">
+
                 <div className="product-card__availability">
                     Availability:
                     <span className="text-success">In Stock</span>
                 </div>
                 {price}
+
+
                 <div className="product-card__buttons">
                     <AsyncAction
                         action={() => cartAddItem(product)}
@@ -146,34 +153,35 @@ function ProductCard(props) {
                             </React.Fragment>
                         )}
                     />
-                    <AsyncAction
-                        action={() => wishlistAddItem(product)}
-                        render={({ run, loading }) => (
-                            <button
-                                type="button"
-                                onClick={run}
-                                className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist', {
-                                    'btn-loading': loading,
-                                })}
-                            >
-                                <Wishlist16Svg />
-                            </button>
-                        )}
-                    />
-                    <AsyncAction
-                        action={() => compareAddItem(product)}
-                        render={({ run, loading }) => (
-                            <button
-                                type="button"
-                                onClick={run}
-                                className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare', {
-                                    'btn-loading': loading,
-                                })}
-                            >
-                                <Compare16Svg />
-                            </button>
-                        )}
-                    />
+
+                    {/*<AsyncAction*/}
+                    {/*    action={() => wishlistAddItem(product)}*/}
+                    {/*    render={({ run, loading }) => (*/}
+                    {/*        <button*/}
+                    {/*            type="button"*/}
+                    {/*            onClick={run}*/}
+                    {/*            className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist', {*/}
+                    {/*                'btn-loading': loading,*/}
+                    {/*            })}*/}
+                    {/*        >*/}
+                    {/*            <Wishlist16Svg />*/}
+                    {/*        </button>*/}
+                    {/*    )}*/}
+                    {/*/>*/}
+                    {/*<AsyncAction*/}
+                    {/*    action={() => compareAddItem(product)}*/}
+                    {/*    render={({ run, loading }) => (*/}
+                    {/*        <button*/}
+                    {/*            type="button"*/}
+                    {/*            onClick={run}*/}
+                    {/*            className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare', {*/}
+                    {/*                'btn-loading': loading,*/}
+                    {/*            })}*/}
+                    {/*        >*/}
+                    {/*            <Compare16Svg />*/}
+                    {/*        </button>*/}
+                    {/*    )}*/}
+                    {/*/>*/}
                 </div>
             </div>
         </div>

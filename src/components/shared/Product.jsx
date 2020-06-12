@@ -239,40 +239,40 @@ class Product extends Component {
                                         />
                                     </div>
                                     <div className="product__actions-item product__actions-item--wishlist">
-                                        <AsyncAction
-                                            action={() => wishlistAddItem(product)}
-                                            render={({ run, loading }) => (
-                                                <button
-                                                    type="button"
-                                                    data-toggle="tooltip"
-                                                    title="Wishlist"
-                                                    onClick={run}
-                                                    className={classNames('btn btn-secondary btn-svg-icon btn-lg', {
-                                                        'btn-loading': loading,
-                                                    })}
-                                                >
-                                                    <Wishlist16Svg />
-                                                </button>
-                                            )}
-                                        />
+                                        {/*<AsyncAction*/}
+                                        {/*    action={() => wishlistAddItem(product)}*/}
+                                        {/*    render={({ run, loading }) => (*/}
+                                        {/*        <button*/}
+                                        {/*            type="button"*/}
+                                        {/*            data-toggle="tooltip"*/}
+                                        {/*            title="Wishlist"*/}
+                                        {/*            onClick={run}*/}
+                                        {/*            className={classNames('btn btn-secondary btn-svg-icon btn-lg', {*/}
+                                        {/*                'btn-loading': loading,*/}
+                                        {/*            })}*/}
+                                        {/*        >*/}
+                                        {/*            <Wishlist16Svg />*/}
+                                        {/*        </button>*/}
+                                        {/*    )}*/}
+                                        {/*/>*/}
                                     </div>
                                     <div className="product__actions-item product__actions-item--compare">
-                                        <AsyncAction
-                                            action={() => compareAddItem(product)}
-                                            render={({ run, loading }) => (
-                                                <button
-                                                    type="button"
-                                                    data-toggle="tooltip"
-                                                    title="Compare"
-                                                    onClick={run}
-                                                    className={classNames('btn btn-secondary btn-svg-icon btn-lg', {
-                                                        'btn-loading': loading,
-                                                    })}
-                                                >
-                                                    <Compare16Svg />
-                                                </button>
-                                            )}
-                                        />
+                                        {/*<AsyncAction*/}
+                                        {/*    action={() => compareAddItem(product)}*/}
+                                        {/*    render={({ run, loading }) => (*/}
+                                        {/*        <button*/}
+                                        {/*            type="button"*/}
+                                        {/*            data-toggle="tooltip"*/}
+                                        {/*            title="Compare"*/}
+                                        {/*            onClick={run}*/}
+                                        {/*            className={classNames('btn btn-secondary btn-svg-icon btn-lg', {*/}
+                                        {/*                'btn-loading': loading,*/}
+                                        {/*            })}*/}
+                                        {/*        >*/}
+                                        {/*            <Compare16Svg />*/}
+                                        {/*        </button>*/}
+                                        {/*    )}*/}
+                                        {/*/>*/}
                                     </div>
                                 </div>
                             </div>
@@ -281,20 +281,20 @@ class Product extends Component {
 
                     <div className="product__footer">
                         <div className="product__tags tags">
-                            <div className="tags__list">
-                                <Link to="/">Mounts</Link>
-                                <Link to="/">Electrodes</Link>
-                                <Link to="/">Chainsaws</Link>
-                            </div>
+                            {/*<div className="tags__list">*/}
+                            {/*    <Link to="/">Mounts</Link>*/}
+                            {/*    <Link to="/">Electrodes</Link>*/}
+                            {/*    <Link to="/">Chainsaws</Link>*/}
+                            {/*</div>*/}
                         </div>
 
                         <div className="product__share-links share-links">
-                            <ul className="share-links__list">
-                                <li className="share-links__item share-links__item--type--like"><Link to="/">Like</Link></li>
-                                <li className="share-links__item share-links__item--type--tweet"><Link to="/">Tweet</Link></li>
-                                <li className="share-links__item share-links__item--type--pin"><Link to="/">Pin It</Link></li>
-                                <li className="share-links__item share-links__item--type--counter"><Link to="/">4K</Link></li>
-                            </ul>
+                            {/*<ul className="share-links__list">*/}
+                            {/*    <li className="share-links__item share-links__item--type--like"><Link to="/">Like</Link></li>*/}
+                            {/*    <li className="share-links__item share-links__item--type--tweet"><Link to="/">Tweet</Link></li>*/}
+                            {/*    <li className="share-links__item share-links__item--type--pin"><Link to="/">Pin It</Link></li>*/}
+                            {/*    <li className="share-links__item share-links__item--type--counter"><Link to="/">4K</Link></li>*/}
+                            {/*</ul>*/}
                         </div>
                     </div>
                 </div>
