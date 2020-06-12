@@ -23,13 +23,15 @@ class Departments extends Component {
 
         this.unsubscribeAria = departmentsArea.subscribe((area) => {
             this.setState({
-                fixed: !!area,
+                // fixed: !!area,
+                fixed: false,
                 area,
             });
         });
 
         this.setState({
-            fixed: !!departmentsArea.area,
+            // fixed: !!departmentsArea.area,
+            fixed: false,
             area: departmentsArea.area,
         });
     }
