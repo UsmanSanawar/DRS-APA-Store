@@ -47,7 +47,7 @@ $item-padding: 14px;
             align-items: center;
             background: transparent;
             transition: background-color .2s;
-            padding: 0 $item-padding;
+            padding: 0px 9px;
             height: $nav-links-item-height;
             border-radius: $nav-links-item-border-radius;
         }
@@ -136,7 +136,7 @@ $item-padding: 14px;
     $item-padding: 10px;
 
     .nav-links__item > a > span {
-        padding: 0 $item-padding;
+        padding: 0px 9px;
     }
     .nav-links__item--with-submenu > a > span {
         @include direction {
