@@ -20,6 +20,7 @@ import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
 import products from '../../data/shopProducts';
 import theme from '../../data/theme';
+import bg1 from "../../assets/imgs/door2.jpg"
 
 
 function HomePageTwo() {
@@ -45,6 +46,49 @@ function HomePageTwo() {
             </Helmet>
 
             <BlockSlideShow />
+
+            <div className="container" style={{ marginBottom: 20 }}>
+                <h2 style={{ color: 'orange', textAlign: 'center' }}>Widest Product Range</h2>
+                <p style={{ fontSize: 20, textAlign: 'center' }}>Lorem ipsum cosa fsdf dsafeosdaf dsavanv</p>
+                <div className="row ">
+                    <div className="col-lg-3 col-sm-6 text-center"><img
+                        src={require('../../assets/imgs/door2.jpg')}
+                        className="img-responsive"
+                        height={200}
+                        style={{ borderRadius: 20, marginBottom: 15, width: '100%', resize: 'both' }} /></div>
+                    <div className="col-lg-3 col-sm-6 text-center">
+                        <img src={require('../../assets/imgs/door3.jpg')}
+                            className="img-responsive"
+                            height={200} style={{ borderRadius: 20, width: '100%', marginBottom: 15 }} /></div>
+                    <div className="col-lg-6">
+                        <div style={{ backgroundColor: '#f1630c', borderRadius: 20, marginBottom: 15, padding: 30, height: 200, }}>
+                            <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>
+                            <h1 style={{ color: '#fff' }}>EQUIPMENTS</h1>
+                        </div>
+                    </div>
+
+
+                    <div className="col-lg-6">
+                        <div style={{ backgroundImage: `url(${bg1})`,  borderRadius: 20, marginBottom: 15, paddingLeft: 30,paddingTop: 30, verticalAlign:'center', height: 200, }}>
+                           <h4>Automatic</h4>
+                            <h1 style={{ }}>DOOR SYSTEMS</h1>
+                          <button style={{backgroundColor: '#f1630c', borderRadius: 20, color:'#ffffff', border:'none', width: 100, padding: 5}} >Browse</button>
+
+                        </div>
+                    </div>
+
+                    <div className="col-lg-3 col-sm-6 text-center">
+                        <img src={require('../../assets/imgs/door4.jpg')}
+                            className="img-responsive" height={200}
+                            style={{ borderRadius: 20, marginBottom: 15, width: '100%', }} /></div>
+                    <div className="col-lg-3 col-sm-6 text-center">
+                        <img src={require('../../assets/imgs/doors-sliding.jpg')}
+                            height={200}
+                            style={{ borderRadius: 20, marginBottom: 15, width: '100%', }} /></div>
+                </div>
+            </div>
+
+
 
             <BlockFeatures layout="boxed" />
 

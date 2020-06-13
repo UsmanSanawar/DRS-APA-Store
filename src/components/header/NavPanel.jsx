@@ -22,23 +22,23 @@ function NavPanel(props) {
     let departments = null;
     let searchIndicator;
 
-    if (layout === 'compact') {
-        logo = (
-            <div className="nav-panel__logo">
-                <Link to="/"><LogoSmallSvg /></Link>
-            </div>
-        );
+    // if (layout === 'compact') {
+    //     logo = (
+    //         <div className="nav-panel__logo">
+    //             <Link to="/"><LogoSmallSvg /></Link>
+    //         </div>
+    //     );
 
-        searchIndicator = <IndicatorSearch />;
-    }
+    //     searchIndicator = <IndicatorSearch />;
+    // }
 
-    if (layout === 'default') {
+    // if (layout === 'default') {
         departments = (
             <div className="nav-panel__departments">
                 <Departments />
             </div>
         );
-    }
+    // }
 
     return (
         <div className="nav-panel">

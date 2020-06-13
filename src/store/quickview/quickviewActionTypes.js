@@ -1,2 +1,3 @@
 export const QUICKVIEW_OPEN = 'QUICKVIEW_OPEN';
 export const QUICKVIEW_CLOSE = 'QUICKVIEW_CLOSE';
+export const STORE_VIEW = "STORE_VIEW"

@@ -73,13 +73,16 @@ function HomePageOne() {
                 <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>
                 <p style={{ fontSize: 20, textAlign: 'center' }}>Lorem ipsum cosa fsdf dsafeosdaf dsavanv</p>
                 <div className="row ">
-                    <div className="col-lg-3 col-sm-6 text-center"><img
+                    <div className="col-lg-3 col-sm-6 text-center">
+                        <img
                         src={require('../../assets/imgs/door2.jpg')}
                         className="img-responsive"
-                        height={200} width={260} style={{ borderRadius: 20, marginBottom: 15 }} /></div>
-                    <div className="col-lg-3 col-sm-6 text-center"><img src={require('../../assets/imgs/door3.jpg')}
+                        height={200} 
+                         style={{ borderRadius: 20, marginBottom: 15 , width: '100%', resize:'both'}} /></div>
+                    <div className="col-lg-3 col-sm-6 text-center">
+                        <img src={require('../../assets/imgs/door3.jpg')}
                         className="img-responsive"
-                        height={200} width={260} style={{ borderRadius: 20, marginBottom: 15 }} /></div>
+                        height={200} style={{ borderRadius: 20,width: '100%', marginBottom: 15 }} /></div>
                     <div className="col-lg-6">
                         <div style={{ backgroundColor: '#F1630C', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>
                             <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>
@@ -89,16 +92,26 @@ function HomePageOne() {
 
 
                     <div className="col-lg-6">
-                        <div style={{ backgroundColor: '#F1630C', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>
-                            <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>
-                            <h1 style={{ color: '#fff' }}>EQUIPMENTS</h1>
+                        <div style={{ backgroundColor: 'gray', borderRadius: 20, marginBottom: 15, padding: 40, height: 200, }}>
+                        <h2 style={{ color: '#fff' }}>Why Chose Us</h2>
+                        <ul>
+                            <li style={{color: '#fff', fontWeight: 'bold'}}>Quality</li>
+                            <li style={{color: '#fff', fontWeight: 'bold'}}>Affordable Products</li>
+                            <li style={{color: '#fff', fontWeight: 'bold'}}>Text 1</li>
+                            <li style={{color: '#fff', fontWeight: 'bold'}}>Text 2</li>
+                        </ul>
+                           
                         </div>
                     </div>
 
                     <div className="col-lg-3 col-sm-6 text-center">
-                        <img src={require('../../assets/imgs/door4.jpg')} className="img-responsive" height={200} width={260} style={{ borderRadius: 20, marginBottom: 15 }}  /></div>
+                        <img src={require('../../assets/imgs/door4.jpg')} 
+                        className="img-responsive" height={200} 
+                        style={{ borderRadius: 20, marginBottom: 15,width: '100%', }}  /></div>
                     <div className="col-lg-3 col-sm-6 text-center">
-                        <img src={require('../../assets/imgs/doors-sliding.jpg')} height={200} width={260} style={{ borderRadius: 20, marginBottom: 15 }} /></div>
+                        <img src={require('../../assets/imgs/doors-sliding.jpg')}
+                         height={200} 
+                         style={{ borderRadius: 20, marginBottom: 15 ,width: '100%',}} /></div>
                 </div>
             </div>
 
