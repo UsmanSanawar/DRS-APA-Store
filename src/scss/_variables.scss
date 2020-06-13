@@ -118,8 +118,8 @@
    $dark-color:                     $light-opposite-color !default;
    $dark-opposite-color:            $light-color          !default;
    // accent
-   $accent-color:                   #ee7647               !default;
-   $accent-opposite-color:          $light-opposite-color !default;
+   $accent-color:                   #F1630C               !default;
+   $accent-opposite-color:          $light-color !default;
    //links
    $link-color:                     #1a66ff               !default;
    $link-hover-color:               #1a66ff               !default;
@@ -261,7 +261,7 @@
       // default
       $nav-links-item-default-bg:          transparent                                !default;
       $nav-links-item-default-shadow:      none                                       !default;
-      $nav-links-item-default-font-color:  inherit                                    !default;
+      $nav-links-item-default-font-color:  #495057                                    !default;
       $nav-links-item-default-arrow-color: rgba(#000, .3)                             !default;
       // hover
       $nav-links-item-hover-bg:            rgba(#fff, .5)                             !default;
@@ -382,7 +382,7 @@
 // ----------------------------------------
 // -- footer
 // ----------------------------------------
-   $footer-bg:                          transparent                    !default;
+   $footer-bg:                          black                    !default;
    $footer-border-top:                  1px solid $light-divider-color !default;
    $footer-copyright-border:            1px solid $light-divider-color !default;
    // social links

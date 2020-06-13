@@ -1,14 +1,14 @@
 export default {
-    name: 'Stroyka',
-    fullName: 'Stroyka - Tools Store React eCommerce Template',
+    name: 'DRS APA Store',
+    fullName: 'DRS Automatic Products Association',
     url: 'https://themeforest.net/item/stroyka-tools-store-react-ecommerce-template/23909258',
     author: {
-        name: 'Kos',
-        profile_url: 'https://themeforest.net/user/kos9',
+        name: 'Xerobit',
+        profile_url: '#',
     },
     contacts: {
-        address: '715 Fake Street, New York 10021 USA',
-        email: 'stroyka@example.com',
-        phone: '(800) 060-0730',
+        address: '715 Fake Street, 10021 UK',
+        email: 'info@a-p-a.co.uk',
+        phone: ' (+0845) 5198 681',
     },
 };

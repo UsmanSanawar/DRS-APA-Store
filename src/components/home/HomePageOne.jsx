@@ -38,21 +38,21 @@ function HomePageOne() {
     return (
         <React.Fragment>
             <Helmet>
-                <title>{`Home Page One — ${theme.name}`}</title>
+                <title>{`Home Page — ${theme.name}`}</title>
             </Helmet>
 
-           
-<BlockSlideShow
 
-// withDepartments
-//above being used as side space for dropdown
-/>
+            <BlockSlideShow
+
+            // withDepartments
+            //above being used as side space for dropdown
+            />
 
             <div className="container">
-                <h2 style={{ color: 'orange', textAlign: 'center' }}>Welcome to AutomationP roducts & Accessories Ltd</h2>
+                <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Automation Products & Accessories Ltd</h2>
                 <div className="row" style={{ padding: "40px 0px" }}>
                     <div className="col-md-4 col-sm-12 col-xs-12">
-                        <p style={{ fontWeight: 'bold', color: 'orange', fontSize: 19 }}>
+                        <p style={{ fontWeight: 'bold', color: '#F1630C', fontSize: 19 }}>
                             Specialist trade supplier of automatic door equipment for the independent companies with in the commercial door market
 </p>
                     </div>
@@ -69,9 +69,8 @@ function HomePageOne() {
 
             </div>
 
-
             <div className="container">
-                <h2 style={{ color: 'orange', textAlign: 'center' }}>Widest Product Range</h2>
+                <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>
                 <p style={{ fontSize: 20, textAlign: 'center' }}>Lorem ipsum cosa fsdf dsafeosdaf dsavanv</p>
                 <div className="row ">
                     <div className="col-lg-3 col-sm-6 text-center"><img
@@ -82,7 +81,7 @@ function HomePageOne() {
                         className="img-responsive"
                         height={200} width={260} style={{ borderRadius: 20, marginBottom: 15 }} /></div>
                     <div className="col-lg-6">
-                        <div style={{ backgroundColor: 'orange', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>
+                        <div style={{ backgroundColor: '#F1630C', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>
                             <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>
                             <h1 style={{ color: '#fff' }}>EQUIPMENTS</h1>
                         </div>
@@ -90,7 +89,7 @@ function HomePageOne() {
 
 
                     <div className="col-lg-6">
-                        <div style={{ backgroundColor: 'orange', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>
+                        <div style={{ backgroundColor: '#F1630C', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>
                             <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>
                             <h1 style={{ color: '#fff' }}>EQUIPMENTS</h1>
                         </div>

@@ -36,9 +36,6 @@ export default function Footer() {
             <div className="container">
                 <div className="site-footer__widgets">
                     <div className="row">
-                        <div className="col-12 col-md-6 col-lg-4">
-                            <FooterContacts />
-                        </div>
                         <div className="col-6 col-md-3 col-lg-2">
                             <FooterLinks title="Information" items={informationLinks} />
                         </div>
@@ -47,6 +44,9 @@ export default function Footer() {
                         </div>
                         <div className="col-12 col-md-12 col-lg-4">
                             <FooterNewsletter />
+                        </div>
+                        <div className="col-12 col-md-6 col-lg-4">
+                            <FooterContacts />
                         </div>
                     </div>
                 </div>
