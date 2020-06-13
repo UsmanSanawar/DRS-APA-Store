@@ -17,7 +17,7 @@ function Header(props) {
     const { layout } = props;
     let bannerSection;
 
-    if (layout === 'default') {
+    // if (layout === 'default') {
         bannerSection = (
             <div className="site-header__middle container">
                 <div className="site-header__logo">
@@ -42,7 +42,7 @@ function Header(props) {
                 </div>
             </div>
         );
-    }
+    // }
 
     return (
         <div className="site-header">

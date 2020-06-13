@@ -1,9 +1,10 @@
-import { QUICKVIEW_CLOSE, QUICKVIEW_OPEN } from './quickviewActionTypes';
+import { QUICKVIEW_CLOSE, QUICKVIEW_OPEN,STORE_VIEW } from './quickviewActionTypes';
 
 
 const initialState = {
     open: false,
     product: null,
+    storeView: false,
 };
 
 export default function quickviewReducer(state = initialState, action) {
@@ -20,6 +21,11 @@ export default function quickviewReducer(state = initialState, action) {
             ...state,
             open: false,
         };
+    }else if(action.type === STORE_VIEW){
+        newState = {
+            ...state,
+            storeView: action.storeView
+        }
     }
 
     return newState;

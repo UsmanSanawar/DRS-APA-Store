@@ -11,22 +11,22 @@ export default [
                 },
     },
     {
-        title: 'FOLDING DOORS',
+        title: 'AUTOMATICE DOOR BARRIER',
         url: '/',
     },{
-        title: 'SWING DOORS',
+        title: 'AUTOMATICE DOOR PARTS',
         url: '/',
     },{
-        title: 'SLIDING DOORS',
+        title: 'MANUAL DOOR PARTS',
         url: '/',
     },{
-        title: 'RETRO-FIT KITS',
+        title: 'DOOR OPERATORS',
         url: '/',
     },{
-        title: 'ON-LINE SHOP',
+        title: 'RETOROFIT KITS',
         url: '/',
     },{
-        title: 'CONTACT US',
+        title: 'SENSORS',
         url: '/',
     },
     // {

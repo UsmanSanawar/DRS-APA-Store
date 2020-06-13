@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import AppLink from '../shared/AppLink';
 import { ArrowRoundedRight6x9Svg } from '../../svg';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 
 function Menu(props) {
     const {
@@ -17,6 +19,8 @@ function Menu(props) {
         items,
         onClick,
     } = props;
+
+    const dispatch = useDispatch();
 
     const renderLink = (item, content) => {
         let link;
@@ -37,6 +41,14 @@ function Menu(props) {
 
         return link;
     };
+
+    const toggleView = (item) =>{
+        if(item.title == "Store"){
+            dispatch({type:"STORE_VIEW", storeView: true})
+        }else if(item.title== "Home"){
+            dispatch({type:"STORE_VIEW", storeView: false})
+        }
+    }
 
     const itemsList = items.map((item, index) => {
         let arrow;
@@ -66,10 +78,13 @@ function Menu(props) {
         return (
             <li key={index}>
                 {renderLink(item, (
-                    <React.Fragment>
+                    <React.Fragment >
+                        <div onClick={()=> toggleView(item)}>
                         {icon}
                         {item.title}
                         {arrow}
+                        </div>
+                       
                     </React.Fragment>
                 ))}
                 {submenu}
