@@ -48,26 +48,26 @@ function HomePageOne() {
             //above being used as side space for dropdown
             />
 
-            <div className="container">
-                <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Automation Products & Accessories Ltd</h2>
-                <div className="row" style={{ padding: "40px 0px" }}>
-                    <div className="col-md-4 col-sm-12 col-xs-12">
-                        <p style={{ fontWeight: 'bold', color: '#F1630C', fontSize: 19 }}>
-                            Specialist trade supplier of automatic door equipment for the independent companies with in the commercial door market
-</p>
-                    </div>
-                    <div className="col-sm-12 col-xs-12 col-md-8">
-                        <p style={{ fontSize: 20 }}>
-                            All members of APA have been in the automatic door industry for many years and have a wide experience of
-                            the many makes & models which span the years since automatic doors where introduced to this country, APA
-                            are also suppliers of specialist automated door equipment, If you’re looking for high quality yet affordable
-                            automatic door equipment then you’ve come to the right place.
-</p>
-                    </div>
+{/*            <div className="container">*/}
+{/*                <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>*/}
+{/*                <div className="row" style={{ padding: "40px 0px" }}>*/}
+{/*                    <div className="col-md-4 col-sm-12 col-xs-12">*/}
+{/*                        <p style={{ fontWeight: 'bold', color: '#F1630C', fontSize: 19 }}>*/}
+{/*                            Specialist trade supplier of automatic door equipment for the independent companies with in the commercial door market*/}
+{/*</p>*/}
+{/*                    </div>*/}
+{/*                    <div className="col-sm-12 col-xs-12 col-md-8">*/}
+{/*                        <p style={{ fontSize: 20 }}>*/}
+{/*                            All members of APA have been in the automatic door industry for many years and have a wide experience of*/}
+{/*                            the many makes & models which span the years since automatic doors where introduced to this country, APA*/}
+{/*                            are also suppliers of specialist automated door equipment, If you’re looking for high quality yet affordable*/}
+{/*                            automatic door equipment then you’ve come to the right place.*/}
+{/*</p>*/}
+{/*                    </div>*/}
 
-                </div>
+{/*                </div>*/}
 
-            </div>
+{/*            </div>*/}
 
             <div className="container">
                 <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>
@@ -77,7 +77,7 @@ function HomePageOne() {
                         <img
                         src={require('../../assets/imgs/door2.jpg')}
                         className="img-responsive"
-                        height={200} 
+                        height={200}
                          style={{ borderRadius: 20, marginBottom: 15 , width: '100%', resize:'both'}} /></div>
                     <div className="col-lg-3 col-sm-6 text-center">
                         <img src={require('../../assets/imgs/door3.jpg')}
@@ -100,17 +100,17 @@ function HomePageOne() {
                             <li style={{color: '#fff', fontWeight: 'bold'}}>Text 1</li>
                             <li style={{color: '#fff', fontWeight: 'bold'}}>Text 2</li>
                         </ul>
-                           
+
                         </div>
                     </div>
 
                     <div className="col-lg-3 col-sm-6 text-center">
-                        <img src={require('../../assets/imgs/door4.jpg')} 
-                        className="img-responsive" height={200} 
+                        <img src={require('../../assets/imgs/door4.jpg')}
+                        className="img-responsive" height={200}
                         style={{ borderRadius: 20, marginBottom: 15,width: '100%', }}  /></div>
                     <div className="col-lg-3 col-sm-6 text-center">
                         <img src={require('../../assets/imgs/doors-sliding.jpg')}
-                         height={200} 
+                         height={200}
                          style={{ borderRadius: 20, marginBottom: 15 ,width: '100%',}} /></div>
                 </div>
             </div>

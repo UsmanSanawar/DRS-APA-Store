@@ -45,13 +45,13 @@ class Root extends Component {
                         <Route
                             path="/home-two"
                             render={(props) => (
-                                <Layout {...props} headerLayout="compact" homeComponent={HomePageTwo} />
+                                <Layout {...props} headerLayout="compact" homeComponent={HomePageOne} />
                             )}
                         />
                         <Route
                             path="/"
                             render={(props) => (
-                                <Layout {...props} headerLayout="default" homeComponent={HomePageOne} />
+                                <Layout {...props} headerLayout="default" homeComponent={HomePageTwo} />
                             )}
                         />
                         <Redirect to="/" />
