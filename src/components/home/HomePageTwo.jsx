@@ -45,10 +45,13 @@ function HomePageTwo() {
                 <title>{`Home Page Two — ${theme.name}`}</title>
             </Helmet>
 
+            <div className="container">
+                <h2 className='py-4' style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Automation Products & Accessories Ltd.</h2>
+            </div>
+
             <BlockSlideShow />
 
             <div className="container pb-4" style={{ marginBottom: 20 }}>
-                <h2 className='py-4' style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Automation Products & Accessories Ltd.</h2>
                 <div className="row pb-2">
                     <div className="col-md-3 text-justify">
                             <p style={{ fontSize: 16, fontWeight:"bold", color:"#F1630C" }}>Specialist trade supplier of automatic door equipment for the independent companies within the commercial door market.</p>

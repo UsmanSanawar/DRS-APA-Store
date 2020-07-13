@@ -1,33 +1,54 @@
 export default [
     {
         title: 'HOME',
-        url: '/',
-        submenu: {
-                    type: 'menu',
-                    menu: [
-                        { title: 'Home', url: '/' },
-                        { title: 'Store', url: '/home-two' },
-                    ],
-                },
+        url: '/'
     },
     {
         title: 'FOLDING DOORS',
-        url: '/',
-    },{
+        url: '/site/folding-doors',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'Echo Fold 90 "Folding Door"', url: '/site/folding-doors/eco-fold-90-folding-door'},
+            ],
+        },
+    }, {
         title: 'SWING DOORS',
-        url: '/',
-    },{
+        url: '/site/swing-doors',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'Echo-Swing 90 Swing Door Unit', url: '/site/swing-doors/eco-swing-90-swing-door-unit-2'},
+                {title: 'Echo-Swing IH "In Head" Swing Unit', url: '/site/swing-doors/eco-swing-90-ih-in-head-swing-unit'},
+                {title: 'Echo-Swing BD "Balance Door"', url: '/site/swing-doors/eco-swing-bd-balance-door'},
+                {title: 'Echo-Swing IF "In-Floor Operator"', url: '/site/swing-doors/eco-swing-if-in-floor-operator'},
+            ],
+        },
+    }, {
         title: 'SLIDING DOORS',
-        url: '/',
-    },{
+        url: '/site/sliding-doors',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'ES400 Sliding Door Unit"', url: '/site/sliding-doors/es400-sliding-door-unit'},
+                {title: 'Echo-Slide 400IH "In-Head" Sliding Door Unit', url: '/site/sliding-doors/es400-sliding-door-unit-2'},
+                {title: 'Echo-Slide 400T Telescopic Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit'},
+                {title: 'Echo-Slide 400T-IH "In-Head" Telescopic Sliding Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2'},
+            ],
+        },
+    }, {
         title: 'RETRO-FIT KITS',
-        url: '/',
-    },{
-        title: 'ON-LINE SHOP',
-        url: '/',
-    },{
+        url: '/site/retro-fit-kit',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'Sliding Door Retro-Fit Kits', url: '/site/retro-fit-kit/sliding-door-retro-fit-kits'},
+                {title: 'Swing Door Retro-Fit Kits', url: '/site/retro-fit-kit/swing-door-retro-fit-kits'},
+            ],
+        },
+    },  {
         title: 'CONTACT US',
-        url: '/',
+        url: '/site/contact-us',
     },
     // {
     //     title: 'Megamenu',
@@ -144,5 +165,5 @@ export default [
     //         ],
     //     },
     // },
-   
+
 ];

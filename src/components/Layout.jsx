@@ -37,6 +37,22 @@ import ShopPageCategory from './shop/ShopPageCategory';
 
 // data stubs
 import theme from '../data/theme';
+import FoldingDoor from "./site/InfoHome/FoldingDoor/FoldingDoor";
+import EchoFold90 from "./site/InfoHome/FoldingDoor/EchoFold90";
+import SwingDoors from "./site/InfoHome/SwingDoor/SwingDoors";
+import EchoSwing90DoorUnit from "./site/InfoHome/SwingDoor/EchoSwing90DoorUnit";
+import EcoSwing90IhHeadSwingUnit from "./site/InfoHome/SwingDoor/EcoSwing90-IH-HeadSwingUnit";
+import EcoSwingBdBalanceDoor from "./site/InfoHome/SwingDoor/EcoSwingBdBalanceDoor";
+import EcoSwingIfInFloorOperator from "./site/InfoHome/SwingDoor/EcoSwingIfInFloorOperator";
+import SlidingDoors from "./site/InfoHome/SlidingDoor/SlidingDoors";
+import Es400SlidingDoorUnit from "./site/InfoHome/SlidingDoor/ES400SlidingDoorUnit";
+import Es400SlidingDoorUnit2 from "./site/InfoHome/SlidingDoor/ES400SlidingDoorUnit2";
+import EcoSlide400TTelescopicDoorUunit from "./site/InfoHome/SlidingDoor/EcoSlide400tTelescopicDoorUunit";
+import EcoSlide400TTelescopicDoorUnit2 from "./site/InfoHome/SlidingDoor/EcoSlide400tTelescopicDoorUnit2";
+import RetroFitKits from "./site/InfoHome/RetroFitKits/RetroFitKits";
+import SlidingDoorRetroFitKits from "./site/InfoHome/RetroFitKits/SlidingDoorRetroFitKits";
+import SwingDoorRetroFitKits from "./site/InfoHome/RetroFitKits/SwingDoorRetroFitKits";
+import ContactUs from "./site/InfoHome/ContactUs/ContactUs";
 
 
 function Layout(props) {
@@ -197,9 +213,25 @@ function Layout(props) {
                         // Site
                         */}
                         <Redirect exact from="/site" to="/site/about-us" />
+                        <Route exact path="/site/folding-doors" component={FoldingDoor} />
+                        <Route exact path="/site/folding-doors/eco-fold-90-folding-door" component={EchoFold90} />
+                        <Route exact path="/site/swing-doors" component={SwingDoors} />
+                        <Route exact path="/site/swing-doors/eco-swing-90-swing-door-unit-2" component={EchoSwing90DoorUnit} />
+                        <Route exact path="/site/swing-doors/eco-swing-90-ih-in-head-swing-unit" component={EcoSwing90IhHeadSwingUnit} />
+                        <Route exact path="/site/swing-doors/eco-swing-bd-balance-door" component={EcoSwingBdBalanceDoor} />
+                        <Route exact path="/site/swing-doors/eco-swing-if-in-floor-operator" component={EcoSwingIfInFloorOperator} />
+                        <Route exact path="/site/sliding-doors" component={SlidingDoors} />
+                        <Route exact path="/site/sliding-doors/es400-sliding-door-unit" component={Es400SlidingDoorUnit} />
+                        <Route exact path="/site/sliding-doors/es400-sliding-door-unit-2" component={Es400SlidingDoorUnit2} />
+                        <Route exact path="/site/sliding-doors/eco-slide-400t-telescopic-door-unit" component={EcoSlide400TTelescopicDoorUunit} />
+                        <Route exact path="/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2" component={EcoSlide400TTelescopicDoorUnit2} />
+                        <Route exact path="/site/retro-fit-kit" component={RetroFitKits} />
+                        <Route exact path="/site/retro-fit-kit/sliding-door-retro-fit-kits" component={SlidingDoorRetroFitKits} />
+                        <Route exact path="/site/retro-fit-kit/swing-door-retro-fit-kits" component={SwingDoorRetroFitKits} />
+                        <Route exact path="/site/contact-us" component={ContactUs} />
                         <Route exact path="/site/about-us" component={SitePageAboutUs} />
                         <Route exact path="/site/components" component={SitePageComponents} />
-                        <Route exact path="/site/contact-us" component={SitePageContactUs} />
+                        {/*<Route exact path="/site/contact-us" component={SitePageContactUs} />*/}
                         <Route exact path="/site/contact-us-alt" component={SitePageContactUsAlt} />
                         <Route exact path="/site/not-found" component={SitePageNotFound} />
                         <Route exact path="/site/faq" component={SitePageFaq} />

@@ -5,7 +5,7 @@ export default [
         url: '/',
         children: [
             { type: 'link', label: 'Home 1', url: '/' },
-            { type: 'link', label: 'Home 2', url: '/home-two' },
+            { type: 'link', label: 'Home 2', url: '/store' },
         ],
     },
 

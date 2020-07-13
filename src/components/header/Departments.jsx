@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import departmentsArea from '../../services/departmentsArea';
 import DepartmentsLinks from './DepartmentsLinks';
 import { Menu18x14Svg, ArrowRoundedDown9x6Svg } from '../../svg';
+import {Link} from "react-router-dom";
 
 
 class Departments extends Component {
@@ -130,12 +131,13 @@ class Departments extends Component {
                         <DepartmentsLinks />
                     </div>
                 </div>
-
+            <Link style={{textDecoration: "none", color: "white"}} to={'/store'}>
                 <button type="button" className="departments__button" onClick={this.handleButtonClick}>
                     <Menu18x14Svg className="departments__button-icon" />
-                    Shop By Category
+                    Online Shop Home
                     <ArrowRoundedDown9x6Svg className="departments__button-arrow" />
                 </button>
+            </Link>
             </div>
         );
     }

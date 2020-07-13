@@ -43,7 +43,7 @@ class Root extends Component {
                 <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <Switch>
                         <Route
-                            path="/home-two"
+                            path="/store"
                             render={(props) => (
                                 <Layout {...props} headerLayout="compact" homeComponent={HomePageOne} />
                             )}

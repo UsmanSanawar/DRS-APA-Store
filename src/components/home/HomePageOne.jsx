@@ -42,6 +42,10 @@ function HomePageOne() {
             </Helmet>
 
 
+            <div className="container">
+                <h2 className="animate__flipInX py-4" style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Auto Door Spares</h2>
+            </div>
+
             <BlockSlideShow
 
             // withDepartments

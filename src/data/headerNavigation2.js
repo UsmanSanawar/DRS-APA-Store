@@ -6,7 +6,7 @@ export default [
                     type: 'menu',
                     menu: [
                         { title: 'Home', url: '/' },
-                        { title: 'Store', url: '/home-two' },
+                        { title: 'Store', url: '/store' },
                     ],
                 },
     },
@@ -144,5 +144,5 @@ export default [
     //         ],
     //     },
     // },
-   
+
 ];
