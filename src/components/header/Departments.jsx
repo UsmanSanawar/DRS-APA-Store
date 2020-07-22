@@ -24,15 +24,15 @@ class Departments extends Component {
 
         this.unsubscribeAria = departmentsArea.subscribe((area) => {
             this.setState({
-                // fixed: !!area,
-                fixed: false,
+                fixed: !!area,
+                // fixed: false,
                 area,
             });
         });
 
         this.setState({
-            // fixed: !!departmentsArea.area,
-            fixed: false,
+            fixed: !!departmentsArea.area,
+            // fixed: false,
             area: departmentsArea.area,
         });
     }
@@ -105,7 +105,7 @@ class Departments extends Component {
     handleOutsideClick = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             this.setState(() => ({
-                open: false,
+                open: false
             }));
         }
     };
@@ -113,6 +113,7 @@ class Departments extends Component {
     handleButtonClick = () => {
         this.setState((state) => ({
             open: !state.open,
+
         }));
     };
 
@@ -134,7 +135,7 @@ class Departments extends Component {
             <Link style={{textDecoration: "none", color: "white"}} to={'/store'}>
                 <button type="button" className="departments__button" onClick={this.handleButtonClick}>
                     <Menu18x14Svg className="departments__button-icon" />
-                    Online Shop Home
+                        Online Shop
                     <ArrowRoundedDown9x6Svg className="departments__button-arrow" />
                 </button>
             </Link>

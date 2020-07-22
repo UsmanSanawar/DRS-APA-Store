@@ -41,14 +41,14 @@ function NavPanel(props) {
     // }
 
     return (
-        <div className="nav-panel">
+        <div className="nav-panel" style={props.layout == "compact" ? {backgroundColor: "#f1630cab"} : {}}>
             <div className="nav-panel__container container">
                 <div className="nav-panel__row">
                     {logo}
                     {departments}
 
                     <div className="nav-panel__nav-links nav-links">
-                        <NavLinks />
+                        <NavLinks layout={props.layout} />
                     </div>
 
                     {/* <div className="nav-panel__indicators"> */}

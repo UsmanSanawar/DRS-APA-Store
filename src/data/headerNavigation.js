@@ -9,7 +9,7 @@ export default [
         submenu: {
             type: 'menu',
             menu: [
-                {title: 'Echo Fold 90 "Folding Door"', url: '/site/folding-doors/eco-fold-90-folding-door'},
+                {title: 'Eco Fold 90 "Folding Door"', url: '/site/folding-doors/eco-fold-90-folding-door'},
             ],
         },
     }, {
@@ -18,10 +18,10 @@ export default [
         submenu: {
             type: 'menu',
             menu: [
-                {title: 'Echo-Swing 90 Swing Door Unit', url: '/site/swing-doors/eco-swing-90-swing-door-unit-2'},
-                {title: 'Echo-Swing IH "In Head" Swing Unit', url: '/site/swing-doors/eco-swing-90-ih-in-head-swing-unit'},
-                {title: 'Echo-Swing BD "Balance Door"', url: '/site/swing-doors/eco-swing-bd-balance-door'},
-                {title: 'Echo-Swing IF "In-Floor Operator"', url: '/site/swing-doors/eco-swing-if-in-floor-operator'},
+                {title: 'Eco-Swing 90 Swing Door Unit', url: '/site/swing-doors/eco-swing-90-swing-door-unit-2'},
+                {title: 'Eco-Swing IH "In Head" Swing Unit', url: '/site/swing-doors/eco-swing-90-ih-in-head-swing-unit'},
+                {title: 'Eco-Swing BD "Balance Door"', url: '/site/swing-doors/eco-swing-bd-balance-door'},
+                {title: 'Eco-Swing IF "In-Floor Operator"', url: '/site/swing-doors/eco-swing-if-in-floor-operator'},
             ],
         },
     }, {
@@ -31,9 +31,9 @@ export default [
             type: 'menu',
             menu: [
                 {title: 'ES400 Sliding Door Unit"', url: '/site/sliding-doors/es400-sliding-door-unit'},
-                {title: 'Echo-Slide 400IH "In-Head" Sliding Door Unit', url: '/site/sliding-doors/es400-sliding-door-unit-2'},
-                {title: 'Echo-Slide 400T Telescopic Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit'},
-                {title: 'Echo-Slide 400T-IH "In-Head" Telescopic Sliding Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2'},
+                {title: 'Eco-Slide 400IH "In-Head" Sliding Door Unit', url: '/site/sliding-doors/es400-sliding-door-unit-2'},
+                {title: 'Eco-Slide 400T Telescopic Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit'},
+                {title: 'Eco-Slide 400T-IH "In-Head" Telescopic Sliding Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2'},
             ],
         },
     }, {

@@ -45,11 +45,17 @@ function HomePageTwo() {
                 <title>{`Home Page Two — ${theme.name}`}</title>
             </Helmet>
 
-            <div className="container">
-                <h2 className='py-4' style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Automation Products & Accessories Ltd.</h2>
-            </div>
+            {/*<div className="container">*/}
+            {/*    <h2 className='py-4' style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Automation Products & Accessories Ltd.</h2>*/}
+            {/*</div>*/}
 
-            <BlockSlideShow />
+            {/*<BlockSlideShow />*/}
+
+            <div className="container mt-2">
+                <iframe width="100%" height="500px" src="https://www.youtube.com/embed/YN5pl0b13QI" frameBorder="0"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen />
+            </div>
 
             <div className="container pb-4" style={{ marginBottom: 20 }}>
                 <div className="row pb-2">
@@ -59,6 +65,11 @@ function HomePageTwo() {
                     <div className="col-md-9">
                         <p>All members of APA have been in the automatic door industry for many years and have been a wide experience of many makes & models which spans the years since automatic doors where introduce to this country. APA are also suppliers of specialist automated door equipment, If you're looking high quality yet  affordable automatic door equipment then you've come to the right place.</p>
                     </div>
+
+                    {/*<div className='col-md-12 text-center mt-4 mb-3'>*/}
+                    {/*    <p style={{ fontSize: 28, fontWeight:"bold", color:"#F1630C" }}>Welcome to Automation Products & Accessories Ltd</p>*/}
+                    {/*    <p className="text-center">Specialist trade supplier of automatic door equipment for the independent companies within the commercial door market.</p>*/}
+                    {/*</div>*/}
 
                     <div className='col-md-12 text-center my-5'>
                         <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>
@@ -78,7 +89,7 @@ function HomePageTwo() {
                              height={200} style={{ borderRadius: 20, width: '100%', marginBottom: 15 }} /></div>
                     <div className="col-lg-6">
                         <div style={{ backgroundColor: '#f1630c', borderRadius: 20, marginBottom: 15, padding: 30, height: 200, }}>
-                            <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>
+                            <p style={{ color: '#fff', fontWeight: 'bold' }}> High quality, affordable, <br /> Automatic door</p>
                             <h1 style={{ color: '#fff' }}>EQUIPMENTS</h1>
                         </div>
                     </div>
