@@ -17,7 +17,7 @@ import {
     Cart20Svg,
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
-
+import logo from "../../assets/imgs/logo-mini.png"
 
 class MobileHeader extends Component {
     constructor(props) {
@@ -87,39 +87,39 @@ class MobileHeader extends Component {
                             <button type="button" className="mobile-header__menu-button" onClick={openMobileMenu}>
                                 <Menu18x14Svg />
                             </button>
-                            <Link to="/" className="mobile-header__logo"><LogoSmallSvg /></Link>
+                            <Link to="/" className="mobile-header__logo"><img height={52} src={logo} alt="main logo"/></Link>
                             <div className={searchClasses} ref={this.setSearchWrapperRef}>
-                                <form className="mobile-header__search-form" action="">
-                                    <input
-                                        className="mobile-header__search-input"
-                                        name="search"
-                                        placeholder="Search over 10,000 products"
-                                        aria-label="Site search"
-                                        type="text"
-                                        autoComplete="off"
-                                        onKeyDown={this.handleSearchKeyDown}
-                                        ref={this.setSearchInputRef}
-                                    />
-                                    <button type="submit" className="mobile-header__search-button mobile-header__search-button--submit">
-                                        <Search20Svg />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="mobile-header__search-button mobile-header__search-button--close"
-                                        onClick={this.handleCloseSearch}
-                                    >
-                                        <Cross20Svg />
-                                    </button>
-                                    <div className="mobile-header__search-body" />
-                                </form>
+                                {/*<form className="mobile-header__search-form" action="">*/}
+                                {/*    <input*/}
+                                {/*        className="mobile-header__search-input"*/}
+                                {/*        name="search"*/}
+                                {/*        placeholder="Search over 10,000 products"*/}
+                                {/*        aria-label="Site search"*/}
+                                {/*        type="text"*/}
+                                {/*        autoComplete="off"*/}
+                                {/*        onKeyDown={this.handleSearchKeyDown}*/}
+                                {/*        ref={this.setSearchInputRef}*/}
+                                {/*    />*/}
+                                {/*    <button type="submit" className="mobile-header__search-button mobile-header__search-button--submit">*/}
+                                {/*        <Search20Svg />*/}
+                                {/*    </button>*/}
+                                {/*    <button*/}
+                                {/*        type="button"*/}
+                                {/*        className="mobile-header__search-button mobile-header__search-button--close"*/}
+                                {/*        onClick={this.handleCloseSearch}*/}
+                                {/*    >*/}
+                                {/*        <Cross20Svg />*/}
+                                {/*    </button>*/}
+                                {/*    <div className="mobile-header__search-body" />*/}
+                                {/*</form>*/}
                             </div>
 
                             <div className="mobile-header__indicators">
-                                <Indicator
-                                    className="indicator--mobile indicator--mobile-search d-sm-none"
-                                    onClick={this.handleOpenSearch}
-                                    icon={<Search20Svg />}
-                                />
+                                {/*<Indicator*/}
+                                {/*    className="indicator--mobile indicator--mobile-search d-sm-none"*/}
+                                {/*    onClick={this.handleOpenSearch}*/}
+                                {/*    icon={<Search20Svg />}*/}
+                                {/*/>*/}
                                 <Indicator
                                     className="indicator--mobile d-sm-flex d-none"
                                     url="/shop/wishlist"

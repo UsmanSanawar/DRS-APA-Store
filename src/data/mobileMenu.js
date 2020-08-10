@@ -1,142 +1,169 @@
 export default [
     {
-        type: 'link',
-        label: 'Home',
-        url: '/',
-        children: [
-            { type: 'link', label: 'Home 1', url: '/' },
-            { type: 'link', label: 'Home 2', url: '/store' },
-        ],
+        title: 'HOME',
+        url: '/'
     },
-
     {
-        type: 'link',
-        label: 'Categories',
-        url: '',
-        children: [
-            {
-                type: 'link',
-                label: 'Power Tools',
-                url: '',
-                children: [
-                    { type: 'link', label: 'Engravers', url: '' },
-                    { type: 'link', label: 'Wrenches', url: '' },
-                    { type: 'link', label: 'Wall Chaser', url: '' },
-                    { type: 'link', label: 'Pneumatic Tools', url: '' },
-                ],
-            },
-            {
-                type: 'link',
-                label: 'Machine Tools',
-                url: '',
-                children: [
-                    { type: 'link', label: 'Thread Cutting', url: '' },
-                    { type: 'link', label: 'Chip Blowers', url: '' },
-                    { type: 'link', label: 'Sharpening Machines', url: '' },
-                    { type: 'link', label: 'Pipe Cutters', url: '' },
-                    { type: 'link', label: 'Slotting machines', url: '' },
-                    { type: 'link', label: 'Lathes', url: '' },
-                ],
-            },
-        ],
+        title: 'FOLDING DOORS',
+        url: '/site/folding-doors',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'Eco Fold 90 "Folding Door"', url: '/site/folding-doors/eco-fold-90-folding-door'},
+            ],
+        },
+    }, {
+        title: 'SWING DOORS',
+        url: '/site/swing-doors',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'Eco-Swing 90 Swing Door Unit', url: '/site/swing-doors/eco-swing-90-swing-door-unit-2'},
+                {title: 'Eco-Swing IH "In Head" Swing Unit', url: '/site/swing-doors/eco-swing-90-ih-in-head-swing-unit'},
+                {title: 'Eco-Swing BD "Balance Door"', url: '/site/swing-doors/eco-swing-bd-balance-door'},
+                {title: 'Eco-Swing IF "In-Floor Operator"', url: '/site/swing-doors/eco-swing-if-in-floor-operator'},
+            ],
+        },
+    }, {
+        title: 'SLIDING DOORS',
+        url: '/site/sliding-doors',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'ES400 Sliding Door Unit"', url: '/site/sliding-doors/es400-sliding-door-unit'},
+                {title: 'Eco-Slide 400IH "In-Head" Sliding Door Unit', url: '/site/sliding-doors/es400-sliding-door-unit-2'},
+                {title: 'Eco-Slide 400T Telescopic Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit'},
+                {title: 'Eco-Slide 400T-IH "In-Head" Telescopic Sliding Door Unit', url: '/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2'},
+            ],
+        },
+    }, {
+        title: 'RETRO-FIT KITS',
+        url: '/site/retro-fit-kit',
+        submenu: {
+            type: 'menu',
+            menu: [
+                {title: 'Sliding Door Retro-Fit Kits', url: '/site/retro-fit-kit/sliding-door-retro-fit-kits'},
+                {title: 'Swing Door Retro-Fit Kits', url: '/site/retro-fit-kit/swing-door-retro-fit-kits'},
+            ],
+        },
+    },  {
+        title: 'CONTACT US',
+        url: '/site/contact-us',
     },
+    // {
+    //     title: 'Megamenu',
+    //     url: '',
+    //     submenu: {
+    //         type: 'megamenu',
+    //         menu: {
+    //             size: 'nl',
+    //             columns: [
+    //                 {
+    //                     size: 6,
+    //                     links: [
+    //                         {
+    //                             title: 'Power Tools',
+    //                             url: '',
+    //                             links: [
+    //                                 { title: 'Engravers', url: '' },
+    //                                 { title: 'Wrenches', url: '' },
+    //                                 { title: 'Wall Chaser', url: '' },
+    //                                 { title: 'Pneumatic Tools', url: '' },
+    //                             ],
+    //                         },
+    //                         {
+    //                             title: 'Machine Tools',
+    //                             url: '',
+    //                             links: [
+    //                                 { title: 'Thread Cutting', url: '' },
+    //                                 { title: 'Chip Blowers', url: '' },
+    //                                 { title: 'Sharpening Machines', url: '' },
+    //                                 { title: 'Pipe Cutters', url: '' },
+    //                                 { title: 'Slotting machines', url: '' },
+    //                                 { title: 'Lathes', url: '' },
+    //                             ],
+    //                         },
+    //                     ],
+    //                 },
+    //                 {
+    //                     size: 6,
+    //                     links: [
+    //                         {
+    //                             title: 'Hand Tools',
+    //                             url: '',
+    //                             links: [
+    //                                 { title: 'Screwdrivers', url: '' },
+    //                                 { title: 'Handsaws', url: '' },
+    //                                 { title: 'Knives', url: '' },
+    //                                 { title: 'Axes', url: '' },
+    //                                 { title: 'Multitools', url: '' },
+    //                                 { title: 'Paint Tools', url: '' },
+    //                             ],
+    //                         },
+    //                         {
+    //                             title: 'Garden Equipment',
+    //                             url: '',
+    //                             links: [
+    //                                 { title: 'Motor Pumps', url: '' },
+    //                                 { title: 'Chainsaws', url: '' },
+    //                                 { title: 'Electric Saws', url: '' },
+    //                                 { title: 'Brush Cutters', url: '' },
+    //                             ],
+    //                         },
+    //                     ],
+    //                 },
+    //             ],
+    //         },
+    //     },
+    // },
+    // {
+    //     title: 'Shop',
+    //     url: '/shop/category-grid-3-columns-sidebar',
+    //     submenu: {
+    //         type: 'menu',
+    //         menu: [
+    //             {
+    //                 title: 'Shop Grid',
+    //                 url: '/shop/category-grid-3-columns-sidebar',
+    //                 submenu: [
+    //                     { title: '3 Columns Sidebar', url: '/shop/category-grid-3-columns-sidebar' },
+    //                     { title: '4 Columns Full', url: '/shop/category-grid-4-columns-full' },
+    //                     { title: '5 Columns Full', url: '/shop/category-grid-5-columns-full' },
+    //                 ],
+    //             },
+    //             { title: 'Shop List', url: '/shop/category-list' },
+    //             { title: 'Shop Right Sidebar', url: '/shop/category-right-sidebar' },
+    //             {
+    //                 title: 'Product',
+    //                 url: '/shop/product-standard',
+    //                 submenu: [
+    //                     { title: 'Product', url: '/shop/product-standard' },
+    //                     { title: 'Product Alt', url: '/shop/product-columnar' },
+    //                     { title: 'Product Sidebar', url: '/shop/product-sidebar' },
+    //                 ],
+    //             },
+    //             { title: 'Cart', url: '/shop/cart' },
+    //             { title: 'Checkout', url: '/shop/checkout' },
+    //             { title: 'Wishlist', url: '/shop/wishlist' },
+    //             { title: 'Compare', url: '/shop/compare' },
+    //             { title: 'Track Order', url: '/shop/track-order' },
+    //         ],
+    //     },
+    // },
+    // {
+    //     title: 'Account',
+    //     url: '/account',
+    //     submenu: {
+    //         type: 'menu',
+    //         menu: [
+    //             { title: 'Login', url: '/account/login' },
+    //             { title: 'Dashboard', url: '/account/dashboard' },
+    //             { title: 'Edit Profile', url: '/account/profile' },
+    //             { title: 'Order History', url: '/account/orders' },
+    //             { title: 'Address Book', url: '/account/addresses' },
+    //             { title: 'Change Password', url: '/account/password' },
+    //         ],
+    //     },
+    // },
 
-    {
-        type: 'link',
-        label: 'Shop',
-        url: '/shop/category-grid-3-columns-sidebar',
-        children: [
-            {
-                type: 'link',
-                label: 'Shop Grid',
-                url: '/shop/category-grid-3-columns-sidebar',
-                children: [
-                    { type: 'link', label: '3 Columns Sidebar', url: '/shop/category-grid-3-columns-sidebar' },
-                    { type: 'link', label: '4 Columns Full', url: '/shop/category-grid-4-columns-full' },
-                    { type: 'link', label: '5 Columns Full', url: '/shop/category-grid-5-columns-full' },
-                ],
-            },
-            { type: 'link', label: 'Shop List', url: '/shop/category-list' },
-            { type: 'link', label: 'Shop Right Sidebar', url: '/shop/category-right-sidebar' },
-            {
-                type: 'link',
-                label: 'Product',
-                url: '/shop/product-standard',
-                children: [
-                    { type: 'link', label: 'Product', url: '/shop/product-standard' },
-                    { type: 'link', label: 'Product Alt', url: '/shop/product-columnar' },
-                    { type: 'link', label: 'Product Sidebar', url: '/shop/product-sidebar' },
-                ],
-            },
-            { type: 'link', label: 'Cart', url: '/shop/cart' },
-            { type: 'link', label: 'Checkout', url: '/shop/checkout' },
-            { type: 'link', label: 'Wishlist', url: '/shop/wishlist' },
-            { type: 'link', label: 'Compare', url: '/shop/compare' },
-            { type: 'link', label: 'Track Order', url: '/shop/track-order' },
-        ],
-    },
-
-    {
-        type: 'link',
-        label: 'Account',
-        url: '/account',
-        children: [
-            { type: 'link', label: 'Login', url: '/account/login' },
-            { type: 'link', label: 'Dashboard', url: '/account/dashboard' },
-            { type: 'link', label: 'Edit Profile', url: '/account/profile' },
-            { type: 'link', label: 'Order History', url: '/account/orders' },
-            { type: 'link', label: 'Address Book', url: '/account/addresses' },
-            { type: 'link', label: 'Change Password', url: '/account/password' },
-        ],
-    },
-
-    {
-        type: 'link',
-        label: 'Blog',
-        url: '/blog/category-classic',
-        children: [
-            { type: 'link', label: 'Blog Classic', url: '/blog/category-classic' },
-            { type: 'link', label: 'Blog Grid', url: '/blog/category-grid' },
-            { type: 'link', label: 'Blog List', url: '/blog/category-list' },
-            { type: 'link', label: 'Blog Left Sidebar', url: '/blog/category-left-sidebar' },
-            { type: 'link', label: 'Post Page', url: '/blog/post-classic' },
-            { type: 'link', label: 'Post Without Sidebar', url: '/blog/post-full' },
-        ],
-    },
-
-    {
-        type: 'link',
-        label: 'Pages',
-        url: '/site/about-us',
-        children: [
-            { type: 'link', label: 'About Us', url: '/site/about-us' },
-            { type: 'link', label: 'Contact Us', url: '/site/contact-us' },
-            { type: 'link', label: 'Contact Us Alt', url: '/site/contact-us-alt' },
-            { type: 'link', label: '404', url: '/site/not-found' },
-            { type: 'link', label: 'Terms And Conditions', url: '/site/terms' },
-            { type: 'link', label: 'FAQ', url: '/site/faq' },
-            { type: 'link', label: 'Components', url: '/site/components' },
-            { type: 'link', label: 'Typography', url: '/site/typography' },
-        ],
-    },
-
-    {
-        type: 'button',
-        label: 'Currency',
-        children: [
-            { type: 'button', label: '€ Euro', data: { type: 'currency', code: 'EUR' } },
-            { type: 'button', label: '£ Pound Sterling', data: { type: 'currency', code: 'GBP' } },
-            { type: 'button', label: '$ US Dollar', data: { type: 'currency', code: 'USD' } },
-            { type: 'button', label: '₽ Russian Ruble', data: { type: 'currency', code: 'RUB' } },
-        ],
-    },
-
-    {
-        type: 'button',
-        label: 'Language',
-        children: [
-            { type: 'button', label: 'English', data: { type: 'language', locale: 'en' } },
-            { type: 'button', label: 'Russian', data: { type: 'language', locale: 'ru' } },
-        ],
-    },
 ];
