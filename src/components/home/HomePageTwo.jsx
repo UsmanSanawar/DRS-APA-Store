@@ -61,7 +61,7 @@ function HomePageTwo() {
             case 'FiTag48Svg':
                 tag = <FiTag48Svg />
                 break;
-  
+
             case 'FiFreeDelivery48Svg':
                 tag = <FiFreeDelivery48Svg />
                 break;
