@@ -63,9 +63,9 @@ export default function Footer() {
                             {theme.author.name}
                         </a> {'    ' + "Build: 080820"}  
                     </div>
-                    <div className="site-footer__payments">
+                    {/* <div className="site-footer__payments">
                         <img src="images/payments.png" alt="" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

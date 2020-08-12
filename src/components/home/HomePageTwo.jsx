@@ -28,10 +28,9 @@ function HomePageTwo() {
                 setData(res.data.data)
             }
         })
-    }, [])
+    }, [])       
 
-
-    return (
+    return ( 
         <React.Fragment>
             <Helmet>
                 <title>{`Home Page Two — ${theme.name}`}</title>
