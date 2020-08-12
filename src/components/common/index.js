@@ -176,7 +176,13 @@ function CommonComp(props) {
 
   return (
     <React.Fragment>
-      {getPreviewHTML()}
+      {/* {getPreviewHTML()} */}
+      {
+        props.data && props.data.length > 0 ? getPreviewHTML() : <div style={{ textAlign: 'center' }}>
+        <div className="spinner-border" />
+      </div>
+      }
+      
     </React.Fragment>
   );
 }
