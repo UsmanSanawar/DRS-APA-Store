@@ -17,29 +17,12 @@ import {IMAGE_URL} from "../../constant/constants";
 import CommonCom from "../../components/common"
 
 
-function HomePageTwo() {
-
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        RestService.getWebPageComponentByPageId(6).then(res => {
-            if (res.data.status == "success") {
-
-                setData(res.data.data)
-            }
-        })
-    }, [])       
-
+function HomePageTwo() {     
+    
     return ( 
         <React.Fragment>
-            <Helmet>
-                <title>{`Home Page Two — ${theme.name}`}</title>
-            </Helmet>
-
-            <div className="container">
             {/* {getPreviewHTML()} */}
-            <CommonCom data={data} />
-            </div>
+            <CommonCom slug="home" />
 
         </React.Fragment>
     );

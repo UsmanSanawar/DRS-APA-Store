@@ -21,7 +21,6 @@ function EchoSwing90() {
     useEffect(() => {
         RestService.getWebPageComponentByPageId(11).then(res => {
             if (res.data.status == "success") {
-
                 setData(res.data.data)
             }
         })
@@ -34,11 +33,11 @@ function EchoSwing90() {
             </Helmet>
 
             <div className="container p-4">
-               <CommonComp data={data}/>
+               <CommonComp data={data}/> 
             </div>
 
         </React.Fragment>
     );
 }
 
-export default EchoSwing90;
+export default EchoSwing90;                   

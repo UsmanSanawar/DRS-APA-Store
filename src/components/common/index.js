@@ -15,6 +15,25 @@ import { IMAGE_URL } from "../../constant/constants";
 function CommonComp(props) {
 
 
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState([]);
+  useEffect(() => {
+    setLoading(true)
+    RestService.getWebPageComponentByPageSlug(props.slug).then(res => {
+      if (res.data.status == "success") {
+        setData(res.data.data)
+        setLoading(false)
+      } else {
+        setData([])
+        setLoading(false)
+      }
+    }).catch(err => {
+      setData([])
+      setLoading(false)
+    }
+    )
+  }, [props.slug])
+
   function getWith(size, fromHtml = false) {
     let i = 50;
     if (size) {
@@ -60,7 +79,7 @@ function CommonComp(props) {
             dataList.map(item => {
               return <div className="col-3">
                 <div className="card p-4"
-                  style={{ backgroundColor: "#f7f7f7", border: "1px solid black" }}>
+                  style={{ backgroundColor: "#f7f7f7", }}>
                   <div className="text-center">
                     <div style={{ textAlign: "-webkit-center" }}>{getIcon(item.icon)}</div>
                     <h3 className="mb-0">{item.mainHeading}</h3>
@@ -107,8 +126,8 @@ function CommonComp(props) {
               paddingTop: 30,
               height: 200
             }}>
-              <h4 style={{ color: item.overlayMainTextColor }}>{item.overlayMainText}</h4>
-              <h1 style={{ color: item.overlaySubTextColor }}>{item.overlaySubText}</h1>
+              {item.overlayMainText != "" && item.overlayMainText != null ? <h4 style={{ color: item.overlayMainTextColor }}>{item.overlayMainText}</h4> : null}
+              {item.overlaySubTextColor != "" && item.overlaySubTextColor != null ? <h1 style={{ color: item.overlaySubTextColor }}>{item.overlaySubText}</h1> : null}
               {item.buttonText != "" && item.buttonText != null ?
                 <button
                   onClick={() => window.location.href = item.buttonLink}
@@ -152,7 +171,7 @@ function CommonComp(props) {
 
   const getPreviewHTML = () => {
 
-    let dataList = props.data.sort((a, b) => a.order - b.order)
+    let dataList = data.sort((a, b) => a.order - b.order)
 
     return <div>
       {
@@ -177,12 +196,18 @@ function CommonComp(props) {
   return (
     <React.Fragment>
       {/* {getPreviewHTML()} */}
-      {
-        props.data && props.data.length > 0 ? getPreviewHTML() : <div style={{ textAlign: 'center' }}>
-        <div className="spinner-border" />
+      <Helmet>
+        <title>{data.length > 0 ? data[0].webPageTitle : ''} </title>
+      </Helmet>
+
+      <div className="container p-4">
+        {
+          !loading ? getPreviewHTML() : <div style={{ textAlign: 'center' }}>
+            <div className="spinner-border" />
+          </div>
+        }
       </div>
-      }
-      
+
     </React.Fragment>
   );
 }

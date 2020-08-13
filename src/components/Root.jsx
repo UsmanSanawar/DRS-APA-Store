@@ -19,7 +19,7 @@ import messages from '../i18n';
 import Layout from './Layout';
 import HomePageOne from './home/HomePageOne';
 import HomePageTwo from './home/HomePageTwo';
-
+import CommonComp from "./common"
 
 class Root extends Component {
     componentDidMount() {
