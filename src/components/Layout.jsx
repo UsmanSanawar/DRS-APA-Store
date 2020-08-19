@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // third-party
 import PropTypes from 'prop-types';
@@ -37,26 +37,25 @@ import ShopPageCategory from './shop/ShopPageCategory';
 
 // data stubs
 import theme from '../data/theme';
-import FoldingDoor from "./site/InfoHome/FoldingDoor/FoldingDoor";
-import EchoFold90 from "./site/InfoHome/FoldingDoor/EchoFold90";
-import SwingDoors from "./site/InfoHome/SwingDoor/SwingDoors";
-import EchoSwing90DoorUnit from "./site/InfoHome/SwingDoor/EchoSwing90DoorUnit";
-import EcoSwing90IhHeadSwingUnit from "./site/InfoHome/SwingDoor/EcoSwing90-IH-HeadSwingUnit";
-import EcoSwingBdBalanceDoor from "./site/InfoHome/SwingDoor/EcoSwingBdBalanceDoor";
-import EcoSwingIfInFloorOperator from "./site/InfoHome/SwingDoor/EcoSwingIfInFloorOperator";
-import SlidingDoors from "./site/InfoHome/SlidingDoor/SlidingDoors";
-import Es400SlidingDoorUnit from "./site/InfoHome/SlidingDoor/ES400SlidingDoorUnit";
-import Es400SlidingDoorUnit2 from "./site/InfoHome/SlidingDoor/ES400SlidingDoorUnit2";
-import EcoSlide400TTelescopicDoorUunit from "./site/InfoHome/SlidingDoor/EcoSlide400tTelescopicDoorUunit";
-import EcoSlide400TTelescopicDoorUnit2 from "./site/InfoHome/SlidingDoor/EcoSlide400tTelescopicDoorUnit2";
-import RetroFitKits from "./site/InfoHome/RetroFitKits/RetroFitKits";
-import SlidingDoorRetroFitKits from "./site/InfoHome/RetroFitKits/SlidingDoorRetroFitKits";
-import SwingDoorRetroFitKits from "./site/InfoHome/RetroFitKits/SwingDoorRetroFitKits";
-import ContactUs from "./site/InfoHome/ContactUs/ContactUs";
 import CommonComp from "../components/common"
+import RestService from '../store/restService/restService';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Layout(props) {
     const { match, headerLayout, homeComponent } = props;
+
+
+    const dispatch = useDispatch();
+    const { menu } = useSelector(({ webView }) => webView);
+    const [menuList, setMenuList] = useState([]);
+
+    useEffect(() => {
+        RestService.getWebMenu().then(res => {
+            if (res.data.status == "success") {
+                dispatch({ type: "SAVE_WEB_MENU", data: res.data.data })
+            }
+        })
+    }, [])
 
     return (
         <React.Fragment>
@@ -213,18 +212,30 @@ function Layout(props) {
                         // Site
                         */}
                         <Redirect exact from="/site" to="/site/about-us" />
-                        <Route exact path="/site/folding-doors" 
-                        render={(props) => (
-                            <CommonComp slug="folding-doors" {...props} />
-                        )} />
 
-                        <Route exact path="/site/folding-doors/eco-fold-90-folding-door" 
-                        render={(props) => (
-                            <CommonComp slug="eco-fold-90-folding-door" {...props} />
-                        )} />
+                        {
+                            menu.map(item => {
+
+                                return <Route path={`/:slug`}
+                                    render={(props) => (
+                                        <CommonComp slug={item.slug} {...props} />
+                                    )} />
+                                   
+                            })
+                        }
+
+                        {/* <Route exact path="/site/folding-doors"
+                            render={(props) => (
+                                <CommonComp slug="folding-doors" {...props} />
+                            )} />
+
+                        <Route exact path="/site/folding-doors/eco-fold-90-folding-door"
+                            render={(props) => (
+                                <CommonComp slug="eco-fold-90-folding-door" {...props} />
+                            )} />
                         <Route exact path="/site/swing-doors" render={(props) => (
-                                <CommonComp slug="swing-doors" {...props} />
-                            )}/>
+                            <CommonComp slug="swing-doors" {...props} />
+                        )} />
                         <Route exact path="/site/swing-doors/eco-swing-90-swing-door-unit-2"
                             render={(props) => (
                                 <CommonComp slug="eco-swing-90-swing-door-unit-2" {...props} />
@@ -234,70 +245,70 @@ function Layout(props) {
                             render={(props) => (
                                 <CommonComp slug="eco-swing-90-ih-in-head-swing-unit" {...props} />
                             )}
-                             />
+                        />
 
                         <Route exact path="/site/swing-doors/eco-swing-bd-balance-door"
-                         
-                         render={(props) => (
+
+                            render={(props) => (
                                 <CommonComp slug="eco-swing-bd-balance-door" {...props} />
-                            )}/>
-                        <Route exact path="/site/swing-doors/eco-swing-if-in-floor-operator" 
-                        render={(props) => (
+                            )} />
+                        <Route exact path="/site/swing-doors/eco-swing-if-in-floor-operator"
+                            render={(props) => (
                                 <CommonComp slug="eco-swing-if-in-floor-operator" {...props} />
                             )} />
-                        <Route exact path="/site/sliding-doors" 
-                        render={(props) => (
+                        <Route exact path="/site/sliding-doors"
+                            render={(props) => (
                                 <CommonComp slug="sliding-doors" {...props} />
                             )} />
-                        <Route exact path="/site/sliding-doors/es400-sliding-door-unit" 
-                        render={(props) => (
+                        <Route exact path="/site/sliding-doors/es400-sliding-door-unit"
+                            render={(props) => (
                                 <CommonComp slug="es400-sliding-door-unit" {...props} />
                             )} />
-                        <Route exact path="/site/sliding-doors/es400-sliding-door-unit-2" 
-                        render={(props) => (
+                        <Route exact path="/site/sliding-doors/es400-sliding-door-unit-2"
+                            render={(props) => (
                                 <CommonComp slug="es400-sliding-door-unit-2" {...props} />
                             )} />
-                        <Route exact path="/site/sliding-doors/eco-slide-400t-telescopic-door-unit" 
-                        render={(props) => (
+                        <Route exact path="/site/sliding-doors/eco-slide-400t-telescopic-door-unit"
+                            render={(props) => (
                                 <CommonComp slug="eco-slide-400t-telescopic-door-unit" {...props} />
                             )} />
-                        <Route exact path="/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2" 
-                        render={(props) => (
+                        <Route exact path="/site/sliding-doors/eco-slide-400t-telescopic-door-unit-2"
+                            render={(props) => (
                                 <CommonComp slug="eco-slide-400t-telescopic-door-unit-2" {...props} />
                             )} />
-                        <Route exact path="/site/retro-fit-kit" 
-                        render={(props) => (
+                        <Route exact path="/site/retro-fit-kit"
+                            render={(props) => (
                                 <CommonComp slug="retro-fit-kit" {...props} />
                             )} />
-                        <Route exact path="/site/retro-fit-kit/sliding-door-retro-fit-kits" 
-                        render={(props) => (
+                        <Route exact path="/site/retro-fit-kit/sliding-door-retro-fit-kits"
+                            render={(props) => (
                                 <CommonComp slug="sliding-door-retro-fit-kits" {...props} />
                             )} />
-                        <Route exact path="/site/retro-fit-kit/swing-door-retro-fit-kits" 
-                        render={(props) => (
+                        <Route exact path="/site/retro-fit-kit/swing-door-retro-fit-kits"
+                            render={(props) => (
                                 <CommonComp slug="swing-door-retro-fit-kits" {...props} />
                             )} />
-                        <Route exact path="/site/contact-us" 
-                        render={(props) => (
+                        <Route exact path="/site/contact-us"
+                            render={(props) => (
                                 <CommonComp slug="contact-us" {...props} />
-                            )} />
-                        <Route exact path="/site/about-us"  component={SitePageAboutUs}
-                         />
-                        
+                            )} /> */}
+                        <Route exact path="/site/about-us" component={SitePageAboutUs}
+                        />
+
                         {/*<Route exact path="/site/contact-us" 
                         render={(props) => (
                                 <CommonComp slug="eco-swing-90-swing-door-unit-2" {...props} />
                             )} />*/}
-                        <Route exact path="/site/contact-us-alt" 
-                        component={SitePageContactUsAlt} />
-                        <Route exact path="/site/not-found" 
-                        rcomponent={SitePageNotFound} />
-                        <Route exact path="/site/faq" 
-                        component={SitePageFaq} />
-                        <Route exact path="/site/terms" 
-                        component={SitePageTerms} />
-                        <Route exact path="/site/typography" 
-                        component={SitePageTypography} />
+                        <Route exact path="/site/contact-us-alt"
+                            component={SitePageContactUsAlt} />
+                        <Route exact path="/site/not-found"
+                            rcomponent={SitePageNotFound} />
+                        <Route exact path="/site/faq"
+                            component={SitePageFaq} />
+                        <Route exact path="/site/terms"
+                            component={SitePageTerms} />
+                        <Route exact path="/site/typography"
+                            component={SitePageTypography} />
 
                         {/*
                         // Page Not Found

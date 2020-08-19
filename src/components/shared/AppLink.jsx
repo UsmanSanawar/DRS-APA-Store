@@ -8,8 +8,7 @@ import { Link } from 'react-router-dom';
 
 function AppLink(props) {
     const { external, children, ...otherProps } = props;
-    let link;
-
+    let link;   
     if (external) {
         const {
             to,

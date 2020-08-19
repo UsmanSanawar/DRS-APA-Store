@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 
 // third-party
 import classNames from 'classnames';
@@ -15,11 +15,15 @@ import { ArrowRoundedDown9x6Svg } from '../../svg';
 // data stubs
 import navLinks from '../../data/headerNavigation';
 import navLinks2 from '../../data/headerNavigation2';
+import RestService from '../../store/restService/restService';
 
-
+ 
 function NavLinks(props) {
-    const webView = useSelector(({ webView }) =>  webView);
-    console.log(webView, 'webView webView webView');
+
+    const {storeView, menu} = useSelector(({ webView }) =>  webView);
+
+    console.log(storeView, menu, 'menu menu menu');
+    
 
     const handleMouseEnter = (event) => {
         const item = event.currentTarget;
@@ -40,45 +44,45 @@ function NavLinks(props) {
 
     const linksList = () =>{
 
-        let data = webView.storeView ? navLinks2 : navLinks;
+        let data = storeView ? navLinks2 : menu;
 
        return data.map((item, index) => {
             let arrow;
-            let submenu;
+            let webSubMenu;
 
-            if (item.submenu) {
+            if (item.hasSubMenu) {
                 arrow = <ArrowRoundedDown9x6Svg className="nav-links__arrow" />;
             }
 
-            if (item.submenu && item.submenu.type === 'menu') {
-                submenu = (
+            if(item.hasSubMenu ){
+                webSubMenu = (
                     <div className="nav-links__menu">
-                        <Menu items={item.submenu.menu} webView={webView} />
+                        <Menu items={item.webSubMenu} />
                     </div>
                 );
             }
 
-            if (item.submenu && item.submenu.type === 'megamenu') {
-                submenu = (
-                    <div className={`nav-links__megamenu nav-links__megamenu--size--${item.submenu.menu.size}`}>
-                        <Megamenu menu={item.submenu.menu} />
+            if (item.webSubMenu && item.webSubMenu.type === 'megamenu') {
+                webSubMenu = (
+                    <div className={`nav-links__megamenu nav-links__megamenu--size--${item.webSubMenu.menu.size}`}>
+                        <Megamenu menu={item.webSubMenu.menu} />
                     </div>
                 );
             }
 
             const classes = classNames('nav-links__item', {
-                'nav-links__item--with-submenu': item.submenu,
+                'nav-links__item--with-webSubMenu': item.webSubMenu,
             });
 
             return (
                 <li key={index} className={classes} onMouseEnter={handleMouseEnter}>
-                    <AppLink to={item.url} {...item.props} >
+                    <AppLink to={item.slug} {...item.props} >
                         <span>
-                            {item.title}
+                            {item.webMenuTitle}
                             {arrow}
                         </span>
                     </AppLink>
-                    {submenu}
+                    {webSubMenu}
                 </li>
             );
         });

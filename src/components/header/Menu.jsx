@@ -25,11 +25,11 @@ function Menu(props) {
     const renderLink = (item, content) => {
         let link;
 
-        if (item.url) {
+        if (item.slug) {
             link = (
-                <AppLink
+                <AppLink    
                     {...item.props}
-                    to={item.url}
+                    to={item.slug}
                     onClick={() => onClick(item)}
                 >
                     {content}
@@ -52,17 +52,17 @@ function Menu(props) {
 
     const itemsList = items.map((item, index) => {
         let arrow;
-        let submenu;
+        let webSubMenu;
         let icon;
 
-        if (item.submenu) {
+        if (item.webSubMenu) {
             arrow = <ArrowRoundedRight6x9Svg className="menu__arrow" />;
         }
 
-        if (item.submenu) {
-            submenu = (
-                <div className="menu__submenu">
-                    <Menu items={item.submenu} />
+        if (item.webSubMenu) {
+            webSubMenu = (
+                <div className="menu__webSubMenu">
+                    <Menu items={item.webSubMenu} />
                 </div>
             );
         }
@@ -81,13 +81,13 @@ function Menu(props) {
                     <React.Fragment >
                         <div onClick={()=> toggleView(item)}>
                         {icon}
-                        {item.title}
+                        {item.webSubMenuTitle}
                         {arrow}
                         </div>
                        
                     </React.Fragment>
                 ))}
-                {submenu}
+                {webSubMenu}
             </li>
         );
     });

@@ -18,8 +18,10 @@ function CommonComp(props) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState([]);
   useEffect(() => {
+    console.log(props, 'props props props, list list list list', props.slug);
+    
     setLoading(true)
-    RestService.getWebPageComponentByPageSlug(props.slug).then(res => {
+    RestService.getWebPageComponentByPageSlug(props.location ? props.location.pathname.substring(1) : 'home').then(res => {
       if (res.data.status == "success") {
         setData(res.data.data)
         setLoading(false)
@@ -32,7 +34,7 @@ function CommonComp(props) {
       setLoading(false)
     }
     )
-  }, [props.slug])
+  }, [props.location])
 
   function getWith(size, fromHtml = false) {
     let i = 50;
@@ -77,7 +79,7 @@ function CommonComp(props) {
         <div className="row">
           {
             dataList.map(item => {
-              return <div className="col-3">
+              return <div className="col-lg-3 mt-3">
                 <div className="card p-4"
                   style={{ backgroundColor: "#f7f7f7", }}>
                   <div className="text-center">
@@ -192,6 +194,10 @@ function CommonComp(props) {
       }
     </div>
   }
+
+  console.log(props.slug, 'props.slug');
+  
+
 
   return (
     <React.Fragment>

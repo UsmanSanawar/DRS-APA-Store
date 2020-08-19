@@ -12,6 +12,7 @@ import { currencyChange } from '../../store/currency';
 import { localeChange } from '../../store/locale';
 import { mobileMenuClose } from '../../store/mobile-menu';
 
+import { useDispatch, useSelector } from 'react-redux';
 // data stubs
 import currencies from '../../data/shopCurrencies';
 import mobileMenuLinks from '../../data/mobileMenu';
@@ -25,6 +26,7 @@ function MobileMenu(props) {
         changeCurrency,
     } = props;
 
+    const {storeView, menu} = useSelector(({ webView }) =>  webView);
     const classes = classNames('mobilemenu', {
         'mobilemenu--open': mobileMenuState.open,
     });
@@ -59,7 +61,7 @@ function MobileMenu(props) {
                     </button>
                 </div>
                 <div className="mobilemenu__content">
-                    <MobileLinks links={mobileMenuLinks} onItemClick={handleItemClick} />
+                    <MobileLinks links={menu} onItemClick={handleItemClick} />
                 </div>
             </div>
         </div>

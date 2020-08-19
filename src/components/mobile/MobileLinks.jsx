@@ -22,7 +22,7 @@ function MobileLinks(props) {
     const linksList = links.map((link, index) => {
         let item;
 
-        if (link.type === 'link' || link.type === 'button') {
+        if (link) {
             item = (
                 <Collapse
                     toggleClass="mobile-links__item--open"
@@ -31,7 +31,7 @@ function MobileLinks(props) {
                         let subLinks;
                         let linkOrButton;
 
-                        if (link.children && link.children.length > 0) {
+                        if (link.hasSubMenu && link.webSubMenu.length > 0) {
                             arrow = (
                                 <button className="mobile-links__item-toggle" type="button" onClick={toggle}>
                                     <ArrowRoundedDown12x7Svg className="mobile-links__item-arrow" />
@@ -41,7 +41,7 @@ function MobileLinks(props) {
                             subLinks = (
                                 <div className="mobile-links__item-sub-links" ref={setContentRef}>
                                     <MobileLinks
-                                        links={link.children}
+                                        links={link.webSubMenu}
                                         level={level + 1}
                                         onItemClick={onItemClick}
                                     />
@@ -49,27 +49,16 @@ function MobileLinks(props) {
                             );
                         }
 
-                        if (link.type === 'link') {
+                       
                             linkOrButton = (
                                 <AppLink
-                                    to={link.url}
+                                    to={link.slug}
                                     className="mobile-links__item-link"
                                     onClick={() => handleItemClick(link)}
                                 >
-                                    {link.label}
+                                    {link.webSubMenuTitle ? link.webSubMenuTitle : link.webMenuTitle}
                                 </AppLink>
                             );
-                        } else {
-                            linkOrButton = (
-                                <button
-                                    type="button"
-                                    className="mobile-links__item-link"
-                                    onClick={() => handleItemClick(link)}
-                                >
-                                    {link.label}
-                                </button>
-                            );
-                        }
 
                         return (
                             <div className="mobile-links__item" ref={setItemRef}>
