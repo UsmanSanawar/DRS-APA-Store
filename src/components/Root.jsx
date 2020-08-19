@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 // third-party
 import PropTypes from 'prop-types';
 import {
-    BrowserRouter,
+    HashRouter,
     Route,
     Redirect,
     Switch,
@@ -40,7 +40,7 @@ class Root extends Component {
 
         return (
             <IntlProvider locale={locale} messages={messages[locale]}>
-                <BrowserRouter basename={process.env.PUBLIC_URL}>
+                <HashRouter basename={process.env.PUBLIC_URL}>
                     <Switch>
                         <Route
                             path="/store"
@@ -56,7 +56,7 @@ class Root extends Component {
                         />
                         <Redirect to="/" />
                     </Switch>
-                </BrowserRouter>
+                </HashRouter>
             </IntlProvider>
         );
     }
