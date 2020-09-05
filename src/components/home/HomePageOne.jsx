@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 // third-party
 import {Helmet} from 'react-helmet';
 // blocks
@@ -17,9 +17,109 @@ import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
 import products from '../../data/shopProducts';
 import theme from '../../data/theme';
-
+import RestService from "../../store/restService/restService";
 
 function HomePageOne() {
+
+    const [productList, setProductList] = useState([])
+    useEffect(()=> {
+        RestService.getProducts().then(res => {
+            if (res.data.status === "success") {
+                let data = res.data.data;
+
+                // {
+                //     "productId": 37,
+                //     "productName": "Nokia N95",
+                //     "description": "N95 slide phone with 13 Megapixel camera",
+                //     "seoH1": "seoH1",
+                //     "seoH2": "seoH2",
+                //     "seoH3": "seoH3",
+                //     "imageTitle": "imageTitle",
+                //     "metaTagTitle": "metaTagTitle",
+                //     "metaTagDescription": "metaTagDescription",
+                //     "metaTagKeywords": "metaTagKeywords",
+                //     "newTabName": "newTabName",
+                //     "newTabContent": "newTabContent",
+                //     "productTags": "productTags,productTags,productTags",
+                //     "productPhotos": [],
+                //     "model": "N95",
+                //     "sku": "Piece",
+                //     "upc": "upc",
+                //     "ean": "ean",
+                //     "jan": "jan",
+                //     "isbn": "isbn",
+                //     "mpn": "mpn",
+                //     "location": "AJK",
+                //     "price": 45000,
+                //     "taxClassId": 2,
+                //     "taxClassTitle": null,
+                //     "quantity": 10,
+                //     "minimumQuantity": 5,
+                //     "subtractStock": true,
+                //     "stockStatusId": 4,
+                //     "stockStatusName": null,
+                //     "requiresShipping": true,
+                //     "seoUrl": "seoUrl",
+                //     "dateAvailable": "2020-09-04T06:50:34.642",
+                //     "length": "length",
+                //     "width": "width",
+                //     "height": "height",
+                //     "lengthUnitId": 1,
+                //     "lengthUnitName": null,
+                //     "weight": "string",
+                //     "weightUnitId": 1,
+                //     "weightUnitName": null,
+                //     "isActive": true,
+                //     "sortOrder": 1,
+                //     "manufacturerId": 5,
+                //     "manufacturerName": null,
+                //     "productCategoriesJunction": [],
+                //     "storeId": 2,
+                //     "storeName": "Secodary Store1",
+                //     "relatedProducts": [],
+                //     "productOptions": [],
+                //     "discountProducts": [],
+                //     "rewardPoints": null
+                // }
+
+                let array = [];
+                let images = [];
+                data.map(item => {
+
+                    if (item.productPhotos.length > 0) {
+
+                        item.productPhotos.map(image => {
+                            images.push(`http://192.3.213.101:3450/Uploads/${image.name}`)
+                        })
+                    }
+
+                    array.push(
+                    {
+                        id: item.productId,
+                        name: item.productName,
+                        price: item.price,
+                        compareAtPrice: null, //need be added to DTO
+                        images: images,
+                        badges: [''],
+                        rating: 3,
+                        reviews: 15,
+                        availability: 'in-stock',
+                        features: [
+                        { name: 'Speed', value: '750 RPM' },
+                        { name: 'Power Source', value: 'Cordless-Electric' },
+                        { name: 'Battery Cell Type', value: 'Lithium' },
+                        { name: 'Voltage', value: '20 Volts' },
+                        { name: 'Battery Capacity', value: '2 Ah' },
+                    ],
+                        options: item.productOptions,
+                    })
+                })
+
+                setProductList(array)
+            }
+        })
+    }, [])
+
     const columns = [
         {
             title: 'Top Rated Products',
@@ -41,94 +141,22 @@ function HomePageOne() {
                 <title>{`Home Page — ${theme.name}`}</title>
             </Helmet>
 
-
-            {/*<div className="container">*/}
-            {/*    <h2 className="animate__flipInX py-4" style={{ color: '#F1630C', textAlign: 'center' }}>Welcome to Auto Door Spares</h2>*/}
-            {/*</div>*/}
-
             <BlockSlideShow
                 withDepartments
                 //above being used as side space for dropdown
             />
 
-            {/*            <div className="container">*/}
-            {/*                <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>*/}
-            {/*                <div className="row" style={{ padding: "40px 0px" }}>*/}
-            {/*                    <div className="col-md-4 col-sm-12 col-xs-12">*/}
-            {/*                        <p style={{ fontWeight: 'bold', color: '#F1630C', fontSize: 19 }}>*/}
-            {/*                            Specialist trade supplier of automatic door equipment for the independent companies with in the commercial door market*/}
-            {/*</p>*/}
-            {/*                    </div>*/}
-            {/*                    <div className="col-sm-12 col-xs-12 col-md-8">*/}
-            {/*                        <p style={{ fontSize: 20 }}>*/}
-            {/*                            All members of APA have been in the automatic door industry for many years and have a wide experience of*/}
-            {/*                            the many makes & models which span the years since automatic doors where introduced to this country, APA*/}
-            {/*                            are also suppliers of specialist automated door equipment, If you’re looking for high quality yet affordable*/}
-            {/*                            automatic door equipment then you’ve come to the right place.*/}
-            {/*</p>*/}
-            {/*                    </div>*/}
-
-            {/*                </div>*/}
-
-            {/*            </div>*/}
-
-            {/*<div className="container">*/}
-            {/*    <h2 style={{ color: '#F1630C', textAlign: 'center' }}>Widest Product Range</h2>*/}
-            {/*    <p style={{ fontSize: 20, textAlign: 'center' }}>Lorem ipsum cosa fsdf dsafeosdaf dsavanv</p>*/}
-            {/*    <div className="row ">*/}
-            {/*        <div className="col-lg-3 col-sm-6 text-center">*/}
-            {/*            <img*/}
-            {/*            src={require('../../assets/imgs/door2.jpg')}*/}
-            {/*            className="img-responsive"*/}
-            {/*            height={200}*/}
-            {/*             style={{ borderRadius: 20, marginBottom: 15 , width: '100%', resize:'both'}} /></div>*/}
-            {/*        <div className="col-lg-3 col-sm-6 text-center">*/}
-            {/*            <img src={require('../../assets/imgs/door3.jpg')}*/}
-            {/*            className="img-responsive"*/}
-            {/*            height={200} style={{ borderRadius: 20,width: '100%', marginBottom: 15 }} /></div>*/}
-            {/*        <div className="col-lg-6">*/}
-            {/*            <div style={{ backgroundColor: '#F1630C', borderRadius: 20, marginBottom: 15, padding: 50, height: 200, }}>*/}
-            {/*                <p style={{ color: '#fff', fontWeight: 'bold' }}> > High quality affordable <br /> automatic door</p>*/}
-            {/*                <h1 style={{ color: '#fff' }}>EQUIPMENTS</h1>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-
-
-            {/*        <div className="col-lg-6">*/}
-            {/*            <div style={{ backgroundColor: 'gray', borderRadius: 20, marginBottom: 15, padding: 40, height: 200, }}>*/}
-            {/*            <h2 style={{ color: '#fff' }}>Why Chose Us</h2>*/}
-            {/*            <ul>*/}
-            {/*                <li style={{color: '#fff', fontWeight: 'bold'}}>Quality</li>*/}
-            {/*                <li style={{color: '#fff', fontWeight: 'bold'}}>Affordable Products</li>*/}
-            {/*                <li style={{color: '#fff', fontWeight: 'bold'}}>Text 1</li>*/}
-            {/*                <li style={{color: '#fff', fontWeight: 'bold'}}>Text 2</li>*/}
-            {/*            </ul>*/}
-
-            {/*            </div>*/}
-            {/*        </div>*/}
-
-            {/*        <div className="col-lg-3 col-sm-6 text-center">*/}
-            {/*            <img src={require('../../assets/imgs/door4.jpg')}*/}
-            {/*            className="img-responsive" height={200}*/}
-            {/*            style={{ borderRadius: 20, marginBottom: 15,width: '100%', }}  /></div>*/}
-            {/*        <div className="col-lg-3 col-sm-6 text-center">*/}
-            {/*            <img src={require('../../assets/imgs/doors-sliding.jpg')}*/}
-            {/*             height={200}*/}
-            {/*             style={{ borderRadius: 20, marginBottom: 15 ,width: '100%',}} /></div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-
             <BlockFeatures/>
 
-            <BlockTabbedProductsCarousel title="Featured Products" layout="grid-4"/>
+            <BlockTabbedProductsCarousel products={productList} title="Featured Products" layout="grid-4"/>
 
             <BlockBanner/>
 
             <BlockProducts
                 title="Bestsellers"
                 layout="large-first"
-                featuredProduct={products[0]}
-                products={products.slice(1, 7)}
+                featuredProduct={productList[0]}
+                products={productList}
             />
 
             <BlockCategories title="Popular Categories" layout="classic" categories={categories}/>
@@ -139,7 +167,7 @@ function HomePageOne() {
 
             <BlockBrands/>
 
-            <BlockProductColumns columns={columns}/>
+            {/*<BlockProductColumns columns={columns}/>*/}
         </React.Fragment>
     );
 }
