@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // application
-import products from '../../data/shopProducts';
+// import products from '../../data/shopProducts';
 
 // data stubs
 import BlockProductsCarousel from './BlockProductsCarousel';
@@ -17,8 +17,10 @@ export default class BlockTabbedProductsCarousel extends Component {
     constructor(props) {
         super(props);
 
+        console.log(this.props.products, "props.products")
+
         this.state = {
-            products: products.slice(),
+            products: this.props.products ? this.props.products.slice() : [],
             loading: false,
             groups: [
                 { id: 1, name: 'All', current: true },
@@ -28,6 +30,16 @@ export default class BlockTabbedProductsCarousel extends Component {
             ],
         };
     }
+
+
+    componentDidMount() {
+        if (this.props.products) {
+            this.setState({
+                products:  this.props.products.slice()
+            })
+        }
+    }
+
 
     componentWillUnmount() {
         clearTimeout(this.timeout);
