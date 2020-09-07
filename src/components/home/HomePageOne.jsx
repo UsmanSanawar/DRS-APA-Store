@@ -83,9 +83,9 @@ function HomePageOne() {
                 // }
 
                 let array = [];
-                let images = [];
+                
                 data.map(item => {
-
+                    let images = [];
                     if (item.productPhotos.length > 0) {
 
                         item.productPhotos.map(image => {

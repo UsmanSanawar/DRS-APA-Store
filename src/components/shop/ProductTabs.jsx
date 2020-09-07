@@ -26,15 +26,18 @@ class ProductTabs extends Component {
 
     render() {
         const { currentTab } = this.state;
-        const { withSidebar } = this.props;
+        const { withSidebar, product } = this.props;
+
+        console.log(product, 'prodcut description');
+        
         const classes = classNames('product-tabs', {
             'product-tabs--layout--sidebar': withSidebar,
         });
 
         const tabs = [
-            { key: 'description', title: 'Description', content: <ProductTabDescription /> },
-            { key: 'specification', title: 'Specification', content: <ProductTabSpecification /> },
-            { key: 'reviews', title: 'Reviews', content: <ProductTabReviews /> },
+            { key: 'description', title: 'Description', content: <div dangerouslySetInnerHTML={{__html:product? product.description: ''}} />  },
+            { key: 'specification', title: 'Specification', content: <ProductTabSpecification product={product} /> },
+            { key: 'reviews', title: 'Reviews', content: <ProductTabReviews  /> },
         ];
 
         const tabsButtons = tabs.map((tab) => {

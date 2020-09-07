@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import {IMAGE_URL } from "../../constant/constants"
 
 // application
 import SlickWithPreventSwipeClick from './SlickWithPreventSwipeClick';
@@ -118,8 +119,8 @@ class ProductGallery extends Component {
 
         const { images } = this.props;
         const items = images.map((image) => ({
-            src: image,
-            msrc: image,
+            src: `${IMAGE_URL}/${image.name}`,
+            msrc: `${IMAGE_URL}/${image.name}`,
             w: 700,
             h: 700,
         }));
@@ -202,8 +203,8 @@ class ProductGallery extends Component {
         const { currentIndex } = this.state;
 
         const featured = images.map((image, index) => (
-            <Link key={index} to={`/${image}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
-                <img src={image} alt="" ref={(element) => { this.imagesRefs[index] = element; }} />
+            <Link key={index} to={`${IMAGE_URL}/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
+                <img src={`${IMAGE_URL}/${image.name}`} alt="" ref={(element) => { this.imagesRefs[index] = element; }} />
             </Link>
         ));
 
@@ -219,7 +220,7 @@ class ProductGallery extends Component {
                     onClick={() => this.handleThumbnailClick(index)}
                     className={classes}
                 >
-                    <img className="product-gallery__carousel-image" src={image} alt="" />
+                    <img className="product-gallery__carousel-image" src={`${IMAGE_URL}/${image.name}`} alt="" />
                 </button>
             );
         });

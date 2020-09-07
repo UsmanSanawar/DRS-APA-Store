@@ -58,7 +58,7 @@ class Product extends Component {
         return (
             <div className={`product product--layout--${layout}`}>
                 <div className="product__content">
-                    <ProductGallery layout={layout} images={product.images} />
+                    <ProductGallery layout={layout} images={product.productPhotos} />
 
                     <div className="product__info">
                         <div className="product__wishlist-compare">
@@ -97,7 +97,7 @@ class Product extends Component {
                                 )}
                             />
                         </div>
-                        <h1 className="product__name">{product.name}</h1>
+                        <h1 className="product__name">{product.productName}</h1>
                         <div className="product__rating">
                             <div className="product__rating-stars">
                                 <Rating value={product.rating} />
@@ -109,9 +109,7 @@ class Product extends Component {
                             </div>
                         </div>
                         <div className="product__description">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-                            ornare, mi in ornare elementum, libero nibh lacinia urna, quis
-                            convallis lorem erat at purus. Maecenas eu varius nisi.
+                            {/* <div dangerouslySetInnerHTML={{__html: product.description}} />  */}
                         </div>
                         <ul className="product__features">
                             <li>Speed: 750 RPM</li>
@@ -124,13 +122,13 @@ class Product extends Component {
                             <li className="product__meta-availability">
                                 Availability:
                                 {' '}
-                                <span className="text-success">In Stock</span>
+                                    <span className="text-success">{product.stockStatusName}</span>
                             </li>
                             <li>
                                 Brand:
-                                <Link to="/">Wakita</Link>
+                                    <Link to="/">{product.manufacturerName}</Link>
                             </li>
-                            <li>SKU: 83690/32</li>
+                                    <li>SKU: {product.sku}</li>
                         </ul>
                     </div>
 
@@ -138,7 +136,7 @@ class Product extends Component {
                         <div className="product__availability">
                             Availability:
                             {' '}
-                            <span className="text-success">In Stock</span>
+                                    <span className="text-success">{product.stockStatusName}</span>
                         </div>
 
                         <div className="product__prices">
@@ -238,42 +236,7 @@ class Product extends Component {
                                             )}
                                         />
                                     </div>
-                                    <div className="product__actions-item product__actions-item--wishlist">
-                                        {/*<AsyncAction*/}
-                                        {/*    action={() => wishlistAddItem(product)}*/}
-                                        {/*    render={({ run, loading }) => (*/}
-                                        {/*        <button*/}
-                                        {/*            type="button"*/}
-                                        {/*            data-toggle="tooltip"*/}
-                                        {/*            title="Wishlist"*/}
-                                        {/*            onClick={run}*/}
-                                        {/*            className={classNames('btn btn-secondary btn-svg-icon btn-lg', {*/}
-                                        {/*                'btn-loading': loading,*/}
-                                        {/*            })}*/}
-                                        {/*        >*/}
-                                        {/*            <Wishlist16Svg />*/}
-                                        {/*        </button>*/}
-                                        {/*    )}*/}
-                                        {/*/>*/}
-                                    </div>
-                                    <div className="product__actions-item product__actions-item--compare">
-                                        {/*<AsyncAction*/}
-                                        {/*    action={() => compareAddItem(product)}*/}
-                                        {/*    render={({ run, loading }) => (*/}
-                                        {/*        <button*/}
-                                        {/*            type="button"*/}
-                                        {/*            data-toggle="tooltip"*/}
-                                        {/*            title="Compare"*/}
-                                        {/*            onClick={run}*/}
-                                        {/*            className={classNames('btn btn-secondary btn-svg-icon btn-lg', {*/}
-                                        {/*                'btn-loading': loading,*/}
-                                        {/*            })}*/}
-                                        {/*        >*/}
-                                        {/*            <Compare16Svg />*/}
-                                        {/*        </button>*/}
-                                        {/*    )}*/}
-                                        {/*/>*/}
-                                    </div>
+       
                                 </div>
                             </div>
                         </form>

@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 
 // third-party
 import PropTypes from 'prop-types';
@@ -21,23 +21,47 @@ import WidgetProducts from '../widgets/WidgetProducts';
 import categories from '../../data/shopWidgetCategories';
 import products from '../../data/shopProducts';
 import theme from '../../data/theme';
+import RestService from '../../store/restService/restService';
 
 
 function ShopPageProduct(props) {
     const { layout, sidebarPosition, match } = props;
-    let product;
+    // let product = {};
 
-    if (match.params.productId) {
-        product = products.find((x) => x.id === parseFloat(match.params.productId));
-    } else {
-        product = products[products.length - 1];
-    }
+    const [product, setProduct] = useState({})
+
+    // if (match.params.productId) {
+    //     product = products.find((x) => x.id === parseFloat(match.params.productId));
+    // } else {
+        // product = products[products.length - 1];
+    // }
 
     const breadcrumb = [
         { title: 'Home', url: '' },
         { title: 'Screwdrivers', url: '' },
         { title: product.name, url: '' },
     ];
+
+
+
+
+    useEffect(()=> {
+        let productId = match.params.productId;
+
+        if(productId){
+
+        RestService.getProductById(productId).then(res => {
+            if (res.data.status === "success") {
+                let data = res.data.data;
+                setProduct(data)
+console.log(data, 'data data pr');
+
+            }
+        })
+    }
+    }, [])
+
+
 
     let content;
 
@@ -62,7 +86,7 @@ function ShopPageProduct(props) {
                     <div className=" shop-layout__content">
                         <div className=" block">
                             <Product product={product} layout={layout} />
-                            <ProductTabs withSidebar />
+                            <ProductTabs product={product} withSidebar   />
                         </div>
 
                         <BlockProductsCarousel title="Related Products" layout="grid-4-sm" products={products} withSidebar />
@@ -77,7 +101,7 @@ function ShopPageProduct(props) {
                 <div className="block">
                     <div className="container">
                         <Product product={product} layout={layout} />
-                        <ProductTabs />
+                        <ProductTabs product={product} />
                     </div>
                 </div>
 

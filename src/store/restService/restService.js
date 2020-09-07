@@ -18,8 +18,12 @@ const RestService = {
     getWebMenu: () => axios.get(`${BASE_URL}/website/WebMenu/0/0`,
         RestService.getHeader()),
 
-    getProducts:() => axios.get(`${BASE_URL}/masterdata/Products/0/0`,
+    getProducts: () => axios.get(`${BASE_URL}/masterdata/Products/0/0`,
         RestService.getHeader()),
+
+    getProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/${prId}`,
+        RestService.getHeader()),
+
 
 };
 export default RestService;

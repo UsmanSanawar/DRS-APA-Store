@@ -60,6 +60,7 @@ function ProductCard(props) {
         );
     }
 
+
     if (product.compareAtPrice) {
         price = (
             <div className="product-card__prices">
@@ -106,7 +107,8 @@ function ProductCard(props) {
             {image}
             <div className="product-card__info">
                 <div style={{color: "#ee7647", fontWeight:"bold"}} className="product-card__name">
-                    <Link to={`/shop/product/${product.id}`}>{product.name}</Link>
+                    <span >{product.name}</span>
+                    {/* <Link to={`/shop/product/${product.id}`}>{product.name}</Link> */}
                 </div>
                 <div className="product-card__rating">
                     <Rating value={product.rating} />
