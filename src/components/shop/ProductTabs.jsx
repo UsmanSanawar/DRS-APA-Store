@@ -37,15 +37,24 @@ class ProductTabs extends Component {
         const tabs = [
             { key: 'description', title: 'Description', content: <div dangerouslySetInnerHTML={{__html:product? product.description: ''}} />  },
             { key: 'specification', title: 'Specification', content: <ProductTabSpecification product={product} /> },
+            { key: 'custom-tab', title: product ? product.newTabName : '' , content: <div dangerouslySetInnerHTML={{__html:product? product.newTabContent: ''}} /> },
             { key: 'reviews', title: 'Reviews', content: <ProductTabReviews  /> },
         ];
-
+        // newTabContent
         const tabsButtons = tabs.map((tab) => {
             const classes = classNames('product-tabs__item', {
                 'product-tabs__item--active': currentTab === tab.key,
             });
-
-            return <button key={tab.key} type="button" onClick={() => this.setTab(tab.key)} className={classes}>{tab.title}</button>;
+            if(tab.key === 'custom-tab'){
+                if(product && product.newTabName !=""){
+                    return <button key={tab.key} type="button" onClick={() => this.setTab(tab.key)} className={classes}>{tab.title}</button>;
+                }else {
+                    return null
+                }
+        
+            }else{
+                return <button key={tab.key} type="button" onClick={() => this.setTab(tab.key)} className={classes}>{tab.title}</button>;
+            }
         });
 
         const tabsContent = tabs.map((tab) => {
@@ -53,7 +62,17 @@ class ProductTabs extends Component {
                 'product-tabs__pane--active': currentTab === tab.key,
             });
 
-            return <div key={tab.key} className={classes}>{tab.content}</div>;
+            if(tab.key === 'custom-tab'){
+                if(product && product.newTabName !=""){
+                    return <div key={tab.key} className={classes}>{tab.content}</div>;
+                }else {
+                    return null
+                }
+        
+            }else{
+                return <div key={tab.key} className={classes}>{tab.content}</div>;
+            }
+            
         });
 
         return (

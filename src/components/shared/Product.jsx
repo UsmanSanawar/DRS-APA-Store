@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {Form , FormGroup, Label, Input, } from "reactstrap";
 
 // application
 import AsyncAction from './AsyncAction';
@@ -122,13 +123,10 @@ class Product extends Component {
                             <li className="product__meta-availability">
                                 Availability:
                                 {' '}
-                                    <span className="text-success">{product.stockStatusName}</span>
+                                <span className="text-success">{product.stockStatusName}</span>
                             </li>
-                            <li>
-                                Brand:
-                                    <Link to="/">{product.manufacturerName}</Link>
-                            </li>
-                                    <li>SKU: {product.sku}</li>
+                            <li>Brand:<Link to="/">{product.manufacturerName}</Link></li>
+                            <li>SKU: {product.sku}</li>
                         </ul>
                     </div>
 
@@ -136,7 +134,7 @@ class Product extends Component {
                         <div className="product__availability">
                             Availability:
                             {' '}
-                                    <span className="text-success">{product.stockStatusName}</span>
+                            <span className="text-success">{product.stockStatusName}</span>
                         </div>
 
                         <div className="product__prices">
@@ -188,8 +186,29 @@ class Product extends Component {
                                 </div>
                             </div>
                             <div className="form-group product__option">
-                                <div className="product__option-label">Material</div>
+                                <div className="product__option-label">Available Options</div>
                                 <div className="input-radio-label">
+                                    <Form>
+                                        {/* <FormGroup>
+                                            <Label for="exampleEmail">Email</Label>
+                                            <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <Label for="examplePassword">Password</Label>
+                                            <Input type="password" name="password" id="examplePassword" placeholder="password placeholder" />
+                                        </FormGroup> */}
+                                        <FormGroup>
+                                            <Label for="exampleSelect">Select</Label>
+                                            <Input type="select" name="select" id="exampleSelect">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option> 
+                                            </Input>
+                                        </FormGroup>
+
+                                    </Form>
                                     <div className="input-radio-label__list">
                                         <label>
                                             <input type="radio" name="material" />
@@ -236,7 +255,7 @@ class Product extends Component {
                                             )}
                                         />
                                     </div>
-       
+
                                 </div>
                             </div>
                         </form>
@@ -250,14 +269,14 @@ class Product extends Component {
                             {/*    <Link to="/">Chainsaws</Link>*/}
                             {/*</div>*/}
                         </div>
-
+     
                         <div className="product__share-links share-links">
-                            {/*<ul className="share-links__list">*/}
-                            {/*    <li className="share-links__item share-links__item--type--like"><Link to="/">Like</Link></li>*/}
-                            {/*    <li className="share-links__item share-links__item--type--tweet"><Link to="/">Tweet</Link></li>*/}
-                            {/*    <li className="share-links__item share-links__item--type--pin"><Link to="/">Pin It</Link></li>*/}
-                            {/*    <li className="share-links__item share-links__item--type--counter"><Link to="/">4K</Link></li>*/}
-                            {/*</ul>*/}
+                            <ul className="share-links__list">
+                                <li className="share-links__item share-links__item--type--like"><Link to="/">Like</Link></li>
+                                <li className="share-links__item share-links__item--type--tweet"><Link to="/">Tweet</Link></li>
+                                <li className="share-links__item share-links__item--type--pin"><Link to="/">Pin It</Link></li>
+                                {/* <li className="share-links__item share-links__item--type--counter"><Link to="/">4K</Link></li> */}
+                            </ul>
                         </div>
                     </div>
                 </div>

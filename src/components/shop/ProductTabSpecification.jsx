@@ -30,7 +30,7 @@ function ProductTabSpecification(props) {
                 </div>
 
                 <div  className="spec__row">
-                    <div className="spec__name">Width</div>
+                    <div className="spec__name">Width</div>       
                     <div className="spec__value">{`${props.product.width} ${props.product.lengthUnitName}`}</div>
                 </div>
 
