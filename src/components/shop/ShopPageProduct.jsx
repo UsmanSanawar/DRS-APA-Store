@@ -51,7 +51,6 @@ function ShopPageProduct(props) {
                 if (res.data.status === "success") {
                     let data = res.data.data;
                     setProduct(data)
-                    console.log(data, 'data data pr');
                 }
             })
         }
