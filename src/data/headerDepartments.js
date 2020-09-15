@@ -262,6 +262,7 @@ export default [
     {
         title: 'Electrical',
         url: '',
+        hasSubMenu: true,
         submenu: {
             type: 'menu',
             menu: [

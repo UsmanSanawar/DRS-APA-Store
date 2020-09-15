@@ -55,6 +55,12 @@ function Layout(props) {
                 dispatch({ type: "SAVE_WEB_MENU", data: res.data.data })
             }
         })
+
+        RestService.getAllCategories().then(res => {
+            if (res.data.status == "success") {
+                dispatch({ type: "SAVE_CATEGORIES", data: res.data.data })
+            }
+        })
     }, [])
 
     return (
@@ -76,7 +82,7 @@ function Layout(props) {
                 </header>
 
                 <header className="site__header d-lg-block d-none">
-                    <Header layout={headerLayout} />
+                    <Header layout={headerLayout} {...props} />
                 </header>
 
                 <div className="site__body">

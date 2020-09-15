@@ -111,9 +111,15 @@ class Departments extends Component {
     };
 
     handleButtonClick = () => {
+        console.log(this.props.history, 'history history');
+        if(this.state.open){
+            this.props.history.push('/store')
+        }else{
+            this.props.history.push('/')
+        }
+       
         this.setState((state) => ({
             open: !state.open,
-
         }));
     };
 
@@ -132,13 +138,13 @@ class Departments extends Component {
                         <DepartmentsLinks />
                     </div>
                 </div>
-            <Link style={{textDecoration: "none", color: "white"}} to={'/store'}>
+            {/* <Link style={{textDecoration: "none", color: "white"}} to={'/store'}> */}
                 <button type="button" className="departments__button" onClick={this.handleButtonClick}>
                     <Menu18x14Svg className="departments__button-icon" />
                         Online Shop
                     <ArrowRoundedDown9x6Svg className="departments__button-arrow" />
                 </button>
-            </Link>
+            {/* </Link> */}
             </div>
         );
     }

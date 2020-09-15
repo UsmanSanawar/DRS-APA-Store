@@ -47,7 +47,7 @@ function Header(props) { console.log(props, "headerProps");
             <Topbar/>
             {bannerSection}
             <div className="site-header__nav-panel">
-                <NavPanel layout={layout}/>
+                <NavPanel layout={layout} {...props} />
             </div>
         </div>
     );

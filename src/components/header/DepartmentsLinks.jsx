@@ -9,33 +9,31 @@ import Megamenu from './Megamenu';
 import Menu from './Menu';
 import { ArrowRoundedRight6x9Svg } from '../../svg';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 // data stubs
 import departments from '../../data/headerDepartments';
 
 
 function DepartmentsLinks() {
-    const linksList = departments.map((department, index) => {
+
+
+    const {storeView, menu, categories} = useSelector(({ webView }) =>  webView);
+
+    const linksList = categories.map((department, index) => {
         let arrow = null;
         let submenu = null;
         let itemClass = '';
 
-        if (department.submenu) {
+        if (department.hasSubMenu) {
             arrow = <ArrowRoundedRight6x9Svg className="departments__link-arrow" />;
         }
 
-        if (department.submenu && department.submenu.type === 'menu') {
+        if (department.hasSubMenu) {
             itemClass = 'departments__item--menu';
             submenu = (
                 <div className="departments__menu">
-                    <Menu items={department.submenu.menu} />
-                </div>
-            );
-        }
-
-        if (department.submenu && department.submenu.type === 'megamenu') {
-            submenu = (
-                <div className={`departments__megamenu departments__megamenu--${department.submenu.menu.size}`}>
-                    <Megamenu menu={department.submenu.menu} location="department" />
+                    <Menu items={department.webSubMenu} />
                 </div>
             );
         }
@@ -43,7 +41,7 @@ function DepartmentsLinks() {
         return (
             <li key={index} className={`departments__item ${itemClass}`}>
                 <Link to={department.url}>
-                    {department.title}
+                    {department.name}
                     {arrow}
                 </Link>
                 {submenu}

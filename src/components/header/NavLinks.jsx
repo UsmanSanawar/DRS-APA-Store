@@ -20,9 +20,9 @@ import RestService from '../../store/restService/restService';
  
 function NavLinks(props) {
 
-    const {storeView, menu} = useSelector(({ webView }) =>  webView);
+    const {storeView, menu, categories} = useSelector(({ webView }) =>  webView);
 
-    console.log(storeView, menu, 'menu menu menu');
+    console.log(props, menu, 'menu menu menu',categories);
     
 
     const handleMouseEnter = (event) => {
@@ -44,7 +44,7 @@ function NavLinks(props) {
 
     const linksList = () =>{
 
-        let data = storeView ? navLinks2 : menu;
+        let data = props.layout == 'compact' ? categories : menu;
 
        return data.map((item, index) => {
             let arrow;

@@ -55,11 +55,11 @@ function Menu(props) {
         let webSubMenu;
         let icon;
 
-        if (item.webSubMenu) {
+        if (item.hasSubMenu == true) {
             arrow = <ArrowRoundedRight6x9Svg className="menu__arrow" />;
         }
 
-        if (item.webSubMenu) {
+        if (item.hasSubMenu == true) {
             webSubMenu = (
                 <div className="menu__webSubMenu">
                     <Menu items={item.webSubMenu} />

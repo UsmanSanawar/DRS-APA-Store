@@ -1,22 +1,22 @@
 // react
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 // third-party
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import {Form, FormGroup, Input, Label} from "reactstrap";
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Form, FormGroup, Input, Label } from "reactstrap";
 // application
 import AsyncAction from './AsyncAction';
 import Currency from './Currency';
 import InputNumber from './InputNumber';
 import ProductGallery from './ProductGallery';
 import Rating from './Rating';
-import {cartAddItem} from '../../store/cart';
-import {compareAddItem} from '../../store/compare';
-import {Compare16Svg, Wishlist16Svg} from '../../svg';
-import {wishlistAddItem} from '../../store/wishlist';
+import { cartAddItem } from '../../store/cart';
+import { compareAddItem } from '../../store/compare';
+import { Compare16Svg, Wishlist16Svg } from '../../svg';
+import { wishlistAddItem } from '../../store/wishlist';
 
 
 class Product extends Component {
@@ -29,7 +29,8 @@ class Product extends Component {
     }
 
     handleChangeQuantity = (quantity) => {
-        this.setState({quantity});
+        this.setState({ quantity });
+
     };
 
     render() {
@@ -40,7 +41,7 @@ class Product extends Component {
             compareAddItem,
             cartAddItem,
         } = this.props;
-        const {quantity} = this.state;
+        const { quantity } = this.state;
         let prices;
 
 
@@ -58,21 +59,21 @@ class Product extends Component {
                     {handleOptionValues(item.optionValues)}
                 </Input>
             } else if (item.optionTypeName === "File") {
-                return <Input type="file" name="file" id="exampleFile"/>
+                return <Input type="file" name="file" id="exampleFile" />
             } else if (item.optionTypeName === "Text") {
-                return <Input name="text" id="exampleText"/>
+                return <Input name="text" id="exampleText" />
             } else if (item.optionTypeName === "Date") {
-                return <Input type={"date"} name="text" id="exampleText"/>
+                return <Input type={"date"} name="text" id="exampleText" />
             } else if (item.optionTypeName === "TextArea") {
-                return <Input type="textarea" name="textArea" id="exampleTextArea"/>
+                return <Input type="textarea" name="textArea" id="exampleTextArea" />
             } else if (item.optionTypeName === "Checkbox") {
-                return <Input style={{display: "block", marginLeft: "0.5rem"}} type="checkbox"/>
+                return <Input style={{ display: "block", marginLeft: "0.5rem" }} type="checkbox" />
             } else if (item.optionTypeName === "Time") {
-                return <Input type="time"/>
+                return <Input type="time" />
             } else if (item.optionTypeName === "Radio") {
-                return <Input style={{display: "block", marginLeft: "0.5rem"}} type="radio"/>
+                return <Input style={{ display: "block", marginLeft: "0.5rem" }} type="radio" />
             } else if (item.optionTypeName === "Date & Time") {
-                return <input type="datetime-local"/>
+                return <input type="datetime-local" />
             }
 
 
@@ -80,7 +81,6 @@ class Product extends Component {
 
         const renderOptions = () => {
             if (product.productOptions != null) {
-
                 return product.productOptions.map(item => {
                     return <FormGroup>
                         <Label for="exampleSelect">{item.option.optionName}</Label>
@@ -97,25 +97,25 @@ class Product extends Component {
         if (product.compareAtPrice) {
             prices = (
                 <React.Fragment>
-                    <span className="product__new-price"><Currency value={product.price}/></span>
+                    <span className="product__new-price"><Currency value={product.price} /></span>
                     {' '}
-                    <span className="product__old-price"><Currency value={product.compareAtPrice}/></span>
+                    <span className="product__old-price"><Currency value={product.compareAtPrice} /></span>
                 </React.Fragment>
             );
         } else {
-            prices = <Currency value={product.price}/>;
+            prices = <Currency value={product.price} />;
         }
 
         return (
             <div className={`product product--layout--${layout}`}>
                 <div className="product__content">
-                    <ProductGallery layout={layout} images={product.productPhotos}/>
+                    <ProductGallery layout={layout} images={product.productPhotos} />
 
                     <div className="product__info">
                         <div className="product__wishlist-compare">
                             <AsyncAction
                                 action={() => wishlistAddItem(product)}
-                                render={({run, loading}) => (
+                                render={({ run, loading }) => (
                                     <button
                                         type="button"
                                         data-toggle="tooltip"
@@ -126,13 +126,13 @@ class Product extends Component {
                                             'btn-loading': loading,
                                         })}
                                     >
-                                        <Wishlist16Svg/>
+                                        <Wishlist16Svg />
                                     </button>
                                 )}
                             />
                             <AsyncAction
                                 action={() => compareAddItem(product)}
-                                render={({run, loading}) => (
+                                render={({ run, loading }) => (
                                     <button
                                         type="button"
                                         data-toggle="tooltip"
@@ -143,7 +143,7 @@ class Product extends Component {
                                             'btn-loading': loading,
                                         })}
                                     >
-                                        <Compare16Svg/>
+                                        <Compare16Svg />
                                     </button>
                                 )}
                             />
@@ -151,7 +151,7 @@ class Product extends Component {
                         <h1 className="product__name">{product.productName}</h1>
                         <div className="product__rating">
                             <div className="product__rating-stars">
-                                <Rating value={product.rating}/>
+                                <Rating value={product.rating} />
                             </div>
                             <div className="product__rating-legend">
                                 <Link to="/">{`${product.reviews} Reviews`}</Link>
@@ -276,7 +276,7 @@ class Product extends Component {
                                     <div className="product__actions-item product__actions-item--addtocart">
                                         <AsyncAction
                                             action={() => cartAddItem(product, [], quantity)}
-                                            render={({run, loading}) => (
+                                            render={({ run, loading }) => (
                                                 <button
                                                     type="button"
                                                     onClick={run}

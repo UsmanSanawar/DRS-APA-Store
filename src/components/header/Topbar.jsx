@@ -50,12 +50,6 @@ function Topbar() {
                             items={accountLinks}
                         />
                     </div>
-                    {/*<div className="topbar__item">*/}
-                    {/*    <DropdownCurrency />*/}
-                    {/*</div>*/}
-                    {/*<div className="topbar__item">*/}
-                    {/*    <DropdownLanguage />*/}
-                    {/*</div>*/}
                 </div>
             </div>
         </div>

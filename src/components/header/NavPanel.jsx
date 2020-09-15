@@ -35,7 +35,7 @@ function NavPanel(props) {
     // if (layout === 'default') {
         departments = (
             <div className="nav-panel__departments">
-                <Departments />
+                <Departments {...props} />
             </div>
         );
     // }

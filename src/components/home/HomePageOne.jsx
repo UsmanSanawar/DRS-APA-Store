@@ -26,62 +26,6 @@ function HomePageOne() {
         RestService.getProducts().then(res => {
             if (res.data.status === "success") {
                 let data = res.data.data;
-
-                // {
-                //     "productId": 37,
-                //     "productName": "Nokia N95",
-                //     "description": "N95 slide phone with 13 Megapixel camera",
-                //     "seoH1": "seoH1",
-                //     "seoH2": "seoH2",
-                //     "seoH3": "seoH3",
-                //     "imageTitle": "imageTitle",
-                //     "metaTagTitle": "metaTagTitle",
-                //     "metaTagDescription": "metaTagDescription",
-                //     "metaTagKeywords": "metaTagKeywords",
-                //     "newTabName": "newTabName",
-                //     "newTabContent": "newTabContent",
-                //     "productTags": "productTags,productTags,productTags",
-                //     "productPhotos": [],
-                //     "model": "N95",
-                //     "sku": "Piece",
-                //     "upc": "upc",
-                //     "ean": "ean",
-                //     "jan": "jan",
-                //     "isbn": "isbn",
-                //     "mpn": "mpn",
-                //     "location": "AJK",
-                //     "price": 45000,
-                //     "taxClassId": 2,
-                //     "taxClassTitle": null,
-                //     "quantity": 10,
-                //     "minimumQuantity": 5,
-                //     "subtractStock": true,
-                //     "stockStatusId": 4,
-                //     "stockStatusName": null,
-                //     "requiresShipping": true,
-                //     "seoUrl": "seoUrl",
-                //     "dateAvailable": "2020-09-04T06:50:34.642",
-                //     "length": "length",
-                //     "width": "width",
-                //     "height": "height",
-                //     "lengthUnitId": 1,
-                //     "lengthUnitName": null,
-                //     "weight": "string",
-                //     "weightUnitId": 1,
-                //     "weightUnitName": null,
-                //     "isActive": true,
-                //     "sortOrder": 1,
-                //     "manufacturerId": 5,
-                //     "manufacturerName": null,
-                //     "productCategoriesJunction": [],
-                //     "storeId": 2,
-                //     "storeName": "Secodary Store1",
-                //     "relatedProducts": [],
-                //     "productOptions": [],
-                //     "discountProducts": [],
-                //     "rewardPoints": null
-                // }
-
                 let array = [];
                 
                 data.map(item => {

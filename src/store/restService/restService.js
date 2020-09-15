@@ -24,6 +24,9 @@ const RestService = {
     getProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/${prId}`,
         RestService.getHeader()),
 
+        getAllCategories: (prId) => axios.get(`${BASE_URL}/masterdata/ProductCategories/0/0`,
+        RestService.getHeader()),
+
 
 };
 export default RestService;
