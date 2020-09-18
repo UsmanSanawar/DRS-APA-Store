@@ -112,15 +112,16 @@ class Departments extends Component {
 
     handleButtonClick = () => {
         console.log(this.props.history, 'history history');
-        if(this.state.open){
-            this.props.history.push('/store')
-        }else{
-            this.props.history.push('/')
-        }
-       
+
         this.setState((state) => ({
             open: !state.open,
-        }));
+        }), () =>{
+            if(this.state.open){
+                this.props.history.push('/store')
+            }else{
+                this.props.history.push('/')
+            }
+        });
     };
 
     handleTransitionEnd = (event) => {

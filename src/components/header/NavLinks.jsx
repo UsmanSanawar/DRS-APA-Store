@@ -46,7 +46,7 @@ function NavLinks(props) {
 
         let data = props.layout == 'compact' ? categories : menu;
 
-       return data.map((item, index) => {
+       return data && data.map((item, index) => {
             let arrow;
             let webSubMenu;
 

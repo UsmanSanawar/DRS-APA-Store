@@ -20,7 +20,7 @@ function DepartmentsLinks() {
 
     const {storeView, menu, categories} = useSelector(({ webView }) =>  webView);
 
-    const linksList = categories.map((department, index) => {
+    const linksList = categories && categories.map((department, index) => {
         let arrow = null;
         let submenu = null;
         let itemClass = '';

@@ -220,7 +220,7 @@ function Layout(props) {
                         <Redirect exact from="/site" to="/site/about-us" />
 
                         {
-                            menu.map(item => {
+                           menu && menu.map(item => {
 
                                 return <Route path={`/:slug`}
                                     render={(props) => (
