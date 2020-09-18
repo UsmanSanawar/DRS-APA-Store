@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 class InputNumber extends Component {
     handleChange = (event) => {
         const { min, onChange } = this.props;
+        console.log("MAN1")
 
         if (onChange) {
             const value = parseFloat(event.target.value);
@@ -48,6 +49,9 @@ class InputNumber extends Component {
         }
 
         if (newValue !== value) {
+
+            console.log("MAN2")
+
             if (onChange) {
                 onChange(newValue);
             }

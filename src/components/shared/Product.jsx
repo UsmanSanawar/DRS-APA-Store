@@ -13,10 +13,11 @@ import Currency from './Currency';
 import InputNumber from './InputNumber';
 import ProductGallery from './ProductGallery';
 import Rating from './Rating';
-import { cartAddItem } from '../../store/cart';
-import { compareAddItem } from '../../store/compare';
-import { Compare16Svg, Wishlist16Svg } from '../../svg';
-import { wishlistAddItem } from '../../store/wishlist';
+import {cartAddItem} from '../../store/cart';
+import {compareAddItem} from '../../store/compare';
+import {Compare16Svg, Wishlist16Svg} from '../../svg';
+import {wishlistAddItem} from '../../store/wishlist';
+import "../../assets/CSS/customStylesForInputs.css";
 
 
 class Product extends Component {
@@ -24,16 +25,61 @@ class Product extends Component {
         super(props);
 
         this.state = {
-            quantity: 1,
+            quantity: parseInt(this.props.product.minimumQuantity),
+            productPlusOptions: this.props.product.productOptions ? this.props.product.productOptions : []
         };
     }
+
+
+    componentDidMount() {
+        if (this.props.product.minimumQuantity) {
+            this.setState({
+                quantity : parseInt(this.props.product.minimumQuantity)
+            })
+        }
+    }
+
 
     handleChangeQuantity = (quantity) => {
         this.setState({ quantity });
 
     };
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.product != prevProps.product) {
+            this.setState({
+                productPlusOptions: this.props.product.productOptions
+            })
+
+            this.setState({
+                quantity: parseInt(this.props.product.minimumQuantity)
+            })
+
+        }
+    }
+
+    handleInputChange = (event, optionId) => {
+        if (event && optionId) {
+           let index =   this.state.productPlusOptions.findIndex(item => item.optionId === optionId)
+            if (index > -1) {
+                this.state.productPlusOptions[index].value = event.target.value;
+
+                this.setState({
+                    productPlusOptions: this.state.productPlusOptions
+                })
+
+            }
+        }
+    }
+
     render() {
+
+        console.log(this.state.quantity, "QuantitiyPrice");
+
+        let CartObj = localStorage.getItem("state");
+        if(CartObj){
+            let Cart = JSON.parse(CartObj).cart;
+        }
         const {
             product,
             layout,
@@ -48,32 +94,78 @@ class Product extends Component {
         const handleOptionValues = (options) => {
             let SelectOptions;
             if (options && options.length) {
-                SelectOptions = options.map(item => <option value={item.optionValue}>{item.name}</option>)
+                SelectOptions = options.map(item => <option value={item.optionValueId}>{item.name}</option>)
             }
             return SelectOptions;
         }
 
         const handleSelect = (item) => {
+
+
             if (item.optionTypeName === "Select") {
-                return <Input type="select" name="select" id="exampleSelect">
-                    {handleOptionValues(item.optionValues)}
-                </Input>
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <div className="select">
+                        <select name={item.optionName} onChange={e => this.handleInputChange(e, item.optionId)}>
+                            {handleOptionValues(item.optionValues)}
+                        </select>
+                    </div>
+                </div>
             } else if (item.optionTypeName === "File") {
-                return <Input type="file" name="file" id="exampleFile" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} type="file" name={item.optionName} id="exampleFile"/>
+                </div>
+
             } else if (item.optionTypeName === "Text") {
-                return <Input name="text" id="exampleText" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} name={item.optionName} id="exampleText"/>
+                </div>
+
             } else if (item.optionTypeName === "Date") {
-                return <Input type={"date"} name="text" id="exampleText" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} type={"date"} name={item.optionName} id="exampleText"/>
+                </div>
+
             } else if (item.optionTypeName === "TextArea") {
-                return <Input type="textarea" name="textArea" id="exampleTextArea" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} type="textarea" name={item.optionName} id="exampleTextArea"/>
+                </div>
+
             } else if (item.optionTypeName === "Checkbox") {
-                return <Input style={{ display: "block", marginLeft: "0.5rem" }} type="checkbox" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} className="checkbox" style={{display:"block", marginLeft: "10px"}} type="checkbox" name={item.optionName}/>
+                </div>
+
             } else if (item.optionTypeName === "Time") {
-                return <Input type="time" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{width:"55%"}} type="time"/>
+                </div>
+
             } else if (item.optionTypeName === "Radio") {
-                return <Input style={{ display: "block", marginLeft: "0.5rem" }} type="radio" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{display: "block", marginLeft: "0.5rem"}} type="radio"/>
+                </div>
+
             } else if (item.optionTypeName === "Date & Time") {
-                return <input type="datetime-local" />
+
+                return <div>
+                    <Label for="exampleSelect">{item.optionName}</Label>
+                    <input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{width:"55%"}} type="datetime-local"/>
+                </div>
             }
 
 
@@ -83,11 +175,8 @@ class Product extends Component {
             if (product.productOptions != null) {
                 return product.productOptions.map(item => {
                     return <FormGroup>
-                        <Label for="exampleSelect">{item.option.optionName}</Label>
                         {
-                            // item.option.optionTypeName === "Select" ?
                             handleSelect(item.option)
-                            // : console.log("")
                         }
                     </FormGroup>
                 })
@@ -105,6 +194,8 @@ class Product extends Component {
         } else {
             prices = <Currency value={product.price} />;
         }
+
+        console.log(quantity, "allQuantity")
 
         return (
             <div className={`product product--layout--${layout}`}>
@@ -176,7 +267,30 @@ class Product extends Component {
                                 <span className="text-success">{product.stockStatusName}</span>
                             </li>
                             <li>Brand:<Link to="/">{product.manufacturerName}</Link></li>
-                            <li>SKU: {product.sku}</li>
+                            {product.sku ?
+                                <li>SKU: {product.sku}</li>
+                                :null
+                            }
+                            {product.upc ?
+                                <li>UPC: {product.upc}</li>
+                                :null
+                            }
+                            {product.ean ?
+                                <li>EAN: {product.ean}</li>
+                                :null
+                            }
+                            {product.jan ?
+                                <li>JAN: {product.jan}</li>
+                                :null
+                            }
+                            {product.isbn ?
+                                <li>ISBN: {product.isbn}</li>
+                                :null
+                            }
+                            {product.mpn ?
+                                <li>ISBN: {product.mpn}</li>
+                                :null
+                            }
                         </ul>
                     </div>
 
@@ -236,7 +350,7 @@ class Product extends Component {
                             {/*    </div>*/}
                             {/*</div>*/}
                             <div className="form-group product__option">
-                                <div className="product__option-label">Available Options</div>
+                                <h4>Available Options</h4>
                                 <div className="input-radio-label">
                                     <Form>
 
@@ -268,15 +382,19 @@ class Product extends Component {
                                             aria-label="Quantity"
                                             className="product__quantity"
                                             size="lg"
-                                            min={1}
+                                            min={parseInt(product.minimumQuantity)}
                                             value={quantity}
                                             onChange={this.handleChangeQuantity}
                                         />
                                     </div>
                                     <div className="product__actions-item product__actions-item--addtocart">
                                         <AsyncAction
-                                            action={() => cartAddItem(product, [], quantity)}
-                                            render={({ run, loading }) => (
+                                            action={() => {
+                                                let prr = product
+                                                prr.productOptions = this.state.productPlusOptions
+                                                return cartAddItem(prr, [], quantity)
+                                            }}
+                                            render={({run, loading}) => (
                                                 <button
                                                     type="button"
                                                     onClick={run}

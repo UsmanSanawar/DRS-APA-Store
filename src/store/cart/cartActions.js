@@ -3,7 +3,7 @@ import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES } from './cartA
 
 
 export function cartAddItemSuccess(product, options = [], quantity = 1) {
-    toast.success(`Product "${product.name}" added to cart!`);
+    toast.success(`Product "${product.productName}" added to cart!`);
 
     return {
         type: CART_ADD_ITEM,
