@@ -1,5 +1,6 @@
 // react
 import React, { Component } from 'react';
+import {Redirect} from "react-router-dom"
 
 // third-party
 import PropTypes from 'prop-types';
@@ -17,16 +18,15 @@ export default class BlockTabbedProductsCarousel extends Component {
     constructor(props) {
         super(props);
 
-        console.log(this.props.products, "props.products")
 
         this.state = {
             products: this.props.products ? this.props.products.slice() : [],
             loading: false,
             groups: [
-                { id: 1, name: 'All', current: true },
-                { id: 2, name: 'Power Tools', current: false },
-                { id: 3, name: 'Hand Tools', current: false },
-                { id: 4, name: 'Plumbing', current: false },
+                { id: 1, name: 'View All', current: false },
+                // { id: 2, name: 'Power Tools', current: false },
+                // { id: 3, name: 'Hand Tools', current: false },
+                // { id: 4, name: 'Plumbing', current: false },
             ],
         };
     }
@@ -40,6 +40,13 @@ export default class BlockTabbedProductsCarousel extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.products !== this.props.products){
+            this.setState({
+                products:  this.props.products.slice()
+            })
+        }
+    }
 
     componentWillUnmount() {
         clearTimeout(this.timeout);
@@ -84,12 +91,22 @@ export default class BlockTabbedProductsCarousel extends Component {
         }, 2000);
     };
 
+    redirectToProductPage = (item) => {
+        console.log(item.name, "ssssse")
+        if (item.name === "View All") {
+            return this.props.history.push("/shop/category-list")
+        }
+    }
+
     render() {
+
+
         return (
             <BlockProductsCarousel
                 {...this.props}
                 {...this.state}
-                onGroupClick={this.handleChangeGroup}
+                // onGroupClick={this.handleChangeGroup}
+                onGroupClick={this.redirectToProductPage}
             />
         );
     }

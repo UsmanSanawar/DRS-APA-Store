@@ -27,7 +27,7 @@ function HomePageOne() {
             if (res.data.status === "success") {
                 let data = res.data.data;
                 let array = [];
-                
+
                 data.map(item => {
                     let images = [];
                     if (item.productPhotos.length > 0) {
@@ -103,11 +103,11 @@ function HomePageOne() {
                 products={productList}
             />
 
-            <BlockCategories title="Popular Categories" layout="classic" categories={categories}/>
+            {/*<BlockCategories title="Popular Categories" layout="classic" categories={categories}/>*/}
 
             <BlockTabbedProductsCarousel title="New Arrivals" layout="horizontal" rows={2}/>
 
-            <BlockPosts title="Latest News" layout="list-sm" posts={posts}/>
+            {/*<BlockPosts title="Latest News" layout="list-sm" posts={posts}/>*/}
 
             <BlockBrands/>
 

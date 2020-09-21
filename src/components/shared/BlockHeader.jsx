@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 // application
 import { ArrowRoundedLeft7x11Svg, ArrowRoundedRight7x11Svg } from '../../svg';
+import {Link} from "react-router-dom";
 
 
 function BlockHeader(props) {
@@ -42,9 +43,11 @@ function BlockHeader(props) {
 
             return (
                 <li key={index}>
-                    <button type="button" className={classes} onClick={() => onGroupClick(group)}>
-                        {group.name}
-                    </button>
+
+                    <Link to={"/shop/category-list"} ><button type="button" className={classes} style={{color: "#f1630c"}}>{group.name}</button></Link>
+                    {/*<button type="button" className={classes} onClick={() => onGroupClick(group)}>*/}
+                    {/*    {group.name}*/}
+                    {/*</button>*/}
                 </li>
             );
         });

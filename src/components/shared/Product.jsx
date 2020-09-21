@@ -99,7 +99,7 @@ class Product extends Component {
                         slectedPr: prOption
                     })
                 }
-                
+
                 if(!successFound) {
                     // alert('else')
                     this.setState({
@@ -137,13 +137,6 @@ class Product extends Component {
     }
 
     render() {
-
-        console.log(this.state.slectedPr, "slectedPr slectedPr slectedPr");
-
-        let CartObj = localStorage.getItem("state");
-        if (CartObj) {
-            let Cart = JSON.parse(CartObj).cart;
-        }
         const {
             product,
             layout,
@@ -151,6 +144,13 @@ class Product extends Component {
             compareAddItem,
             cartAddItem,
         } = this.props;
+        console.log(this.state.slectedPr, "slectedPr", product);
+
+        let CartObj = localStorage.getItem("state");
+        if (CartObj) {
+            let Cart = JSON.parse(CartObj).cart;
+        }
+
 
         const { quantity } = this.state;
         let prices;
@@ -261,8 +261,7 @@ class Product extends Component {
             prices = <Currency value={product.price} />;
         }
 
-        console.log(quantity, "allQuantity")
-
+        console.log(layout, "|LAayout")
         return (
             <div className={`product product--layout--${layout}`}>
                 <div className="product__content">
@@ -311,7 +310,7 @@ class Product extends Component {
                                 <Rating value={product.rating} />
                             </div>
                             <div className="product__rating-legend">
-                                <Link to="/">{`${product.reviews} Reviews`}</Link>
+                                <Link to="/">{`${product.reviews ? product.reviews : 0} Reviews`}</Link>
                                 <span>/</span>
                                 <Link to="/">Write A Review</Link>
                             </div>
@@ -332,7 +331,13 @@ class Product extends Component {
                                 {' '}
                                 <span className="text-success">{product.stockStatusName}</span>
                             </li>
-                            <li>Brand:<Link to="/">{product.manufacturerName}</Link></li>
+
+                            {product.manufacturerName ? <li>Brand: {product.manufacturerName}</li> : null   }
+
+                            {this.state.slectedPr.optionModel ?
+                                <li>Model: {this.state.slectedPr.optionModel}</li>
+                                : null
+                            }
                             {product.sku ?
                                 <li>SKU: {product.sku}</li>
                                 : null
@@ -368,8 +373,16 @@ class Product extends Component {
                         </div>
 
                         <div className="product__prices">
-
-                            {this.state.slectedPr.optionPrice ? this.state.slectedPr.optionPrice : prices}
+                            {this.state.slectedPr.optionPrice ?
+                                this.state.slectedPr.priceParam === "equal" ?
+                                "$"+(this.state.slectedPr.optionPrice.toFixed(2))
+                                    : this.state.slectedPr.priceParam === "plus" ?
+                                    "$"+(this.state.slectedPr.optionPrice + product.price).toFixed(2)
+                                    : this.state.slectedPr.priceParam === "minus" ?
+                                        "$"+(this.state.slectedPr.optionPrice - product.price).toFixed(2)
+                                        : 0
+                                :prices
+                                }
                         </div>
 
                         <form className="product__options">
