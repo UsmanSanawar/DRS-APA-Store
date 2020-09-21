@@ -13,11 +13,12 @@ import Currency from './Currency';
 import InputNumber from './InputNumber';
 import ProductGallery from './ProductGallery';
 import Rating from './Rating';
-import {cartAddItem} from '../../store/cart';
-import {compareAddItem} from '../../store/compare';
-import {Compare16Svg, Wishlist16Svg} from '../../svg';
-import {wishlistAddItem} from '../../store/wishlist';
+import { cartAddItem } from '../../store/cart';
+import { compareAddItem } from '../../store/compare';
+import { Compare16Svg, Wishlist16Svg } from '../../svg';
+import { wishlistAddItem } from '../../store/wishlist';
 import "../../assets/CSS/customStylesForInputs.css";
+import RestService from '../../store/restService/restService';
 
 
 class Product extends Component {
@@ -26,7 +27,9 @@ class Product extends Component {
 
         this.state = {
             quantity: parseInt(this.props.product.minimumQuantity),
-            productPlusOptions: this.props.product.productOptions ? this.props.product.productOptions : []
+            // productPlusOptions: this.props.product.productOptions ? this.props.product.productOptions : [],
+            options: [],
+            slectedPr: {},
         };
     }
 
@@ -34,9 +37,12 @@ class Product extends Component {
     componentDidMount() {
         if (this.props.product.minimumQuantity) {
             this.setState({
-                quantity : parseInt(this.props.product.minimumQuantity)
+                quantity: parseInt(this.props.product.minimumQuantity)
             })
         }
+
+
+        this.getProductOptionCombination()
     }
 
 
@@ -47,9 +53,11 @@ class Product extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.product != prevProps.product) {
-            this.setState({
-                productPlusOptions: this.props.product.productOptions
-            })
+
+            this.getProductOptionCombination()
+            // this.setState({
+            //     productPlusOptions: this.props.product.productOptions
+            // })
 
             this.setState({
                 quantity: parseInt(this.props.product.minimumQuantity)
@@ -58,26 +66,82 @@ class Product extends Component {
         }
     }
 
-    handleInputChange = (event, optionId) => {
-        if (event && optionId) {
-           let index =   this.state.productPlusOptions.findIndex(item => item.optionId === optionId)
-            if (index > -1) {
-                this.state.productPlusOptions[index].value = event.target.value;
+    getProductOptionCombination = () => {
 
+        if (this.props.product.productId) {
+            RestService.getProductOptionCombination(this.props.product.productId).then(res => {
+                if (res.data.status == 'success') {
+                    this.setState({
+                        options: res.data.data != null ? res.data.data : []
+                    })
+                }
+            })
+        }
+    }
+
+    getPrice = () => {
+        if (this.props.product.productId) {
+            let successFound = false;
+            for (let prOption of this.props.product.productOptions) {
+                let success = 0;
+                for (let combination of prOption.productOptionCombination) {
+                    console.log(combination, 'option ptions combination ',this.state.options);
+                    if (this.state.options.some(option => option.optionId == combination.optionId && option.value == combination.optionValueId)) {
+                        success++
+                    }
+                }
+
+                console.log(success, 'success, sucees', this.state.options.length);
+
+                if (success == this.state.options.length) {
+                    successFound=true
+                    this.setState({
+                        slectedPr: prOption
+                    })
+                }
+                
+                if(!successFound) {
+                    // alert('else')
+                    this.setState({
+                        slectedPr: {}
+                    })
+                }
+            }
+        }
+
+    }
+
+
+
+    handleInputChange = (event, optionId) => {
+        console.log(event, optionId, 'event && optionId', this.state.options);
+
+        if (event != undefined && optionId != undefined) {
+
+            let index = this.state.options.findIndex(item => {
+                return item.optionValues.some(comb => comb.optionId === optionId)
+                //   return item.optionId === optionId
+            })
+            //    alert(index)
+            if (index > -1) {
+                this.state.options[index].value = event.target.value;
                 this.setState({
-                    productPlusOptions: this.state.productPlusOptions
+                    options: this.state.options
+                }, () => {
+                    this.getPrice()
                 })
 
             }
+
         }
     }
 
     render() {
 
-        console.log(this.state.quantity, "QuantitiyPrice");
+        console.log(this.state.slectedPr, "slectedPr slectedPr slectedPr");
 
         let CartObj = localStorage.getItem("state");
-        if(CartObj){
+        if (CartObj) {
             let Cart = JSON.parse(CartObj).cart;
         }
         const {
@@ -87,6 +151,7 @@ class Product extends Component {
             compareAddItem,
             cartAddItem,
         } = this.props;
+
         const { quantity } = this.state;
         let prices;
 
@@ -107,6 +172,7 @@ class Product extends Component {
                     <Label for="exampleSelect">{item.optionName}</Label>
                     <div className="select">
                         <select name={item.optionName} onChange={e => this.handleInputChange(e, item.optionId)}>
+                            <option value={null}>{'N/A'}</option>
                             {handleOptionValues(item.optionValues)}
                         </select>
                     </div>
@@ -115,56 +181,56 @@ class Product extends Component {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} type="file" name={item.optionName} id="exampleFile"/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} type="file" name={item.optionName} id="exampleFile" />
                 </div>
 
             } else if (item.optionTypeName === "Text") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} name={item.optionName} id="exampleText"/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} name={item.optionName} id="exampleText" />
                 </div>
 
             } else if (item.optionTypeName === "Date") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} type={"date"} name={item.optionName} id="exampleText"/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} type={"date"} name={item.optionName} id="exampleText" />
                 </div>
 
             } else if (item.optionTypeName === "TextArea") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{width:"55%"}} type="textarea" name={item.optionName} id="exampleTextArea"/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} type="textarea" name={item.optionName} id="exampleTextArea" />
                 </div>
 
             } else if (item.optionTypeName === "Checkbox") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} className="checkbox" style={{display:"block", marginLeft: "10px"}} type="checkbox" name={item.optionName}/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} className="checkbox" style={{ display: "block", marginLeft: "10px" }} type="checkbox" name={item.optionName} />
                 </div>
 
             } else if (item.optionTypeName === "Time") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{width:"55%"}} type="time"/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ width: "55%" }} type="time" />
                 </div>
 
             } else if (item.optionTypeName === "Radio") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{display: "block", marginLeft: "0.5rem"}} type="radio"/>
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" />
                 </div>
 
             } else if (item.optionTypeName === "Date & Time") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{width:"55%"}} type="datetime-local"/>
+                    <input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ width: "55%" }} type="datetime-local" />
                 </div>
             }
 
@@ -172,11 +238,11 @@ class Product extends Component {
         }
 
         const renderOptions = () => {
-            if (product.productOptions != null) {
-                return product.productOptions.map(item => {
+            if (this.state.options != null) {
+                return this.state.options.map(item => {
                     return <FormGroup>
                         {
-                            handleSelect(item.option)
+                            handleSelect(item)
                         }
                     </FormGroup>
                 })
@@ -269,27 +335,27 @@ class Product extends Component {
                             <li>Brand:<Link to="/">{product.manufacturerName}</Link></li>
                             {product.sku ?
                                 <li>SKU: {product.sku}</li>
-                                :null
+                                : null
                             }
                             {product.upc ?
                                 <li>UPC: {product.upc}</li>
-                                :null
+                                : null
                             }
                             {product.ean ?
                                 <li>EAN: {product.ean}</li>
-                                :null
+                                : null
                             }
                             {product.jan ?
                                 <li>JAN: {product.jan}</li>
-                                :null
+                                : null
                             }
                             {product.isbn ?
                                 <li>ISBN: {product.isbn}</li>
-                                :null
+                                : null
                             }
                             {product.mpn ?
                                 <li>ISBN: {product.mpn}</li>
-                                :null
+                                : null
                             }
                         </ul>
                     </div>
@@ -302,53 +368,11 @@ class Product extends Component {
                         </div>
 
                         <div className="product__prices">
-                            {prices}
+
+                            {this.state.slectedPr.optionPrice ? this.state.slectedPr.optionPrice : prices}
                         </div>
 
                         <form className="product__options">
-                            {/*<div className="form-group product__option">*/}
-                            {/*    <div className="product__option-label">Color</div>*/}
-                            {/*    <div className="input-radio-color">*/}
-                            {/*        <div className="input-radio-color__list">*/}
-                            {/*            <label*/}
-                            {/*                className="input-radio-color__item input-radio-color__item--white"*/}
-                            {/*                style={{color: '#fff'}}*/}
-                            {/*                data-toggle="tooltip"*/}
-                            {/*                title="White"*/}
-                            {/*            >*/}
-                            {/*                <input type="radio" name="color"/>*/}
-                            {/*                <span/>*/}
-                            {/*            </label>*/}
-                            {/*            <label*/}
-                            {/*                className="input-radio-color__item"*/}
-                            {/*                style={{color: '#ffd333'}}*/}
-                            {/*                data-toggle="tooltip"*/}
-                            {/*                title="Yellow"*/}
-                            {/*            >*/}
-                            {/*                <input type="radio" name="color"/>*/}
-                            {/*                <span/>*/}
-                            {/*            </label>*/}
-                            {/*            <label*/}
-                            {/*                className="input-radio-color__item"*/}
-                            {/*                style={{color: '#ff4040'}}*/}
-                            {/*                data-toggle="tooltip"*/}
-                            {/*                title="Red"*/}
-                            {/*            >*/}
-                            {/*                <input type="radio" name="color"/>*/}
-                            {/*                <span/>*/}
-                            {/*            </label>*/}
-                            {/*            <label*/}
-                            {/*                className="input-radio-color__item input-radio-color__item--disabled"*/}
-                            {/*                style={{color: '#4080ff'}}*/}
-                            {/*                data-toggle="tooltip"*/}
-                            {/*                title="Blue"*/}
-                            {/*            >*/}
-                            {/*                <input type="radio" name="color" disabled/>*/}
-                            {/*                <span/>*/}
-                            {/*            </label>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
                             <div className="form-group product__option">
                                 <h4>Available Options</h4>
                                 <div className="input-radio-label">
@@ -357,20 +381,6 @@ class Product extends Component {
                                         {renderOptions()}
 
                                     </Form>
-                                    {/*<div className="input-radio-label__list">*/}
-                                    {/*    <label>*/}
-                                    {/*        <input type="radio" name="material"/>*/}
-                                    {/*        <span>Metal</span>*/}
-                                    {/*    </label>*/}
-                                    {/*    <label>*/}
-                                    {/*        <input type="radio" name="material"/>*/}
-                                    {/*        <span>Wood</span>*/}
-                                    {/*    </label>*/}
-                                    {/*    <label>*/}
-                                    {/*        <input type="radio" name="material" disabled/>*/}
-                                    {/*        <span>Plastic</span>*/}
-                                    {/*    </label>*/}
-                                    {/*</div>*/}
                                 </div>
                             </div>
                             <div className="form-group product__option">
@@ -391,10 +401,10 @@ class Product extends Component {
                                         <AsyncAction
                                             action={() => {
                                                 let prr = product
-                                                prr.productOptions = this.state.productPlusOptions
+                                                // prr.productOptions = this.state.productPlusOptions
                                                 return cartAddItem(prr, [], quantity)
                                             }}
-                                            render={({run, loading}) => (
+                                            render={({ run, loading }) => (
                                                 <button
                                                     type="button"
                                                     onClick={run}
