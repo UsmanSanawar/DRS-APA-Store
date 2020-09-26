@@ -204,7 +204,7 @@ class ProductGallery extends Component {
 
         const featured = images.map((image, index) => (
             <Link key={index} to={`${IMAGE_URL}/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
-                <img src={`${IMAGE_URL}/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
+                <img style={{maxHeight: "400px"}}  src={`${IMAGE_URL}/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
             </Link>
         ));
 

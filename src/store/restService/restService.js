@@ -24,10 +24,10 @@ const RestService = {
     getProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/${prId}`,
         RestService.getHeader()),
 
-        getAllCategories: (prId) => axios.get(`${BASE_URL}/masterdata/ProductCategories/0/0`,
+    getAllCategories: () => axios.get(`${BASE_URL}/masterdata/ProductCategories/0/0`,
         RestService.getHeader()),
 
-        getProductOptionCombination: (prId)=> axios.get(`${BASE_URL}/masterdata/ProductOptionCombination/${prId}`,
+    getProductOptionCombination: (prId) => axios.get(`${BASE_URL}/masterdata/ProductOptionCombination/onProductId/${prId}`,
         RestService.getHeader()),
 
 

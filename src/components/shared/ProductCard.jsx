@@ -55,7 +55,7 @@ function ProductCard(props) {
     if (product.images && product.images.length > 0) {
         image = (
             <div className="product-card__image">
-                <Link to={`/shop/product/${product.id}`}><img style={{borderRadius: "30px"}} src={product.images[0]} alt="" /></Link>
+                    <Link to={`/shop/product/${product.id}`}><img src={product.images[0]} alt="Product" style={{maxWidth: "230px", maxHeight: "230px", width: "100%"}} /></Link>
             </div>
         );
     }

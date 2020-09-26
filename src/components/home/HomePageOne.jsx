@@ -36,6 +36,9 @@ function HomePageOne() {
                             images.push(`http://192.3.213.101:3450/Uploads/${image.name}`)
                         })
                     }
+                    console.log(images.sort(function(x, y) {
+                        return (x === y) ? 0 : x ? -1 : 1;
+                    }), "dsadsadsad")
 
                     array.push(
                     {
