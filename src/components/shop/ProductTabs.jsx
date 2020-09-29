@@ -38,7 +38,7 @@ class ProductTabs extends Component {
             { key: 'description', title: 'Description', content: <div dangerouslySetInnerHTML={{__html:product? product.description: ''}} />  },
             { key: 'specification', title: 'Specification', content: <ProductTabSpecification product={product} /> },
             { key: 'custom-tab', title: product ? product.newTabName : '' , content: <div dangerouslySetInnerHTML={{__html:product? product.newTabContent: ''}} /> },
-            { key: 'reviews', title: 'Reviews', content: <ProductTabReviews  /> },
+            { key: 'reviews', title: 'Reviews', content: <ProductTabReviews productId={product.productId}  /> },
         ];
         // newTabContent
         const tabsButtons = tabs.map((tab) => {

@@ -48,8 +48,8 @@ function HomePageOne() {
                         compareAtPrice: null, //need be added to DTO
                         images: images,
                         badges: [''],
-                        rating: 3,
-                        reviews: 15,
+                        rating: item.totalRating,
+                        reviews: item.totalReviewsCount,
                         availability: 'in-stock',
                         features: [
                         { name: 'Speed', value: '750 RPM' },

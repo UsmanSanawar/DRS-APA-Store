@@ -234,7 +234,6 @@ class Product extends Component {
                 </div>
             }
 
-
         }
 
         const renderOptions = () => {
@@ -259,6 +258,11 @@ class Product extends Component {
             );
         } else {
             prices = <Currency value={product.price} />;
+        }
+
+        const getRatingCal = () =>{
+            return product.totalRating /product.totalReviewsCount 
+            
         }
 
         console.log(layout, "|LAayout")
@@ -307,12 +311,10 @@ class Product extends Component {
                         <h1 className="product__name">{product.productName}</h1>
                         <div className="product__rating">
                             <div className="product__rating-stars">
-                                <Rating value={product.rating} />
+                                <Rating value={getRatingCal()} />
                             </div>
                             <div className="product__rating-legend">
-                                <Link to="/">{`${product.reviews ? product.reviews : 0} Reviews`}</Link>
-                                <span>/</span>
-                                <Link to="/">Write A Review</Link>
+                               <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0} Reviews`}</span>
                             </div>
                         </div>
                         <div className="product__description">

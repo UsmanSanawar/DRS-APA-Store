@@ -9,6 +9,15 @@ const RestService = {
             'Content-Type': 'application/json',
         },
     }),
+
+
+    getReviews:( prId=0,currentPage=1, pageSize=10 ) => axios.get(`${BASE_URL}/masterdata/Reviews/${currentPage}/${pageSize}?productId=${prId}`, FormData, 
+    RestService.getHeader()),
+
+
+    postReview:(FormData) => axios.post(`${BASE_URL}/masterdata/Reviews`, FormData, 
+    RestService.getHeader()),
+
     getWebPageComponentByPageId: (id) => axios.get(`${BASE_URL}/website/WebPageComponent/GetWebPageComponentsOnPageId/${id}`,
         RestService.getHeader()),
 

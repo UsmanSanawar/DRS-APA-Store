@@ -87,6 +87,7 @@ function ProductCard(props) {
         );
     }
 
+
     return (
         <div className={containerClasses}>
             {/*<AsyncAction*/}
@@ -111,7 +112,7 @@ function ProductCard(props) {
                      <Link to={`/shop/product/${product.id}`}>{product.name}</Link>
                 </div>
                 <div className="product-card__rating">
-                    <Rating value={product.rating} />
+                    <Rating value={product.rating /product.reviews} />
                     <div className=" product-card__rating-legend">{`${product.reviews} Reviews`}</div>
                 </div>
                 {features}
