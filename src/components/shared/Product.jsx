@@ -261,8 +261,8 @@ class Product extends Component {
         }
 
         const getRatingCal = () =>{
-            return product.totalRating /product.totalReviewsCount 
-            
+            return product.totalRating /product.totalReviewsCount
+
         }
 
         console.log(layout, "|LAayout")
@@ -330,7 +330,7 @@ class Product extends Component {
                         <ul className="product__meta">
                             <li className="product__meta-availability">
                                 Availability:
-                                {' '}
+                                {console.log(product, "availableii")}
                                 <span className="text-success">{product.stockStatusName}</span>
                             </li>
 

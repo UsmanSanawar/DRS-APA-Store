@@ -14,7 +14,6 @@ import FilterPrice from '../filters/FilterPrice';
 import FilterRadio from '../filters/FilterRadio';
 import { ArrowRoundedDown12x7Svg } from '../../svg';
 
-
 function WidgetFilters(props) {
     const { title, filters, offcanvas } = props;
 
@@ -32,9 +31,11 @@ function WidgetFilters(props) {
                     name={filter.options.name}
                 />
             );
-        } else if (filter.type === 'color') {
-            filterView = <FilterColor items={filter.options.items} />;
-        } else if (filter.type === 'price') {
+        }
+        // else if (filter.type === 'color') {
+        //     filterView = <FilterColor items={filter.options.items} />;
+        // }
+        else if (filter.type === 'price') {
             filterView = (
                 <FilterPrice
                     from={filter.options.from}

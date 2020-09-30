@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 
 // third-party
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
+import PropTypes, {array} from 'prop-types';
 import { connect } from 'react-redux';
+import InfiniteScroll from "react-infinite-scroll-component";
 
 // application
 import Pagination from '../shared/Pagination';
@@ -16,6 +17,8 @@ import {
     LayoutList16x16Svg,
 } from '../../svg';
 import { sidebarOpen } from '../../store/sidebar';
+import RestService from "../../store/restService/restService";
+import CircularLoader from "../../assets/loaders";
 
 
 class ProductsView extends Component {
@@ -23,7 +26,10 @@ class ProductsView extends Component {
         super(props);
 
         this.state = {
-            page: 1,
+            pageNumber: 1,
+            itemLength: 10,
+            products: [],
+            headers: {}
         };
     }
 
@@ -31,19 +37,84 @@ class ProductsView extends Component {
         this.setState(() => ({ layout }));
     };
 
-    handlePageChange = (page) => {
-        this.setState(() => ({ page }));
-    };
+    componentDidMount() {
+        this.handleGetProducts(1,10,"");
+    }
+
+    handleGetProducts = (pageNumber, itemLength, filter) => {
+        RestService.getProductsByPageAndFilter(pageNumber, itemLength, filter).then(res => {
+
+            if (res) {
+                this.setState({
+                    headers: JSON.parse(res.headers["x-pagination"])
+                })
+            }
+
+            if (res.data.status === "success") {
+                let data = res.data.data;
+                let array = [];
+                data.map(item => {
+                    let images = [];
+                    if (item.productPhotos.length > 0) {
+
+                        item.productPhotos.map(image => {
+                            images.push(`http://192.3.213.101:3450/Uploads/${image.name}`)
+                        })
+                    }
+                    console.log(images.sort(function(x, y) {
+                        return (x === y) ? 0 : x ? -1 : 1;
+                    }), "dsadsadsad")
+
+                    array.push(
+                        {
+                            id: item.productId,
+                            name: item.productName,
+                            price: item.price,
+                            model: item.manufacturerName,
+                            compareAtPrice: null, //need be added to DTO
+                            images: images,
+                            badges: [''],
+                            rating: item.totalRating,
+                            reviews: item.totalReviewsCount,
+                            availability: item.stockStatusName,
+                            features: [
+                                { name: 'Length', value: item.length + " " + item.lengthUnitName },
+                                { name: 'Width', value: item.width + " " + item.lengthUnitName },
+                                { name: 'Height', value: item.height + " " + item.lengthUnitName },
+                                { name: 'Weight', value: item.weight + " " + (item.weightUnitName != null? item.weightUnitName : "") },
+                            ],
+                            options: item.productOptions,
+                        })
+                })
+
+                this.setState({
+                    products: [...this.state.products, ...array]
+                })
+            }
+        })
+    }
+
+    // handlePageChange = (page) => {
+    //     this.setState(() => ({ page }));
+    // };
+
+    fetchMoreData = () => {
+        let page = this.state.pageNumber + 1;
+
+        console.log(this.state.pageNumber, "asdsadasdsadsad")
+
+        this.handleGetProducts(parseInt(page), this.state.itemLength, "");
+    }
 
     render() {
         const {
-            products,
             grid,
             offcanvas,
             layout: propsLayout,
             sidebarOpen,
         } = this.props;
-        const { page, layout: stateLayout } = this.state;
+
+        const { page, layout: stateLayout, products, headers } = this.state;
         const layout = stateLayout || propsLayout;
 
         let viewModes = [
@@ -70,12 +141,6 @@ class ProductsView extends Component {
             );
         });
 
-        const productsList = products.map((product) => (
-            <div key={product.id} className="products-list__item">
-                <ProductCard product={product} />
-            </div>
-        ));
-
         const viewOptionsClasses = classNames('view-options', {
             'view-options--offcanvas--always': offcanvas === 'always',
             'view-options--offcanvas--mobile': offcanvas === 'mobile',
@@ -99,7 +164,7 @@ class ProductsView extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="view-options__legend">Showing 6 of 98 products</div>
+                        {/*<div className="view-options__legend">Showing 6 of 98 products</div>*/}
                         <div className="view-options__divider" />
                         <div className="view-options__control">
                             <label htmlFor="view-options-sort">Sort By</label>
@@ -110,15 +175,15 @@ class ProductsView extends Component {
                                 </select>
                             </div>
                         </div>
-                        <div className="view-options__control">
-                            <label htmlFor="view-options-limit">Show</label>
-                            <div>
-                                <select className="form-control form-control-sm" name="" id="view-options-limit">
-                                    <option value="">12</option>
-                                    <option value="">24</option>
-                                </select>
-                            </div>
-                        </div>
+                        {/*<div className="view-options__control">*/}
+                        {/*    <label htmlFor="view-options-limit">Show</label>*/}
+                        {/*    <div>*/}
+                        {/*        <select className="form-control form-control-sm" name="" id="view-options-limit">*/}
+                        {/*            <option value="10">10</option>*/}
+                        {/*            <option value="20">20</option>*/}
+                        {/*        </select>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
 
@@ -127,19 +192,45 @@ class ProductsView extends Component {
                     data-layout={layout !== 'list' ? grid : layout}
                     data-with-features={layout === 'grid-with-features' ? 'true' : 'false'}
                 >
-                    <div className="products-list__body">
-                        {productsList}
-                    </div>
+
+                    {console.log(this.state.products.length <= headers.totalCount, "condition", "plength",this.state.products.length , "totalC", headers.totalCount )}
+
+                        <InfiniteScroll
+                            dataLength={this.state.itemLength}
+                            next={this.fetchMoreData}
+                            hasMore={!(this.state.products.length === headers.totalCount)}
+                            loader={<div style={{textAlign: "center"}}><CircularLoader/></div>}
+                            scrollableTarget
+                            endMessage={
+                                <p style={{ textAlign: "center", marginTop: 10}}>
+                                    <b>No further records found !</b>
+                                </p>
+                            }
+                        >
+                            <div className="products-list__body">
+
+                            {
+                                products.map((product) => (
+                                    <div key={product.id} className="products-list__item">
+                                        <ProductCard product={product} />
+                                    </div>
+                                ))
+                            }
+                            </div>
+
+                        </InfiniteScroll>
+
+
                 </div>
 
-                <div className="products-view__pagination">
-                    <Pagination
-                        current={page}
-                        siblings={2}
-                        total={10}
-                        onPageChange={this.handlePageChange}
-                    />
-                </div>
+                {/*<div className="products-view__pagination">*/}
+                {/*    <Pagination*/}
+                {/*        current={page}*/}
+                {/*        siblings={2}*/}
+                {/*        total={10}*/}
+                {/*        onPageChange={this.handlePageChange}*/}
+                {/*    />*/}
+                {/*</div>*/}
             </div>
         );
     }

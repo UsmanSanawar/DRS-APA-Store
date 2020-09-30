@@ -35,6 +35,8 @@ function ProductCard(props) {
         'product-card--layout--horizontal': layout === 'horizontal',
     });
 
+    console.log(product, "productProps")
+
     let badges = [];
     let image;
     let price;
@@ -55,7 +57,7 @@ function ProductCard(props) {
     if (product.images && product.images.length > 0) {
         image = (
             <div className="product-card__image">
-                    <Link to={`/shop/product/${product.id}`}><img src={product.images[0]} alt="Product" style={{maxWidth: "230px", maxHeight: "230px", width: "100%"}} /></Link>
+                    <Link to={`/shop/product/${product.id}`}><img src={product.images[0]} alt="Product" /></Link>
             </div>
         );
     }
@@ -86,7 +88,6 @@ function ProductCard(props) {
             </ul>
         );
     }
-
 
     return (
         <div className={containerClasses}>
@@ -125,10 +126,15 @@ function ProductCard(props) {
 
                 <div className="product-card__availability">
                     Availability:
-                    <span className="text-success">In Stock</span>
+                    <span className="text-success">  {product.availability}</span>
                 </div>
-                {price}
 
+                <div className="product-card__availability">
+                    Model:
+                    <span style={{fontWeight: "bold", color: "black"}}>  {product.model}</span>
+                </div>
+
+                {price}
 
                 <div className="product-card__buttons">
                     <AsyncAction

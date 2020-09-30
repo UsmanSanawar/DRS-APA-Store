@@ -11,11 +11,11 @@ const RestService = {
     }),
 
 
-    getReviews:( prId=0,currentPage=1, pageSize=10 ) => axios.get(`${BASE_URL}/masterdata/Reviews/${currentPage}/${pageSize}?productId=${prId}`, FormData, 
+    getReviews:( prId=0,currentPage=1, pageSize=10 ) => axios.get(`${BASE_URL}/masterdata/Reviews/${currentPage}/${pageSize}?productId=${prId}`, FormData,
     RestService.getHeader()),
 
 
-    postReview:(FormData) => axios.post(`${BASE_URL}/masterdata/Reviews`, FormData, 
+    postReview:(FormData) => axios.post(`${BASE_URL}/masterdata/Reviews`, FormData,
     RestService.getHeader()),
 
     getWebPageComponentByPageId: (id) => axios.get(`${BASE_URL}/website/WebPageComponent/GetWebPageComponentsOnPageId/${id}`,
@@ -28,6 +28,9 @@ const RestService = {
         RestService.getHeader()),
 
     getProducts: () => axios.get(`${BASE_URL}/masterdata/Products/0/0`,
+        RestService.getHeader()),
+
+    getProductsByPageAndFilter: (pageNumber, pageSize, filter = null) => axios.get(`${BASE_URL}/masterdata/Products/${pageNumber}/${pageSize}?category=${filter}`,
         RestService.getHeader()),
 
     getProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/${prId}`,

@@ -55,6 +55,7 @@
 .product-card__image {
     padding: 18px;
     flex-shrink: 0;
+    overflow-y: hidden;
 
     a {
         display: block;
