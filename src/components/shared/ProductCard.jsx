@@ -130,7 +130,7 @@ function ProductCard(props) {
                 </div>
 
                 <div className="product-card__availability">
-                    Model:
+                    Manufacturer:
                     <span style={{fontWeight: "bold", color: "black"}}>  {product.model}</span>
                 </div>
 

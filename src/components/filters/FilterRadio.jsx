@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 function FilterRadio(props) {
     const { items, name } = props;
 
-    const itemsList = items.map((item) => {
+    const itemsList = items.map((item) => { 
         let count;
 
         if (item.count) {

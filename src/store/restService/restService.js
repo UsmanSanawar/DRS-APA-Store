@@ -41,6 +41,9 @@ const RestService = {
 
     getProductOptionCombination: (prId) => axios.get(`${BASE_URL}/masterdata/ProductOptionCombination/onProductId/${prId}`,
         RestService.getHeader()),
+   
+    getAllManufacturer: (prId) => axios.get(`${BASE_URL}/masterdata/Manufacturers/0/0`,
+        RestService.getHeader()),
 
 
 };

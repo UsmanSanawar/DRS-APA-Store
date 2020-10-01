@@ -32,9 +32,9 @@ function WidgetFilters(props) {
                 />
             );
         }
-        // else if (filter.type === 'color') {
-        //     filterView = <FilterColor items={filter.options.items} />;
-        // }
+        else if (filter.type === 'color') {
+            filterView = <FilterColor items={filter.options.items} />;
+        }
         else if (filter.type === 'price') {
             filterView = (
                 <FilterPrice
