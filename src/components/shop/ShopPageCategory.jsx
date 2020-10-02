@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useState } from 'react';
 
 // third-party
 import PropTypes from 'prop-types';
@@ -18,6 +18,24 @@ import theme from '../../data/theme';
 
 
 function ShopPageCategory(props) {
+
+
+    const [Filters, setFilters] = useState({
+        priceRange: [],
+        manufacturers: [],
+        category: null,
+    });
+
+    function onChange(key, value) {
+        Filters[key] = value;
+
+        setFilters({...Filters});
+    }
+
+
+    console.log(Filters, "Filters Parent out Func")
+
+
     const {
         columns,
         viewMode,
@@ -36,19 +54,18 @@ function ShopPageCategory(props) {
             <div className="container">
                 <div className="block">
                     <ProductsView
-                        products={products}
                         layout={viewMode}
                         grid={`grid-${columns}-full`}
                         limit={15}
                         offcanvas={offcanvas}
                     />
                 </div>
-                {<CategorySidebar offcanvas={offcanvas} />}
+                {<CategorySidebar onChange={onChange} offcanvas={offcanvas} />}
             </div>
         );
     } else {
         const sidebar = (
-            <div className="shop-layout__sidebar">{<CategorySidebar offcanvas={offcanvas} />}</div>
+            <div className="shop-layout__sidebar">{<CategorySidebar onChange={onChange} offcanvas={offcanvas} />}</div>
         );
 
         content = (
@@ -58,7 +75,8 @@ function ShopPageCategory(props) {
                     <div className="shop-layout__content">
                         <div className="block">
                             <ProductsView
-                                products={products}
+                                sideFilters={Filters}
+                                // products={products}
                                 layout={viewMode}
                                 grid="grid-3-sidebar"
                                 limit={15}
@@ -71,6 +89,7 @@ function ShopPageCategory(props) {
             </div>
         );
     }
+
 
     return (
         <React.Fragment>

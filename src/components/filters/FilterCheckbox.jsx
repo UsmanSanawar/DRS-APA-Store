@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useState } from 'react';
 
 // third-party
 import classNames from 'classnames';
@@ -11,6 +11,25 @@ import { Check9x7Svg } from '../../svg';
 
 function FilterCheckbox(props) {
     const { items } = props;
+
+  const [manufacturer, setmanufaturer] = useState([])
+    function onCheckboxChange(event, id) {
+        if (event.target.checked) {
+                manufacturer.push(id)                
+        } else {
+            if (manufacturer.includes(id)) {
+                let index = manufacturer.indexOf(id);
+                if (index > -1) {
+                    manufacturer.splice(index, 1);                    
+                }
+            }
+        }
+
+        console.log("manufacturers", manufacturer);
+        setmanufaturer(manufacturer)
+
+        props.onChange("manufacturers", manufacturer)
+    }
 
     const itemsList = items.map((item) => {
         let count;
@@ -28,7 +47,7 @@ function FilterCheckbox(props) {
             >
                 <span className="filter-list__input input-check">
                     <span className="input-check__body">
-                        <input className="input-check__input" type="checkbox" defaultChecked={item.checked} disabled={item.disabled} />
+                        <input className="input-check__input" onChange={(event) => onCheckboxChange(event, item.id)}  type="checkbox" defaultChecked={item.checked} disabled={item.disabled} />
                         <span className="input-check__box" />
                         <Check9x7Svg className="input-check__icon" />
                     </span>

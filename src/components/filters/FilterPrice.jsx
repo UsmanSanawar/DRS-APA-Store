@@ -21,7 +21,14 @@ export default class FilterPrice extends Component {
             from: value.min,
             to: value.max,
         }));
+
+        this.props.onChange("priceRange", [value.min, value.max])
     };
+
+    componentDidMount() {
+        this.props.onChange("priceRange", [this.props.from, this.props.to])
+    }
+    
 
     render() {
         const { from: stateFrom, to: stateTo } = this.state;

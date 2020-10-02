@@ -21,6 +21,7 @@ import RestService from "../../store/restService/restService";
 import {} from "../../store/webView.js";
 
 function CategorySidebar(props) {
+   
     const [manufacturer, setManufacturer] = useState([]);
     const [category, setCategory] = useState([]);
     const PriceFilter = {
@@ -29,8 +30,8 @@ function CategorySidebar(props) {
         type: 'price',
         options: {
             min: 1,
-            max: 10000,
-            from: 200,
+            max: 3000,
+            from: 1,
             to: 1000,
         },
     };
@@ -192,7 +193,7 @@ function CategorySidebar(props) {
                     </button>
                 </div>
                 <div className="block-sidebar__item">
-                    <WidgetFilters title="Filters" filters={[manufacturer, PriceFilter ,category]} offcanvas={offcanvas} />
+                    <WidgetFilters title="Filters" onChange={props.onChange} filters={[manufacturer, PriceFilter ,category]} offcanvas={offcanvas} />
                 </div>
                 {/* {offcanvas !== 'always' && (
                         <div className="block-sidebar__item d-none d-lg-block">

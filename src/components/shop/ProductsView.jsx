@@ -29,7 +29,8 @@ class ProductsView extends Component {
             pageNumber: 1,
             itemLength: 10,
             products: [],
-            headers: {}
+            headers: {},
+            filters: {}
         };
     }
 
@@ -38,10 +39,24 @@ class ProductsView extends Component {
     };
 
     componentDidMount() {
-        this.handleGetProducts(1,10,"");
+        this.handleGetProducts(1, 10, this.props.sideFilters);
     }
 
-    handleGetProducts = (pageNumber, itemLength, filter) => {
+    componentDidUpdate(prevProps, prevState) {
+
+
+        if (prevProps.sideFilters != this.props.sideFilters) {
+            this.state.pageNumber = 1;
+            this.handleGetProducts(this.state.pageNumber, this.state.itemLength, this.props.sideFilters, true);  
+            
+            this.setState({
+                pageNumber: this.state.pageNumber
+            })
+        }
+    }
+    
+
+    productAPI = (pageNumber, itemLength, filter) => {
         RestService.getProductsByPageAndFilter(pageNumber, itemLength, filter).then(res => {
 
             if (res) {
@@ -61,9 +76,6 @@ class ProductsView extends Component {
                             images.push(`http://192.3.213.101:3450/Uploads/${image.name}`)
                         })
                     }
-                    console.log(images.sort(function(x, y) {
-                        return (x === y) ? 0 : x ? -1 : 1;
-                    }), "dsadsadsad")
 
                     array.push(
                         {
@@ -88,10 +100,27 @@ class ProductsView extends Component {
                 })
 
                 this.setState({
-                    products: [...this.state.products, ...array]
+                    products: [...this.state.products, ...array].filter((v,i,a)=>a.findIndex(t=>(JSON.stringify(t) === JSON.stringify(v)))===i)
                 })
             }
         })
+
+    }
+
+
+    handleGetProducts = (pageNumber, itemLength, filter, didUpdate) => {
+
+        if (didUpdate) {
+            this.setState({
+                products: []
+            })
+            this.productAPI(pageNumber, itemLength, filter);
+    
+        } else {
+            this.productAPI(pageNumber, itemLength, filter);
+        }
+
+        
     }
 
     // handlePageChange = (page) => {
@@ -99,14 +128,24 @@ class ProductsView extends Component {
     // };
 
     fetchMoreData = () => {
-        let page = this.state.pageNumber + 1;
 
-        console.log(this.state.pageNumber, "asdsadasdsadsad")
 
-        this.handleGetProducts(parseInt(page), this.state.itemLength, "");
+        let page = 1
+        if (this.state.headers.totalPages != this.state.pageNumber) {
+            page = this.state.pageNumber + 1;
+            
+            this.handleGetProducts(parseInt(page), this.state.itemLength, this.props.sideFilters);
+        }
+        
+        this.setState({
+            pageNumber: page
+        })
     }
 
     render() {
+
+        console.log("render this.State", this.state)
+
         const {
             grid,
             offcanvas,
@@ -193,11 +232,11 @@ class ProductsView extends Component {
                     data-with-features={layout === 'grid-with-features' ? 'true' : 'false'}
                 >
 
-                    {console.log(this.state.products.length <= headers.totalCount, "condition", "plength",this.state.products.length , "totalC", headers.totalCount )}
+                    {console.log(this.state.products.length , !(this.state.products.length === headers.totalCount) , headers.totalCount )}
 
                         <InfiniteScroll
-                            dataLength={this.state.itemLength}
-                            next={this.fetchMoreData}
+                            dataLength={this.state.products.length} //it needs to be setted to the current data we have
+                            next={ this.fetchMoreData }
                             hasMore={!(this.state.products.length === headers.totalCount)}
                             loader={<div style={{textAlign: "center"}}><CircularLoader/></div>}
                             scrollableTarget

@@ -22,7 +22,7 @@ function FilterCategories(props) {
         return (
             <li key={category.id} className={`filter-categories__item filter-categories__item--${category.type}`}>
                 {arrow}
-                <Link to="/">{category.name}</Link>
+                <p style={{cursor: "pointer"}} onClick={()=>props.onChange("category" ,category.id)}>{category.name}</p>
                 <div className="filter-categories__counter">{category.count}</div>
             </li>
         );
