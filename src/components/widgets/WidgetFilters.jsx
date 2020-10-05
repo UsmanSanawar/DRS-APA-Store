@@ -77,12 +77,12 @@ function WidgetFilters(props) {
                 {/* <button type="button" className="btn btn-primary btn-sm">
                     Filter
                 </button> */}
-                <button
+                {/* <button
                     type="button"
                     className="btn btn-secondary btn-sm ml-2"
                 >
                     Reset Filters
-                </button>
+                </button> */}
             </div>
         </div>
     );
