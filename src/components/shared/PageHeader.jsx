@@ -54,8 +54,8 @@ function PageHeader(props) {
     return (
         <div className="page-header">
             <div className="page-header__container container">
-                {breadcrumb}
-                {header}
+                {/* {breadcrumb} */}
+                {/* {header} */}
             </div>
         </div>
     );

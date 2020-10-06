@@ -19,6 +19,8 @@ import {
 import { sidebarOpen } from '../../store/sidebar';
 import RestService from "../../store/restService/restService";
 import CircularLoader from "../../assets/loaders";
+import { IMAGE_URL } from '../../constant/constants'
+
 
 
 class ProductsView extends Component {
@@ -73,7 +75,7 @@ class ProductsView extends Component {
                     if (item.productPhotos.length > 0) {
 
                         item.productPhotos.map(image => {
-                            images.push(`http://192.3.213.101:3450/Uploads/${image.name}`)
+                            images.push(`${IMAGE_URL}/${image.name}`)
                         })
                     }
 

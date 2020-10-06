@@ -110,7 +110,7 @@ export default [
     //                     { title: '5 Columns Full', url: '/shop/category-grid-5-columns-full' },
     //                 ],
     //             },
-    //             { title: 'Shop List', url: '/shop/category-list' },
+    //             { title: 'Shop List', url: '/store/category-list' },
     //             { title: 'Shop Right Sidebar', url: '/shop/category-right-sidebar' },
     //             {
     //                 title: 'Product',

@@ -94,7 +94,7 @@ export default class BlockTabbedProductsCarousel extends Component {
     redirectToProductPage = (item) => {
         console.log(item.name, "ssssse")
         if (item.name === "View All") {
-            return this.props.history.push("/shop/category-list")
+            return this.props.history.push("/store/category-list")
         }
     }
 
