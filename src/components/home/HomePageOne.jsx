@@ -18,6 +18,7 @@ import posts from '../../data/blogPosts';
 import products from '../../data/shopProducts';
 import theme from '../../data/theme';
 import RestService from "../../store/restService/restService";
+import { IMAGE_URL } from '../../constant/constants';
 
 function HomePageOne() {
 
@@ -33,7 +34,7 @@ function HomePageOne() {
                     if (item.productPhotos.length > 0) {
 
                         item.productPhotos.map(image => {
-                            images.push(`http://192.3.213.101:3450/Uploads/${image.name}`)
+                            images.push(`${IMAGE_URL}/${image.name}`)
                         })
                     }
                     console.log(images.sort(function(x, y) {

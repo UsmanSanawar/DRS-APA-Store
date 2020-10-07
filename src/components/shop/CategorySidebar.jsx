@@ -193,7 +193,7 @@ function CategorySidebar(props) {
                     </button>
                 </div>
                 <div className="block-sidebar__item">
-                    <WidgetFilters title="Filters" onChange={props.onChange} filters={[manufacturer, PriceFilter ,category]} offcanvas={offcanvas} />
+                    <WidgetFilters title="Filters" onChange={props.onChange} filters={[category, manufacturer, PriceFilter]} offcanvas={offcanvas} />
                 </div>
                 {/* {offcanvas !== 'always' && (
                         <div className="block-sidebar__item d-none d-lg-block">

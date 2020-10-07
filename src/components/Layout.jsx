@@ -119,7 +119,7 @@ function Layout(props) {
                         />
                         <Route
                             exact
-                            path="/shop/category-list"
+                            path="/store/category-list"
                             render={(props) => (
                                 <ShopPageCategory {...props} columns={3} viewMode="list" sidebarPosition="start" />
                             )}

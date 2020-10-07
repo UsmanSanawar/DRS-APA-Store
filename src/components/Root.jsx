@@ -1,19 +1,14 @@
 // react
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 // third-party
-import PropTypes from 'prop-types';
-import {
-    HashRouter,
-    Route,
-    Redirect,
-    Switch,
-} from 'react-router-dom';
-import { connect } from 'react-redux';
-import { IntlProvider } from 'react-intl';
+import PropTypes from "prop-types";
+import { HashRouter, Route, Redirect, Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import { IntlProvider } from "react-intl";
 
 // application
-import messages from '../i18n';
+import messages from "../i18n";
 
 // pages
 import Layout from './Layout';
@@ -24,14 +19,14 @@ import ScrollToTop from "./scrollToTop"
 class Root extends Component {
     componentDidMount() {
         setTimeout(() => {
-            const preloader = document.querySelector('.site-preloader');
+            const preloader = document.querySelector(".site-preloader");
 
-            preloader.addEventListener('transitionend', (event) => {
-                if (event.propertyName === 'opacity') {
+            preloader.addEventListener("transitionend", (event) => {
+                if (event.propertyName === "opacity") {
                     preloader.parentNode.removeChild(preloader);
                 }
             });
-            preloader.classList.add('site-preloader__fade');
+            preloader.classList.add("site-preloader__fade");
         }, 500);
 
         window.scrollTo(0, 0);

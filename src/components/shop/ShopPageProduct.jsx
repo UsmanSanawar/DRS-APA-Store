@@ -37,9 +37,9 @@ function ShopPageProduct(props) {
     // }
 
     const breadcrumb = [
-        {title: 'Home', url: ''},
-        {title: 'Screwdrivers', url: ''},
-        {title: product.productName, url: ''},
+        // {title: 'Home', url: ''},
+        // {title: 'Screwdrivers', url: ''},
+        // {title: product.productName, url: ''},
     ];
 
 
