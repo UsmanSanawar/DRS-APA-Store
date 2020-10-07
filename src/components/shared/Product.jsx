@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, FormGroup, Input, Label } from "reactstrap";
 // application
+import { Helmet } from 'react-helmet';
 import AsyncAction from './AsyncAction';
 import Currency from './Currency';
 import InputNumber from './InputNumber';
@@ -19,7 +20,7 @@ import { Compare16Svg, Wishlist16Svg } from '../../svg';
 import { wishlistAddItem } from '../../store/wishlist';
 import "../../assets/CSS/customStylesForInputs.css";
 import RestService from '../../store/restService/restService';
-
+import { BASE_URL, IMAGE_URL } from "../../constant/constants"
 
 class Product extends Component {
     constructor(props) {
@@ -35,6 +36,11 @@ class Product extends Component {
 
 
     componentDidMount() {
+        console.log(window.addthis.layers(), 'wondow addt this c');
+
+        if (window.addthis && window.addthis.layers) {
+            window.addthis.layers();
+        }
         if (this.props.product.minimumQuantity) {
             this.setState({
                 quantity: parseInt(this.props.product.minimumQuantity)
@@ -53,15 +59,35 @@ class Product extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.product != prevProps.product) {
+            const { product } = this.props
+            const { prForShar } = this.state
+            //  prForShar.data_url = 'http://192.3.213.101:2550/#/shop/product/104'
+            //  prForShar.data_title = product.productName
+            //  prForShar.data_media = product.productPhotos.length > 0 ? `${IMAGE_URL}/${product.productPhotos[0].name}`: ''
 
-            this.getProductOptionCombination()
             // this.setState({
-            //     productPlusOptions: this.props.product.productOptions
+            //     prForShar
+            // },()=>{
+            //     if(window.addthis){
+            //         window.addthis.layers.refresh();
+            //     }
+
             // })
 
+
+
+            // window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png');
+            // window.addthis.update('share', 'url', 'http://192.3.213.101:2550/#/shop/product/104');
+
+
+            console.log(product.productPhotos.length > 0 ? IMAGE_URL + '/' + product.productPhotos[0].name : '', 'product.productPhotos[0].name image');
+
+
+            this.getProductOptionCombination()
             this.setState({
                 quantity: parseInt(this.props.product.minimumQuantity)
             })
+
 
         }
     }
@@ -85,7 +111,7 @@ class Product extends Component {
             for (let prOption of this.props.product.productOptions) {
                 let success = 0;
                 for (let combination of prOption.productOptionCombination) {
-                    console.log(combination, 'option ptions combination ',this.state.options);
+                    console.log(combination, 'option ptions combination ', this.state.options);
                     if (this.state.options.some(option => option.optionId == combination.optionId && option.value == combination.optionValueId)) {
                         success++
                     }
@@ -94,13 +120,13 @@ class Product extends Component {
                 console.log(success, 'success, sucees', this.state.options.length);
 
                 if (success == this.state.options.length) {
-                    successFound=true
+                    successFound = true
                     this.setState({
                         slectedPr: prOption
                     })
                 }
 
-                if(!successFound) {
+                if (!successFound) {
                     // alert('else')
                     this.setState({
                         slectedPr: {}
@@ -136,7 +162,23 @@ class Product extends Component {
         }
     }
 
+
+
     render() {
+
+        console.log(window.addthis, 'sdfaf');
+
+        // if(window.addthis){
+        //     if(document.getElementById('share-btn') != null){
+        //         document.getElementById('share-btn').setAttribute('data-media', 'http://i.imgur.com/sI5mrZP.png')
+        //     }
+
+        //     window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png'); 
+        //     window.addthis.media = "http://i.imgur.com/sI5mrZP.png";                
+        //     window.addthis.toolbox(".addthis_toolbox");
+        // }
+
+
         const {
             product,
             layout,
@@ -260,14 +302,23 @@ class Product extends Component {
             prices = <Currency value={product.price} />;
         }
 
-        const getRatingCal = () =>{
-            return product.totalRating /product.totalReviewsCount
+        const getRatingCal = () => {
+            return product.totalRating / product.totalReviewsCount
 
         }
 
         console.log(layout, "|LAayout")
         return (
             <div className={`product product--layout--${layout}`}>
+
+                <Helmet>
+                    <title>{`FAQ — ${product.productName}`}</title>
+                    <meta property="og:title" content="European Travel Destinations" />
+                    <meta property="og:description" content="Offering tour packages for individuals or groups." />
+                    <meta property="og:image" content="http://192.3.213.101:3450/Uploads/800px_COLOURBOX2650448.jpg" />
+                    <meta property="og:url" content="http://192.3.213.101:2550/#/shop/product/104"></meta>
+                </Helmet>
+
                 <div className="product__content">
                     <ProductGallery layout={layout} images={product.productPhotos} />
 
@@ -314,7 +365,7 @@ class Product extends Component {
                                 <Rating value={getRatingCal()} />
                             </div>
                             <div className="product__rating-legend">
-                               <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0} Reviews`}</span>
+                                <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0} Reviews`}</span>
                             </div>
                         </div>
                         <div className="product__description">
@@ -334,7 +385,7 @@ class Product extends Component {
                                 <span className="text-success">{product.stockStatusName}</span>
                             </li>
 
-                            {product.manufacturerName ? <li>Brand: {product.manufacturerName}</li> : null   }
+                            {product.manufacturerName ? <li>Brand: {product.manufacturerName}</li> : null}
 
                             {this.state.slectedPr.optionModel ?
                                 <li>Model: {this.state.slectedPr.optionModel}</li>
@@ -377,14 +428,14 @@ class Product extends Component {
                         <div className="product__prices">
                             {this.state.slectedPr.optionPrice ?
                                 this.state.slectedPr.priceParam === "equal" ?
-                                "$"+(this.state.slectedPr.optionPrice.toFixed(2))
+                                    "$" + (this.state.slectedPr.optionPrice.toFixed(2))
                                     : this.state.slectedPr.priceParam === "plus" ?
-                                    "$"+(this.state.slectedPr.optionPrice + product.price).toFixed(2)
-                                    : this.state.slectedPr.priceParam === "minus" ?
-                                        "$"+(this.state.slectedPr.optionPrice - product.price).toFixed(2)
-                                        : 0
-                                :prices
-                                }
+                                        "$" + (this.state.slectedPr.optionPrice + product.price).toFixed(2)
+                                        : this.state.slectedPr.priceParam === "minus" ?
+                                            "$" + (this.state.slectedPr.optionPrice - product.price).toFixed(2)
+                                            : 0
+                                : prices
+                            }
                         </div>
 
                         <form className="product__options">
@@ -448,15 +499,26 @@ class Product extends Component {
                         </div>
 
                         <div className="product__share-links share-links">
-                            <ul className="share-links__list">
+                            {/* <div className="addthis_inline_share_toolbox" data-url={'http://192.3.213.101:2550/#/shop/product/104'}
+                        data-description={product.description}
+                        data-title={product.productName} data-media={`${IMAGE_URL}/${product.productPhotos && product.productPhotos.length > 0 ? product.productPhotos[0].name: ''}`  }
+                        ></div> */}
+
+                            <div className="addthis_inline_share_toolbox"
+
+                                data-url="http://192.3.213.101:2550/#/shop/product/104"
+                                // data-title="The AddThis Blog"
+                                // data-media="http://192.3.213.101:3450/Uploads/800px_COLOURBOX2650448.jpg"
+
+                            ></div>
+                            {/* <ul className="share-links__list">
                                 <li className="share-links__item share-links__item--type--like"><Link to="/">Like</Link>
                                 </li>
                                 <li className="share-links__item share-links__item--type--tweet"><Link
                                     to="/">Tweet</Link></li>
                                 <li className="share-links__item share-links__item--type--pin"><Link to="/">Pin
                                     It</Link></li>
-                                {/* <li className="share-links__item share-links__item--type--counter"><Link to="/">4K</Link></li> */}
-                            </ul>
+                            </ul> */}
                         </div>
                     </div>
                 </div>

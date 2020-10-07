@@ -19,7 +19,7 @@ import messages from '../i18n';
 import Layout from './Layout';
 import HomePageOne from './home/HomePageOne';
 import HomePageTwo from './home/HomePageTwo';
-import CommonComp from "./common"
+import ScrollToTop from "./scrollToTop"
 
 class Root extends Component {
     componentDidMount() {
@@ -33,6 +33,8 @@ class Root extends Component {
             });
             preloader.classList.add('site-preloader__fade');
         }, 500);
+
+        window.scrollTo(0, 0);
     }
 
     render() {
@@ -40,7 +42,9 @@ class Root extends Component {
 
         return (
             <IntlProvider locale={locale} messages={messages[locale]}>
-                <HashRouter basename={process.env.PUBLIC_URL}>
+                
+                <HashRouter basename={process.env.PUBLIC_URL} >
+                <ScrollToTop>
                     <Switch>
                         <Route
                             path="/store"
@@ -56,7 +60,9 @@ class Root extends Component {
                         />
                         <Redirect to="/" />
                     </Switch>
+                    </ScrollToTop>
                 </HashRouter>
+               
             </IntlProvider>
         );
     }
