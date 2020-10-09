@@ -143,7 +143,7 @@ export default [
     //                 ],
     //             },
     //             { title: 'Cart', url: '/shop/cart' },
-    //             { title: 'Checkout', url: '/shop/checkout' },
+    //             { title: 'Checkout', url: '/store/checkout' },
     //             { title: 'Wishlist', url: '/shop/wishlist' },
     //             { title: 'Compare', url: '/shop/compare' },
     //             { title: 'Track Order', url: '/shop/track-order' },

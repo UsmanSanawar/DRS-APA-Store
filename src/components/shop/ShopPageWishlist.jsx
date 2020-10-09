@@ -35,7 +35,7 @@ function ShopPageWishlist(props) {
 
             if (item.images.length > 0) {
                 image = (
-                    <Link to={`/shop/product/${item.id}`}>
+                    <Link to={`/store/product/${item.id}`}>
                         <img src={item.images[0]} alt="" />
                     </Link>
                 );
@@ -63,7 +63,7 @@ function ShopPageWishlist(props) {
                         {image}
                     </td>
                     <td className="wishlist__column wishlist__column--product">
-                        <Link to={`/shop/product/${item.id}`} className="wishlist__product-name">{item.name}</Link>
+                        <Link to={`/store/product/${item.id}`} className="wishlist__product-name">{item.name}</Link>
                         <div className="wishlist__product-rating">
                             <Rating value={item.rating} />
                             <div className="wishlist__product-rating-legend">{`${item.reviews} Reviews`}</div>
@@ -117,7 +117,7 @@ function ShopPageWishlist(props) {
                     <div className="block-empty__body">
                         <div className="block-empty__message">Your wish list is empty!</div>
                         <div className="block-empty__actions">
-                            <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
+                            <Link to="/store" className="btn btn-primary btn-sm">Continue</Link>
                         </div>
                     </div>
                 </div>

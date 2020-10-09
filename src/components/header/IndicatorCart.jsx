@@ -19,6 +19,8 @@ function IndicatorCart(props) {
     let dropdown;
     let totals;
 
+    console.log(cart, "Cart items...")
+
     if (cart.extraLines.length > 0) {
         const extraLines = cart.extraLines.map((extraLine, index) => (
             <tr key={index}>
@@ -52,10 +54,11 @@ function IndicatorCart(props) {
             );
         }
 
-        if (item.product.images.length) {
+        console.log(item.product, "dasdasdsadsadasdasdsada")
+        if (item.product && item.product.images && item.product.images.length) {
             image = (
                 <div className="dropcart__product-image">
-                    <Link to={`/shop/product/${item.product.id}`}>
+                    <Link to={`/store/product/${item.product.id}`}>
                         <img src={item.product.images[0]} alt="" />
                     </Link>
                 </div>
@@ -84,7 +87,7 @@ function IndicatorCart(props) {
                 {image}
                 <div className="dropcart__product-info">
                     <div className="dropcart__product-name">
-                        <Link to={`/shop/product/${item.product.id}`}>{item.product.name}</Link>
+                        <Link to={`/store/product/${item.product.id}`}>{item.product.name}</Link>
                     </div>
                     {options}
                     <div className="dropcart__product-meta">
@@ -118,8 +121,8 @@ function IndicatorCart(props) {
                 </div>
 
                 <div className="dropcart__buttons">
-                    <Link className="btn btn-secondary" to="/shop/cart">View Cart</Link>
-                    <Link className="btn btn-primary" to="/shop/checkout">Checkout</Link>
+                    <Link className="btn btn-secondary" to="/store/cart">View Cart</Link>
+                    <Link className="btn btn-primary" to="/store/checkout">Checkout</Link>
                 </div>
             </div>
         );
@@ -134,7 +137,7 @@ function IndicatorCart(props) {
     }
 
     return (
-        <Indicator url="/shop/cart" dropdown={dropdown} value={cart.quantity} icon={<Cart20Svg />} />
+        <Indicator url="/store/cart" dropdown={dropdown} value={cart.quantity} icon={<Cart20Svg />} />
     );
 }
 

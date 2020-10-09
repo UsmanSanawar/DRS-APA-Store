@@ -22,6 +22,8 @@ import categories from '../../data/shopWidgetCategories';
 import products from '../../data/shopProducts';
 import theme from '../../data/theme';
 import RestService from '../../store/restService/restService';
+import {useDispatch, useSelector} from "react-redux";
+import productObjectConverter from "../../constant/helpers";
 
 
 function ShopPageProduct(props) {
@@ -42,6 +44,7 @@ function ShopPageProduct(props) {
         // {title: product.productName, url: ''},
     ];
 
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let productId = match.params.productId;
@@ -49,13 +52,19 @@ function ShopPageProduct(props) {
         if (productId) {
             RestService.getProductById(productId).then(res => {
                 if (res.data.status === "success") {
-                    let data = res.data.data;
+                    let data = productObjectConverter(res.data.data);
                     setProduct(data)
                 }
             })
-        }
-    }, [])
 
+            RestService.getRelatedProductById(productId).then(res => {
+                if (res.data.status === "success") {
+                    dispatch({type: "RELATED_PRODUCTS", data: res.data.data})
+                }
+            })
+        }
+    }, [match.params.productId])
+    const { relatedProducts } = useSelector(({ webView }) => webView);
 
     let content;
 
@@ -100,7 +109,7 @@ function ShopPageProduct(props) {
                     </div>
                 </div>
 
-                <BlockProductsCarousel title="Related Products" layout="grid-5" products={products}/>
+                <BlockProductsCarousel title="Related Products" layout="grid-5" products={relatedProducts}/>
             </React.Fragment>
         );
     }

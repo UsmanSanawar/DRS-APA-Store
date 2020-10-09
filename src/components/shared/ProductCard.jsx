@@ -57,7 +57,7 @@ function ProductCard(props) {
     if (product.images && product.images.length > 0) {
         image = (
             <div className="product-card__image">
-                    <Link to={`/shop/product/${product.id}`}><img src={product.images[0]} alt="Product" /></Link>
+                    <Link to={`/store/product/${product.id}`}><img src={product.images[0]} alt="Product" /></Link>
             </div>
         );
     }
@@ -110,7 +110,7 @@ function ProductCard(props) {
             <div className="product-card__info">
                 <div style={{color: "#ee7647", fontWeight:"bold"}} className="product-card__name">
                     {/*<span >{product.name}</span>*/}
-                     <Link to={`/shop/product/${product.id}`}>{product.name}</Link>
+                     <Link to={`/store/product/${product.id}`}>{product.name}</Link>
                 </div>
                 <div className="product-card__rating">
                     <Rating value={product.rating /product.reviews} />
@@ -163,20 +163,20 @@ function ProductCard(props) {
                         )}
                     />
 
-                    {/*<AsyncAction*/}
-                    {/*    action={() => wishlistAddItem(product)}*/}
-                    {/*    render={({ run, loading }) => (*/}
-                    {/*        <button*/}
-                    {/*            type="button"*/}
-                    {/*            onClick={run}*/}
-                    {/*            className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist', {*/}
-                    {/*                'btn-loading': loading,*/}
-                    {/*            })}*/}
-                    {/*        >*/}
-                    {/*            <Wishlist16Svg />*/}
-                    {/*        </button>*/}
-                    {/*    )}*/}
-                    {/*/>*/}
+                    <AsyncAction
+                        action={() => wishlistAddItem(product)}
+                        render={({ run, loading }) => (
+                            <button
+                                type="button"
+                                onClick={run}
+                                className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist', {
+                                    'btn-loading': loading,
+                                })}
+                            >
+                                <Wishlist16Svg />
+                            </button>
+                        )}
+                    />
                     {/*<AsyncAction*/}
                     {/*    action={() => compareAddItem(product)}*/}
                     {/*    render={({ run, loading }) => (*/}

@@ -132,7 +132,7 @@ function Layout(props) {
                             )}
                         />
 
-                        <Route exact path="/shop/product/:productId" component={ShopPageProduct} />
+                        <Route exact path="/store/product/:productId" component={ShopPageProduct} />
                         <Route
                             exact
                             path="/shop/product-standard"
@@ -155,9 +155,9 @@ function Layout(props) {
                             )}
                         />
 
-                        <Route exact path="/shop/cart" component={PageCart} />
-                        <Route exact path="/shop/checkout" component={PageCheckout} />
-                        <Route exact path="/shop/wishlist" component={PageWishlist} />
+                        <Route exact path="/store/cart" component={PageCart} />
+                        <Route exact path="/store/checkout" component={PageCheckout} />
+                        <Route exact path="/store/wishlist" component={PageWishlist} />
                         <Route exact path="/shop/compare" component={PageCompare} />
                         <Route exact path="/shop/track-order" component={ShopPageTrackOrder} />
 
@@ -226,7 +226,7 @@ function Layout(props) {
                                     render={(props) => (
                                         <CommonComp slug={item.slug} {...props} />
                                     )} />
-                                   
+
                             })
                         }
 

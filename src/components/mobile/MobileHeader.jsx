@@ -122,13 +122,13 @@ class MobileHeader extends Component {
                                 {/*/>*/}
                                 <Indicator
                                     className="indicator--mobile d-sm-flex d-none"
-                                    url="/shop/wishlist"
+                                    url="/store/wishlist"
                                     value={wishlist.length}
                                     icon={<Heart20Svg />}
                                 />
                                 <Indicator
                                     className="indicator--mobile"
-                                    url="/shop/cart"
+                                    url="/store/cart"
                                     value={cart.quantity}
                                     icon={<Cart20Svg />}
                                 />
