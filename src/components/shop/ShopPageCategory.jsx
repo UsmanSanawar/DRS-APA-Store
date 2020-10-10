@@ -60,12 +60,12 @@ function ShopPageCategory(props) {
                         offcanvas={offcanvas}
                     />
                 </div>
-                {<CategorySidebar onChange={onChange} offcanvas={offcanvas} />}
+                {<CategorySidebar onChange={onChange} sideFilters={Filters} offcanvas={offcanvas} />}
             </div>
         );
     } else {
         const sidebar = (
-            <div className="shop-layout__sidebar">{<CategorySidebar onChange={onChange} offcanvas={offcanvas} />}</div>
+            <div className="shop-layout__sidebar">{<CategorySidebar onChange={onChange} sideFilters={Filters} offcanvas={offcanvas} />}</div>
         );
 
         content = (

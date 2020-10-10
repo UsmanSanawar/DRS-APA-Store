@@ -22,10 +22,12 @@ export default class FilterPrice extends Component {
             to: value.max,
         }));
 
-        this.props.onChange("priceRange", [value.min, value.max])
+        // this.props.onChange("priceRange", [value.min, value.max])
     };
 
     componentDidMount() {
+        console.log(this.props, 'this.props for price');
+        
         this.props.onChange("priceRange", [this.props.from, this.props.to])
     }
     
@@ -52,6 +54,8 @@ export default class FilterPrice extends Component {
                         value={{ min: from, max: to }}
                         step={step}
                         onChange={this.handleChange}
+                        onChangeComplete={(value) => this.props.onChange("priceRange", [value.min, value.max])}
+
                     />
                 </div>
                 <div className="filter-price__title">

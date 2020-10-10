@@ -10,7 +10,7 @@ import { ArrowRoundedLeft6x9Svg } from '../../svg';
 
 
 function FilterCategories(props) {
-    const { categories } = props;
+    const { categories, sideFilters, } = props;
 
     const categoriesList = categories.map((category) => {
         let arrow;
@@ -20,7 +20,7 @@ function FilterCategories(props) {
         }
 
         return (
-            <li key={category.id} className={`filter-categories__item filter-categories__item--${category.type}`}>
+            <li key={category.id} className={`filter-categories__item filter-categories__item--${sideFilters.category != null && sideFilters.category == category.id ? 'current' : category.type}`}>
                 {arrow}
                 <p style={{cursor: "pointer"}} onClick={()=>props.onChange("category" ,category.id)}>{category.name}</p>
                 <div className="filter-categories__counter">{category.count}</div>

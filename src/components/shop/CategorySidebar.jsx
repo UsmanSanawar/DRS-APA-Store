@@ -72,25 +72,37 @@ function CategorySidebar(props) {
                 let Data = res.data.data;
                 function categoryItems() {
                     let catArray = [];
-                    Data.map((item) => {
+                    let parernts = Data.filter(item => item.parentCategoryId == null);
+
+                    parernts.map((item) => {
                         let categoryitem;
-                        if (item.parentCategoryId == null) {
+                        // if (item.parentCategoryId == null) { 
+
                             categoryitem = {
                                 id: item.productCategoryId,
                                 type: "parent",
                                 // count: 75,
                                 name: item.name
                             };
-                        } else {
-                            categoryitem = {
-                                id: item.productCategoryId,
-                                type: "child",
-                                // count: 75,
-                                name: item.name
-                            }
-                        }
+                        // } 
+                        // else {
+                        //     categoryitem = {
+                        //         id: item.productCategoryId,
+                        //         type: "child",
+                        //         // count: 75,
+                        //         name: item.name
+                        //     }
+                        // }
 
                         catArray.push(categoryitem);
+                        let childs = Data.filter(row => row.parentCategoryId == item.productCategoryId)
+
+                        for(let child of childs){
+                            child.id = child.productCategoryId
+                            child.type= "child"
+                        }
+
+                        catArray = [...catArray, ...childs]
                     });
                     return catArray;
                 }
@@ -104,6 +116,7 @@ function CategorySidebar(props) {
                     },
                 };
 
+                // setCategory(filters[0])
                 setCategory(Object)
             }
         });
@@ -193,7 +206,7 @@ function CategorySidebar(props) {
                     </button>
                 </div>
                 <div className="block-sidebar__item">
-                    <WidgetFilters title="Filters" onChange={props.onChange} filters={[category, manufacturer, PriceFilter]} offcanvas={offcanvas} />
+                    <WidgetFilters title="Filters" onChange={props.onChange} sideFilters={props.sideFilters} filters={[category, manufacturer, PriceFilter]} offcanvas={offcanvas} />
                 </div>
                 {/* {offcanvas !== 'always' && (
                         <div className="block-sidebar__item d-none d-lg-block">

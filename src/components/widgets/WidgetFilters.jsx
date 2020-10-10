@@ -17,22 +17,27 @@ import { ArrowRoundedDown12x7Svg } from "../../svg";
 function WidgetFilters(props) {
     const { title, filters, offcanvas } = props;
 
+    console.log(props, 'props is sidget filer');
+    
+
 
     const filtersList = filters.map((filter) => {
         let filterView;
 
         if (filter.type === "categories") {
-            filterView = <FilterCategories onChange={props.onChange} categories={filter.options.items} />;
+            filterView = <FilterCategories onChange={props.onChange} sideFilters={props.sideFilters} categories={filter.options.items} />;
         } else if (filter.type === "checkbox") {
-            filterView = <FilterCheckbox onChange={props.onChange} items={filter.options.items} />;
+            filterView = <FilterCheckbox onChange={props.onChange} sideFilters={props.sideFilters} items={filter.options.items} />;
         } else if (["checkbox", "radio"].includes(filter.type)) {
-            filterView = <FilterRadio items={filter.options.items} name={filter.options.name} />;
+            filterView = <FilterRadio items={filter.options.items} sideFilters={props.sideFilters} name={filter.options.name} />;
         } else if (filter.type === "color") {
             filterView = <FilterColor items={filter.options.items} />;
         } else if (filter.type === "price") {
             filterView = (
                 <FilterPrice
+                   
                     onChange={props.onChange}
+                    sideFilters={props.sideFilters}
                     from={filter.options.from}
                     to={filter.options.to}
                     min={filter.options.min}
