@@ -1,8 +1,10 @@
+import productObjectConverter from "../constant/helpers";
 
 const initialState = {
     storeView: false,
     menu: [],
-    categories: []
+    categories: [],
+    relatedProducts: []
 };
 
 export default function quickviewReducer(state = initialState, action) {
@@ -23,6 +25,20 @@ export default function quickviewReducer(state = initialState, action) {
                 storeView: state.storeView
             };
         }
+
+        case 'RELATED_PRODUCTS': {
+            let dataList = action.data;
+            let array = [];
+            dataList.map(item => {
+                array.push(productObjectConverter(item))
+            })
+
+            return {
+                ...state,
+                relatedProducts: array
+            };
+        }
+
         case 'SAVE_CATEGORIES': {
             console.log(action.data, 'SAVE_CATEGORIES');
             let dataList = action.data;

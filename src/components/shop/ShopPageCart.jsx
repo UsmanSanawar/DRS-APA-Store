@@ -71,7 +71,7 @@ class ShopPageCart extends Component {
             let options;
 
             if (item.product.images.length > 0) {
-                image = <Link to={`/shop/product/${item.product.id}`}><img src={item.product.images[0]} alt="" /></Link>;
+                image = <Link to={`/store/product/${item.product.id}`}><img src={item.product.images[0]} alt="" /></Link>;
             }
 
             if (item.options.length > 0) {
@@ -107,7 +107,7 @@ class ShopPageCart extends Component {
                         {image}
                     </td>
                     <td className="cart-table__column cart-table__column--product">
-                        <Link to={`/shop/product/${item.product.id}`} className="cart-table__product-name">
+                        <Link to={`/store/product/${item.product.id}`} className="cart-table__product-name">
                             {item.product.name}
                         </Link>
                         {options}
@@ -219,7 +219,7 @@ class ShopPageCart extends Component {
                             <button type="submit" className="btn btn-primary">Apply Coupon</button>
                         </form>
                         <div className="cart__buttons">
-                            <Link to="/" className="btn btn-light">Continue Shopping</Link>
+                            <Link to="/store" className="btn btn-light">Continue Shopping</Link>
                             {updateCartButton}
                         </div>
                     </div>
@@ -238,7 +238,7 @@ class ShopPageCart extends Component {
                                             </tr>
                                         </tfoot>
                                     </table>
-                                    <Link to="/shop/checkout" className="btn btn-primary btn-xl btn-block cart__checkout-button">
+                                    <Link to="/store/checkout" className="btn btn-primary btn-xl btn-block cart__checkout-button">
                                         Proceed to checkout
                                     </Link>
                                 </div>
@@ -268,7 +268,7 @@ class ShopPageCart extends Component {
                         <div className="block-empty__body">
                             <div className="block-empty__message">Your shopping cart is empty!</div>
                             <div className="block-empty__actions">
-                                <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
+                                <Link to="/store" className="btn btn-primary btn-sm">Continue</Link>
                             </div>
                         </div>
                     </div>

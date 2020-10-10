@@ -38,7 +38,7 @@ const RestService = {
       for (let manufacturerId of filters.manufacturers) {
         manufacturers.push(`manufacturerId=${manufacturerId}`)
       }
-    } 
+    }
         return axios.get(
             `${BASE_URL}/masterdata/Products/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category}&${manufacturers.join("&")}`,
             RestService.getHeader()
@@ -47,11 +47,13 @@ const RestService = {
 
     getProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/${prId}`, RestService.getHeader()),
 
+    getRelatedProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/GetRelatedProductsByProductId/${prId}`, RestService.getHeader()),
+
     getAllCategories: () => axios.get(`${BASE_URL}/masterdata/ProductCategories/0/0`, RestService.getHeader()),
 
     getProductOptionCombination: (prId) =>
         axios.get(`${BASE_URL}/masterdata/ProductOptionCombination/onProductId/${prId}`, RestService.getHeader()),
 
-    getAllManufacturer: (prId) => axios.get(`${BASE_URL}/masterdata/Manufacturers/0/0`, RestService.getHeader()),
+    getAllManufacturer: () => axios.get(`${BASE_URL}/masterdata/Manufacturers/0/0`, RestService.getHeader()),
 };
 export default RestService;

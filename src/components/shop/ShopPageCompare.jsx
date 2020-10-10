@@ -54,7 +54,7 @@ function ShopPageCompare(props) {
 
             return (
                 <td key={product.id}>
-                    <Link to={`/shop/product/${product.id}`} className="compare-table__product-link">
+                    <Link to={`/store/product/${product.id}`} className="compare-table__product-link">
                         <div className="compare-table__product-image">
                             {image}
                         </div>
@@ -186,7 +186,7 @@ function ShopPageCompare(props) {
                     <div className="block-empty__body">
                         <div className="block-empty__message">You have not chosen any products to compare!</div>
                         <div className="block-empty__actions">
-                            <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
+                            <Link to="/store" className="btn btn-primary btn-sm">Continue</Link>
                         </div>
                     </div>
                 </div>

@@ -61,7 +61,7 @@ class Product extends Component {
         if (this.props.product != prevProps.product) {
             const { product } = this.props
             const { prForShar } = this.state
-            //  prForShar.data_url = 'http://192.3.213.101:2550/#/shop/product/104'
+            //  prForShar.data_url = 'http://192.3.213.101:2550/#/store/product/104'
             //  prForShar.data_title = product.productName
             //  prForShar.data_media = product.productPhotos.length > 0 ? `${IMAGE_URL}/${product.productPhotos[0].name}`: ''
 
@@ -71,13 +71,12 @@ class Product extends Component {
             //     if(window.addthis){
             //         window.addthis.layers.refresh();
             //     }
-
             // })
 
 
 
             // window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png');
-            // window.addthis.update('share', 'url', 'http://192.3.213.101:2550/#/shop/product/104');
+            // window.addthis.update('share', 'url', 'http://192.3.213.101:2550/#/store/product/104');
 
 
             console.log(product.productPhotos.length > 0 ? IMAGE_URL + '/' + product.productPhotos[0].name : '', 'product.productPhotos[0].name image');
@@ -173,8 +172,8 @@ class Product extends Component {
         //         document.getElementById('share-btn').setAttribute('data-media', 'http://i.imgur.com/sI5mrZP.png')
         //     }
 
-        //     window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png'); 
-        //     window.addthis.media = "http://i.imgur.com/sI5mrZP.png";                
+        //     window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png');
+        //     window.addthis.media = "http://i.imgur.com/sI5mrZP.png";
         //     window.addthis.toolbox(".addthis_toolbox");
         // }
 
@@ -316,7 +315,7 @@ class Product extends Component {
                     <meta property="og:title" content="European Travel Destinations" />
                     <meta property="og:description" content="Offering tour packages for individuals or groups." />
                     <meta property="og:image" content="http://192.3.213.101:3450/Uploads/800px_COLOURBOX2650448.jpg" />
-                    <meta property="og:url" content="http://192.3.213.101:2550/#/shop/product/104"></meta>
+                    <meta property="og:url" content="http://192.3.213.101:2550/#/store/product/104"></meta>
                 </Helmet>
 
                 <div className="product__content">
@@ -499,14 +498,14 @@ class Product extends Component {
                         </div>
 
                         <div className="product__share-links share-links">
-                            {/* <div className="addthis_inline_share_toolbox" data-url={'http://192.3.213.101:2550/#/shop/product/104'}
+                            {/* <div className="addthis_inline_share_toolbox" data-url={'http://192.3.213.101:2550/#/store/product/104'}
                         data-description={product.description}
                         data-title={product.productName} data-media={`${IMAGE_URL}/${product.productPhotos && product.productPhotos.length > 0 ? product.productPhotos[0].name: ''}`  }
                         ></div> */}
 
                             <div className="addthis_inline_share_toolbox"
 
-                                data-url="http://192.3.213.101:2550/#/shop/product/104"
+                                data-url="http://192.3.213.101:2550/#/store/product/104"
                                 // data-title="The AddThis Blog"
                                 // data-media="http://192.3.213.101:3450/Uploads/800px_COLOURBOX2650448.jpg"
 

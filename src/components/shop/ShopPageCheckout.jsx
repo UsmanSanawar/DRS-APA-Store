@@ -149,7 +149,7 @@ class ShopPageCheckout extends Component {
 
         const breadcrumb = [
             { title: 'Home', url: '' },
-            { title: 'Shopping Cart', url: '/shop/cart' },
+            { title: 'Shopping Cart', url: '/store/cart' },
             { title: 'Checkout', url: '' },
         ];
 
