@@ -1,9 +1,11 @@
 // react
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 
 // third-party
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
+import RestService from '../../store/restService/restService';
 
 // application
 import Dropdown from './Dropdown';
@@ -12,6 +14,7 @@ import DropdownLanguage from './DropdownLanguage';
 
 
 function Topbar() {
+
     const links = [
         { title: <FormattedMessage id="topbar.aboutUs" defaultMessage="About Us" />, url: '/site/about-us' },
         { title: <FormattedMessage id="topbar.contacts" defaultMessage="Contacts" />, url: '/site/contact-us' },

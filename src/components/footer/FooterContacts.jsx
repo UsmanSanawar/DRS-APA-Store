@@ -1,11 +1,21 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // data stubs
 import theme from '../../data/theme';
 
 
-export default function FooterContacts() {
+export default function FooterContacts(props) {
+
+    const [Org, setOrg] = useState({defaultAddress: {}})
+    useEffect(() => {
+    if (props.organization) {
+        setOrg(props.organization)
+    }
+    }, [props.organization])
+
+console.log('OrgObject', Org)
+
     return (
         <div className="site-footer__widget footer-contacts">
             <h5 className="footer-contacts__title">Contact Us</h5>
@@ -16,21 +26,24 @@ export default function FooterContacts() {
             </div>
 
             <ul className="footer-contacts__contacts">
-                <li>
-                    <i className="footer-contacts__icon fas fa-globe-americas" />
-                    {theme.contacts.address}
+                <li className="text-justify">
+                    {Org.defaultAddress
+                        ? <div>
+                            <p className="m-0"> <i className="footer-contacts__icon fas fa-globe-americas" />{`${Org.defaultAddress.address}, ${Org.defaultAddress.city} ${Org.defaultAddress.postCode},`}</p>
+                            <p className="m-0">{`${ Org.defaultAddress.country}`}</p>
+                        </div> : ""}
                 </li>
                 <li>
                     <i className="footer-contacts__icon far fa-envelope" />
-                    {theme.contacts.email}
+                    {Org.defaultAddress ? Org.defaultAddress.email : ""}
                 </li>
                 <li>
                     <i className="footer-contacts__icon fas fa-mobile-alt" />
-                    {`${theme.contacts.phone}, ${theme.contacts.phone}`}
+                    {`${Org.defaultAddress ? Org.defaultAddress.phoneNo : ""}, ${Org.defaultAddress ? Org.defaultAddress.phoneNo : ""}`}
                 </li>
                 <li>
                     <i className="footer-contacts__icon far fa-clock" />
-                    Mon-Sat 10:00pm - 7:00pm
+                    {Org ? Org.officeTiming : ""}
                 </li>
             </ul>
         </div>

@@ -55,5 +55,8 @@ const RestService = {
         axios.get(`${BASE_URL}/masterdata/ProductOptionCombination/onProductId/${prId}`, RestService.getHeader()),
 
     getAllManufacturer: () => axios.get(`${BASE_URL}/masterdata/Manufacturers/0/0`, RestService.getHeader()),
+
+    getOrganizationsByCode: (code) => axios.get(`${BASE_URL}/masterdata/Organization/${code}`, RestService.getHeader()),
+
 };
 export default RestService;

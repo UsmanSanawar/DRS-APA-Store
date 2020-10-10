@@ -48,6 +48,7 @@ function Layout(props) {
     const dispatch = useDispatch();
     const { menu } = useSelector(({ webView }) => webView);
     const [menuList, setMenuList] = useState([]);
+    const [organization, setOrganization] = useState({});
 
     useEffect(() => {
         RestService.getWebMenu().then(res => {
@@ -61,6 +62,24 @@ function Layout(props) {
                 dispatch({ type: "SAVE_CATEGORIES", data: res.data.data })
             }
         })
+
+         RestService.getOrganizationsByCode("ORG").then(res => {
+             if (res.data.status === "success") {
+                 let org = {};
+              org = res.data.data;
+              let addresses = res.data.data && res.data.data.locations ? res.data.data.locations : [];
+              addresses = res.data.data.locations.filter(item => item.isDefault === true);
+              if (addresses.length > 0) {
+                org.defaultAddress = addresses[0]
+              }
+                 
+                 console.log(org, "consloesdasdadsadadsad");
+                
+                setOrganization(org);
+            }
+          });
+
+
     }, [])
 
     return (
@@ -82,7 +101,7 @@ function Layout(props) {
                 </header>
 
                 <header className="site__header d-lg-block d-none">
-                    <Header layout={headerLayout} {...props} />
+                    <Header organization={organization} layout={headerLayout} {...props} />
                 </header>
 
                 <div className="site__body">
@@ -253,7 +272,7 @@ function Layout(props) {
                 </div>
 
                 <footer className="site__footer">
-                    <Footer />
+                    <Footer organization={organization} />
                 </footer>
             </div>
         </React.Fragment>

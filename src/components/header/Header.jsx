@@ -34,8 +34,7 @@ function Header(props) { console.log(props, "headerProps");
                     <FormattedMessage id="header.phoneLabel" defaultMessage="Customer Service"/>
                 </div>
                 <div className="site-header__phone-number">
-                    <FormattedMessage id="header.phone" defaultMessage=" (+0845) 5198 681
-"/>
+                    <FormattedMessage id="header.phone" defaultMessage={props.organization && props.organization.defaultAddress ? props.organization.defaultAddress.phoneNo : ""}/>
                 </div>
             </div>
         </div>

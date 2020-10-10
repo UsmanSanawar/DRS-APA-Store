@@ -1,7 +1,9 @@
+import RestService from "../store/restService/restService";
+
 export default {
     name: 'DRS APA Store',
     fullName: 'DRS Automatic Products Association',
-    url: 'https://themeforest.net/item/stroyka-tools-store-react-ecommerce-template/23909258',
+    url: 'void:0',
     author: {
         name: 'Xerobit',
         profile_url: '#',
