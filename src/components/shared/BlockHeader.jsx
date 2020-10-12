@@ -44,7 +44,7 @@ function BlockHeader(props) {
             return (
                 <li key={index}>
 
-                    <Link to={"/store/category-list"} ><button type="button" className={classes} style={{color: "#f1630c"}}>{group.name}</button></Link>
+                    <Link to={"/store/products"} ><button type="button" className={classes} style={{color: "#f1630c"}}>{group.name}</button></Link>
                     {/*<button type="button" className={classes} onClick={() => onGroupClick(group)}>*/}
                     {/*    {group.name}*/}
                     {/*</button>*/}

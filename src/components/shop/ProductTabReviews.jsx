@@ -10,16 +10,16 @@ import Rating from '../shared/Rating';
 import RestService from '../../store/restService/restService';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-import {Spinner} from "reactstrap"
+import { Spinner } from "reactstrap"
 
 function ProductTabReviews(props) {
 
-    let initReview = { rating: 1, text: '', productId: null }
+    let initReview = { rating: 5, text: '', productId: null }
 
     const [loading, setloading] = useState(true);
     const [formData, setformData] = useState(initReview);
     const [reviews, setreviews] = useState([]);
-    const [reviewPagination, setreviewPagination] = useState({currentPage: 1,pageSize: 10, totalCount: 10, totalPages: 2});
+    const [reviewPagination, setreviewPagination] = useState({ currentPage: 1, pageSize: 10, totalCount: 10, totalPages: 2 });
 
 
     useEffect(() => {
@@ -29,22 +29,22 @@ function ProductTabReviews(props) {
     }, [props.productId])
 
 
-   function getReviews(currentPage){
-    setloading(true)
-    try {
-        RestService.getReviews(props.productId,currentPage).then(res => {
-            if(res.data.status === 'success'){
-                setreviews(res.data.data)
-                setreviewPagination(JSON.parse(res.headers["x-pagination"]))
-                console.log(res.data, JSON.parse(res.headers["x-pagination"]),' 9000000099900');
-                
-            }
+    function getReviews(currentPage) {
+        setloading(true)
+        try {
+            RestService.getReviews(props.productId, currentPage).then(res => {
+                if (res.data.status === 'success') {
+                    setreviews(res.data.data)
+                    setreviewPagination(JSON.parse(res.headers["x-pagination"]))
+                    console.log(res.data, JSON.parse(res.headers["x-pagination"]), ' 9000000099900');
+
+                }
+                setloading(false)
+            })
+        } catch (err) {
+            toast.error('Internal Server Error')
             setloading(false)
-        })
-    }catch(err){
-        toast.error('Internal Server Error')
-        setloading(false)
-    }
+        }
     }
 
 
@@ -56,8 +56,8 @@ function ProductTabReviews(props) {
 
 
     const reviewsList = reviews.map((review, index) => {
-    
-      return <li key={index} className="reviews-list__item">
+
+        return <li key={index} className="reviews-list__item">
             <div className="review">
                 <div className="review__avatar"><img src={'images/avatars/avatar-1.jpg'} alt="" /></div>
                 <div className=" review__content">
@@ -87,7 +87,7 @@ function ProductTabReviews(props) {
                     if (res.data.status === 'success') {
                         setformData(initReview)
                         reviews.push(res.data.data)
-                        
+
                         setreviews([...reviews])
                     }
                 })
@@ -99,8 +99,6 @@ function ProductTabReviews(props) {
 
 
     console.log(reviews, 'reviews reviews reviews');
-    
-
 
     return (
         <div className="reviews-view">
@@ -116,20 +114,23 @@ function ProductTabReviews(props) {
                     </ol>
                     <div className="reviews-list__pagination">
                         {/* <Pagination current={5} siblings={10} total={50} /> */}
-
-                        <ReactPaginate
-                            previousLabel={"prev"}
-                            nextLabel={"next"}
-                            breakLabel={"..."}
-                            breakClassName={"break-me"}
-                            pageCount={reviewPagination.totalPages}
-                            marginPagesDisplayed={4}
-                            pageRangeDisplayed={4}
-                            onPageChange={handlePageClick}
-                            containerClassName={"pagination"}
-                            subContainerClassName={"pages pagination"}
-                            activeClassName={"active"}
-                        />
+                        {
+                            reviewPagination.totalPages == 0 ? <h1 className="text-center">No Reviews Yet</h1>
+                                :
+                                <ReactPaginate
+                                    previousLabel={"prev"}
+                                    nextLabel={"next"}
+                                    breakLabel={"..."}
+                                    breakClassName={"break-me"}
+                                    pageCount={reviewPagination.totalPages}
+                                    marginPagesDisplayed={4}
+                                    pageRangeDisplayed={4}
+                                    onPageChange={handlePageClick}
+                                    containerClassName={"pagination"}
+                                    subContainerClassName={"pages pagination"}
+                                    activeClassName={"active"}
+                                />
+                        }
                     </div>
                 </div>
             </div>

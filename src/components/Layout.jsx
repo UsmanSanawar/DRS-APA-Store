@@ -71,15 +71,10 @@ function Layout(props) {
               addresses = res.data.data.locations.filter(item => item.isDefault === true);
               if (addresses.length > 0) {
                 org.defaultAddress = addresses[0]
-              }
-                 
-                 console.log(org, "consloesdasdadsadadsad");
-                
+              } 
                 setOrganization(org);
             }
           });
-
-
     }, [])
 
     return (
@@ -138,7 +133,7 @@ function Layout(props) {
                         />
                         <Route
                             exact
-                            path="/store/category-list"
+                            path="/store/products"
                             render={(props) => (
                                 <ShopPageCategory {...props} columns={3} viewMode="list" sidebarPosition="start" />
                             )}

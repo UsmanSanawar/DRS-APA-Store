@@ -73,10 +73,16 @@ function NavLinks(props) {
             const classes = classNames('nav-links__item', {
                 'nav-links__item--with-webSubMenu': item.webSubMenu,
             });
-
             return (
                 <li key={index} className={classes} onMouseEnter={handleMouseEnter}>
-                    <AppLink to={item.slug} {...item.props} >
+                    <AppLink to={{
+      pathname: "/store/products",
+      state: {
+       categoryId: item.productCategoryId
+      }
+   }}
+    // to={item.slug} 
+    {...item.props} >
                         <span>
                             {item.webMenuTitle}
                             {arrow}
