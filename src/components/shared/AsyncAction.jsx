@@ -43,6 +43,7 @@ class AsyncAction extends Component {
         const { render } = this.props;
         const { loading } = this.state;
 
+
         if (render) {
             return render({ run: this.run, loading });
         }

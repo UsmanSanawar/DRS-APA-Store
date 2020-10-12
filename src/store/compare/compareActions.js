@@ -3,7 +3,7 @@ import { COMPARE_ADD_ITEM, COMPARE_REMOVE_ITEM } from './compareActionTypes';
 
 
 export function compareAddItemSuccess(product) {
-    toast.success(`Product "${product.name}" added to compare!`);
+    toast.success(`Product "${product.productName ? product.productName : product.name}" added to compare!`);
 
     return {
         type: COMPARE_ADD_ITEM,
@@ -25,7 +25,7 @@ export function compareAddItem(product) {
             setTimeout(() => {
                 dispatch(compareAddItemSuccess(product));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }
@@ -37,7 +37,7 @@ export function compareRemoveItem(productId) {
             setTimeout(() => {
                 dispatch(compareRemoveItemSuccess(productId));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }

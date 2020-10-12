@@ -80,7 +80,7 @@ function Layout(props) {
     return (
         <React.Fragment>
             <Helmet>
-                <title>{theme.name}</title>
+                <title>{organization.name}</title>
                 <meta name="description" content={theme.fullName} />
             </Helmet>
 

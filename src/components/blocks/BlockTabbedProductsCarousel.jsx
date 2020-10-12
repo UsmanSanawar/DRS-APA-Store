@@ -88,7 +88,7 @@ export default class BlockTabbedProductsCarousel extends Component {
                     loading: false,
                 };
             });
-        }, 2000);
+        }, 500);
     };
 
     redirectToProductPage = (item) => {
@@ -100,6 +100,7 @@ export default class BlockTabbedProductsCarousel extends Component {
 
     render() {
 
+        console.log(this.props, "featuredList");
 
         return (
             <BlockProductsCarousel

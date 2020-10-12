@@ -1,6 +1,5 @@
 // react
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // third-party
 import { FormattedMessage } from 'react-intl';
@@ -13,8 +12,18 @@ import DropdownCurrency from './DropdownCurrency';
 import DropdownLanguage from './DropdownLanguage';
 
 
-function Topbar() {
+function Topbar(props) {
 
+const [Organization, setOrganization] = useState({defaultAddress:{}})
+useEffect(() => {
+
+    setOrganization(props.organization)
+
+}, [props.organization])
+
+    
+    console.log(props.organization, "aadadaprops")
+    
     const links = [
         { title: <FormattedMessage id="topbar.aboutUs" defaultMessage="About Us" />, url: '/site/about-us' },
         { title: <FormattedMessage id="topbar.contacts" defaultMessage="Contacts" />, url: '/site/contact-us' },
@@ -32,14 +41,8 @@ function Topbar() {
         { title: 'Logout', url: '/account/login' },
     ];
 
-    // const linksList = links.map((item, index) => (
-    //     <div key={index} className="topbar__item topbar__item--link">
-    //         <Link className="topbar-link" to={item.url}>{item.title}</Link>
-    //     </div>
-    // ));
 
-
-    const linksList = <div><span className="pr-2"><i className="fa fa-envelope pr-1"/>  info@a-p-a.co.uk</span> {" | "} <span className="pl-2"><i className="fa fa-phone pr-1"/>  +0845 5198 681</span> </div>
+    const linksList = <div><span className="pr-2"><i className="fa fa-envelope pr-1" />{Organization.defaultAddress ? Organization.defaultAddress.email : ""}</span> {" | "} <span className="pl-2"><i className="fa fa-phone pr-1"/>  {Organization.defaultAddress ? Organization.defaultAddress.phoneNo : ""}</span> </div>
 
     return (
         <div className="site-header__topbar topbar">

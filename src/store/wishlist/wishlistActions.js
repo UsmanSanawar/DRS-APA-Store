@@ -3,7 +3,7 @@ import { WISHLIST_ADD_ITEM, WISHLIST_REMOVE_ITEM } from './wishlistActionTypes';
 
 
 export function wishlistAddItemSuccess(product) {
-    toast.success(`Product "${product.name}" added to wish list!`);
+    toast.success(`Product "${product.productName ? product.productName : product.name}" added to wish list!`);
 
     return {
         type: WISHLIST_ADD_ITEM,
@@ -25,7 +25,7 @@ export function wishlistAddItem(product) {
             setTimeout(() => {
                 dispatch(wishlistAddItemSuccess(product));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }
@@ -37,7 +37,7 @@ export function wishlistRemoveItem(productId) {
             setTimeout(() => {
                 dispatch(wishlistRemoveItemSuccess(productId));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }

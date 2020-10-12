@@ -10,9 +10,11 @@ import Search from './Search';
 import Topbar from './Topbar';
 import logofull from "../../assets/imgs/logo-full.png";
 
-function Header(props) { console.log(props, "headerProps");
+function Header(props) { console.log(props.organization, "headerProps");
     const {layout} = props;
     let bannerSection;
+
+
 
     // if (layout === 'default') {
     bannerSection = (
@@ -31,10 +33,12 @@ function Header(props) { console.log(props, "headerProps");
             </div>
             <div className="site-header__phone">
                 <div className="site-header__phone-title">
-                    <FormattedMessage id="header.phoneLabel" defaultMessage="Customer Service"/>
+                    {/* <FormattedMessage id="header.phoneLabel" defaultMessage="Customer Service"/> */}
+                    Customer Service
                 </div>
                 <div className="site-header__phone-number">
-                    <FormattedMessage id="header.phone" defaultMessage={props.organization && props.organization.defaultAddress ? props.organization.defaultAddress.phoneNo : ""}/>
+                    {/* <FormattedMessage id="header.phone" defaultMessage={""}/> */}
+                    {props.organization && props.organization.defaultAddress ? props.organization.defaultAddress.phoneNo : ""}
                 </div>
             </div>
         </div>
@@ -43,7 +47,7 @@ function Header(props) { console.log(props, "headerProps");
 
     return (
         <div className="site-header">
-            <Topbar/>
+            <Topbar organization={props.organization} />
             {bannerSection}
             <div className="site-header__nav-panel">
                 <NavPanel layout={layout} {...props} />
