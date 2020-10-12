@@ -3,7 +3,7 @@ import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES } from './cartA
 
 
 export function cartAddItemSuccess(product, options = [], quantity = 1) {
-    toast.success(`Product "${product.productName}" added to cart!`);
+    toast.success(`Product "${product.productName ? product.productName : product.name}" added to cart!`);
 
     return {
         type: CART_ADD_ITEM,
@@ -34,7 +34,7 @@ export function cartAddItem(product, options = [], quantity = 1) {
             setTimeout(() => {
                 dispatch(cartAddItemSuccess(product, options, quantity));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }
@@ -46,7 +46,7 @@ export function cartRemoveItem(itemId) {
             setTimeout(() => {
                 dispatch(cartRemoveItemSuccess(itemId));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }
@@ -58,7 +58,7 @@ export function cartUpdateQuantities(quantities) {
             setTimeout(() => {
                 dispatch(cartUpdateQuantitiesSuccess(quantities));
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }

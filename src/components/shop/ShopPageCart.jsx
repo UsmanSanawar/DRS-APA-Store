@@ -70,7 +70,7 @@ class ShopPageCart extends Component {
             let image;
             let options;
 
-            if (item.product.images.length > 0) {
+            if (item.product && item.product.images && item.product.images.length > 0) {
                 image = <Link to={`/store/product/${item.product.id}`}><img src={item.product.images[0]} alt="" /></Link>;
             }
 

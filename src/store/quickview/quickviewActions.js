@@ -27,7 +27,7 @@ export function quickviewOpen(productId) {
                 }
 
                 resolve();
-            }, 2000);
+            }, 500);
         })
     );
 }

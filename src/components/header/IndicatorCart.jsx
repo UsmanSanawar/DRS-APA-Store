@@ -55,7 +55,7 @@ function IndicatorCart(props) {
         }
 
         console.log(item.product, "dasdasdsadsadasdasdsada")
-        if (item.product && item.product.images && item.product.images.length) {
+        if (item.product && item.product.images && item.product.images.length > 0) {
             image = (
                 <div className="dropcart__product-image">
                     <Link to={`/store/product/${item.product.id}`}>

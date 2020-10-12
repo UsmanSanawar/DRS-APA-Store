@@ -1,5 +1,3 @@
-import RestService from "../store/restService/restService";
-
 export default {
     name: 'DRS APA Store',
     fullName: 'DRS Automatic Products Association',
