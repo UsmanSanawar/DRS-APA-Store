@@ -138,6 +138,7 @@ function Layout(props) {
                                 <ShopPageCategory {...props} columns={3} viewMode="list" sidebarPosition="start" />
                             )}
                         />
+                        
                         <Route
                             exact
                             path="/shop/category-right-sidebar"

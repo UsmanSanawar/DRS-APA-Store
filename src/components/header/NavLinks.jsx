@@ -1,5 +1,5 @@
 // react
-import React,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 // third-party
 import classNames from 'classnames';
@@ -12,18 +12,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import Menu from './Menu';
 import { ArrowRoundedDown9x6Svg } from '../../svg';
 
-// data stubs
-import navLinks from '../../data/headerNavigation';
-import navLinks2 from '../../data/headerNavigation2';
-import RestService from '../../store/restService/restService';
 
- 
 function NavLinks(props) {
 
-    const {storeView, menu, categories} = useSelector(({ webView }) =>  webView);
+    const { storeView, menu, categories } = useSelector(({ webView }) => webView);
 
-    console.log(props, menu, 'menu menu menu',categories);
-    
+   const onMenuClick = (item) =>{
+        props.history.replace({
+            pathname:props.layout == 'compact' ? "/store/products" : item.slug,
+            state: {  categoryId: item.productCategoryId }
+          })
+    }
 
     const handleMouseEnter = (event) => {
         const item = event.currentTarget;
@@ -42,11 +41,11 @@ function NavLinks(props) {
         }
     };
 
-    const linksList = () =>{
+    const linksList = () => {
 
         let data = props.layout == 'compact' ? categories : menu;
 
-       return data && data.map((item, index) => {
+        return data && data.map((item, index) => {
             let arrow;
             let webSubMenu;
 
@@ -54,10 +53,10 @@ function NavLinks(props) {
                 arrow = <ArrowRoundedDown9x6Svg className="nav-links__arrow" />;
             }
 
-            if(item.hasSubMenu ){
+            if (item.hasSubMenu) {
                 webSubMenu = (
                     <div className="nav-links__menu">
-                        <Menu items={item.webSubMenu} />
+                        <Menu items={item.webSubMenu} onClick={onMenuClick} />
                     </div>
                 );
             }
@@ -75,19 +74,15 @@ function NavLinks(props) {
             });
             return (
                 <li key={index} className={classes} onMouseEnter={handleMouseEnter}>
-                    <AppLink to={{
-      pathname: "/store/products",
-      state: {
-       categoryId: item.productCategoryId
-      }
-   }}
-    // to={item.slug} 
-    {...item.props} >
+                    <a href="JavaScript:void(0);"
+                    onClick={() => onMenuClick(item)
+                    }
+                        {...item.props} >
                         <span>
                             {item.webMenuTitle}
                             {arrow}
                         </span>
-                    </AppLink>
+                    </a>
                     {webSubMenu}
                 </li>
             );
@@ -96,7 +91,7 @@ function NavLinks(props) {
     }
 
     return (
-        <ul className="nav-links__list" style={props.layout == "compact" ? {color: "#fff"} : {}}>
+        <ul className="nav-links__list" style={props.layout == "compact" ? { color: "#fff" } : {}}>
             {linksList()}
         </ul>
     );

@@ -29,7 +29,12 @@ function Menu(props) {
             link = (
                 <AppLink    
                     {...item.props}
-                    to={item.slug}
+                    to={{
+                        pathname: item.slug,
+                        state: {
+                         categoryId: item.productCategoryId
+                        }
+                    }}
                     onClick={() => onClick(item)}
                 >
                     {content}
@@ -81,7 +86,7 @@ function Menu(props) {
                     <React.Fragment >
                         <div onClick={()=> toggleView(item)}>
                         {icon}
-                        {item.webSubMenuTitle}
+                        {`${item.webSubMenuTitle}-55555555`}
                         {arrow}
                         </div>
                        

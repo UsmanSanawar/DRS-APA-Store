@@ -1,5 +1,5 @@
 // react
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // third-party
 import PropTypes from 'prop-types';
@@ -12,13 +12,10 @@ import PageHeader from '../shared/PageHeader';
 import ProductsView from './ProductsView';
 import { sidebarClose } from '../../store/sidebar';
 
-// data stubs
-import products from '../../data/shopProducts';
 import theme from '../../data/theme';
 
 
 function ShopPageCategory(props) {
-
 
     const [Filters, setFilters] = useState({
         priceRange: [],
@@ -32,9 +29,16 @@ function ShopPageCategory(props) {
         setFilters({...Filters});
     }
 
+ 
+    useEffect(() => {
+        console.log(props.location.state, 'props.location.state', props.location.state);
+        
+        if(props.location.state && props.location.state.categoryId){
+            setFilters({...Filters, category: props.location.state.categoryId});
+        }
+    }, [props]) 
 
-    console.log(Filters, "Filters Parent out Func")
-
+    console.log(Filters, "Filters Parent out Func", props.history)
 
     const {
         columns,

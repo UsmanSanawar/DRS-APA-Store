@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 function AppLink(props) {
     const { external, children, ...otherProps } = props;
     let link;   
+
+
+console.log(props, 'props are the ap link');
     if (external) {
         const {
             to,
@@ -24,6 +27,8 @@ function AppLink(props) {
 
     return link;
 }
+
+
 
 AppLink.propTypes = {
     to: PropTypes.oneOfType([

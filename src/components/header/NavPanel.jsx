@@ -11,7 +11,6 @@ import CartIndicator from './IndicatorCart';
 import Departments from './Departments';
 import Indicator from './Indicator';
 import NavLinks from './NavLinks';
-import IndicatorSearch from './IndicatorSearch';
 import { Heart20Svg, LogoSmallSvg } from '../../svg';
 
 
@@ -22,23 +21,11 @@ function NavPanel(props) {
     let departments = null;
     let searchIndicator;
 
-    // if (layout === 'compact') {
-    //     logo = (
-    //         <div className="nav-panel__logo">
-    //             <Link to="/"><LogoSmallSvg /></Link>
-    //         </div>
-    //     );
-
-    //     searchIndicator = <IndicatorSearch />;
-    // }
-
-    // if (layout === 'default') {
         departments = (
             <div className="nav-panel__departments">
                 <Departments {...props} />
             </div>
         );
-    // }
 
     return (
         <div className="nav-panel" style={props.layout == "compact" ? {backgroundColor: "#f1630cab"} : {}}>
@@ -48,12 +35,10 @@ function NavPanel(props) {
                     {departments}
 
                     <div className="nav-panel__nav-links nav-links">
-                        <NavLinks layout={props.layout} />
+                        <NavLinks layout={props.layout} history={props.history} />
                     </div>
 
                      <div className="nav-panel__indicators">
-                         {/*{searchIndicator}*/}
-
                          <Indicator url="/store/wishlist" value={wishlist.length} icon={<Heart20Svg />} />
 
                          <CartIndicator />
