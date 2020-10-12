@@ -63,7 +63,7 @@ function Layout(props) {
             }
         })
 
-         RestService.getOrganizationsByCode("ORG").then(res => {
+        RestService.getOrganizationsByCode("ORG").then(res => {
              if (res.data.status === "success") {
                  let org = {};
               org = res.data.data;
@@ -75,7 +75,10 @@ function Layout(props) {
                 setOrganization(org);
             }
           });
+    
+          
     }, [])
+
 
     return (
         <React.Fragment>

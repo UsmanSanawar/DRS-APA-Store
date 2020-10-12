@@ -19,6 +19,7 @@ import products from '../../data/shopProducts';
 import theme from '../../data/theme';
 import RestService from "../../store/restService/restService";
 import { IMAGE_URL } from '../../constant/constants';
+import productObjectConverter from '../../constant/helpers';
 
 function HomePageOne() {
 
@@ -30,37 +31,7 @@ function HomePageOne() {
                 let array = [];
 
                 data.map(item => {
-                    let images = [];
-                    if (item.productPhotos.length > 0) {
-
-                        item.productPhotos.map(image => {
-                            images.push(`${IMAGE_URL}/${image.name}`)
-                        })
-                    }
-                    console.log(images.sort(function(x, y) {
-                        return (x === y) ? 0 : x ? -1 : 1;
-                    }), "dsadsadsad")
-
-                    array.push(
-                    {
-                        id: item.productId,
-                        name: item.productName,
-                        price: item.price,
-                        compareAtPrice: null, //need be added to DTO
-                        images: images,
-                        badges: [''],
-                        rating: item.totalRating,
-                        reviews: item.totalReviewsCount,
-                        availability: 'in-stock',
-                        features: [
-                        { name: 'Speed', value: '750 RPM' },
-                        { name: 'Power Source', value: 'Cordless-Electric' },
-                        { name: 'Battery Cell Type', value: 'Lithium' },
-                        { name: 'Voltage', value: '20 Volts' },
-                        { name: 'Battery Capacity', value: '2 Ah' },
-                    ],
-                        options: item.productOptions,
-                    })
+                    array.push(productObjectConverter(item))
                 })
 
                 setProductList(array)
