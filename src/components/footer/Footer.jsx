@@ -12,11 +12,11 @@ import theme from '../../data/theme';
 
 export default function Footer(props) {
     const informationLinks = [
-        { title: 'About Us', url: '' },
+        { title: 'About Us', url: '/about-us' },
+        { title: 'Contact Us', url: '/contact-us' },
         { title: 'Delivery Information', url: '' },
         { title: 'Privacy Policy', url: '' },
         { title: 'Brands', url: '' },
-        { title: 'Contact Us', url: '' },
         { title: 'Returns', url: '' },
         { title: 'Site Map', url: '' },
     ];
@@ -24,7 +24,7 @@ export default function Footer(props) {
     const accountLinks = [
         { title: 'Store Location', url: '' },
         { title: 'Order History', url: '' },
-        { title: 'Wish List', url: '' },
+        { title: 'Wish List', url: '/store/wishlist' },
         { title: 'Newsletter', url: '' },
         { title: 'Specials', url: '' },
         { title: 'Gift Certificates', url: '' },
@@ -43,7 +43,7 @@ export default function Footer(props) {
                             <FooterLinks title="My Account" items={accountLinks} />
                         </div>
                         <div className="col-12 col-md-12 col-lg-4">
-                            <FooterNewsletter />
+                            <FooterNewsletter organization={props.organization} />
                         </div>
                         <div className="col-12 col-md-6 col-lg-4">
                             <FooterContacts organization={props.organization} />

@@ -4,7 +4,7 @@ import React from 'react';
 // third-party
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 // application
@@ -12,10 +12,10 @@ import AsyncAction from './AsyncAction';
 import Currency from './Currency';
 import Rating from './Rating';
 import { cartAddItem } from '../../store/cart';
-import { Compare16Svg, Quickview16Svg, Wishlist16Svg } from '../../svg';
+import { Compare16Svg, Quickview16Svg, Wishlist16Svg, Wishlist16SvgRed } from '../../svg';
 import { compareAddItem } from '../../store/compare';
 import { quickviewOpen } from '../../store/quickview';
-import { wishlistAddItem } from '../../store/wishlist';
+import { wishlistAddItem, wishlistRemoveItem } from '../../store/wishlist';
 
 
 function ProductCard(props) {
@@ -26,7 +26,11 @@ function ProductCard(props) {
         cartAddItem,
         wishlistAddItem,
         compareAddItem,
+        wishlistRemoveItem
     } = props;
+
+    const { wishlist } = useSelector(state => state)
+
     const containerClasses = classNames('product-card', {
         'product-card--layout--grid product-card--size--sm': layout === 'grid-sm',
         'product-card--layout--grid product-card--size--nl': layout === 'grid-nl',
@@ -35,22 +39,10 @@ function ProductCard(props) {
         'product-card--layout--horizontal': layout === 'horizontal',
     });
 
-    console.log(product, "productProps")
-
     let badges = [];
     let image;
     let price;
     let features;
-    //
-    // if (product.badges.includes('sale')) {
-    //     badges.push(<div key="sale" className="product-card__badge product-card__badge--sale">Sale</div>);
-    // }
-    // if (product.badges.includes('hot')) {
-    //     badges.push(<div key="hot" className="product-card__badge product-card__badge--hot">Hot</div>);
-    // }
-    // if (product.badges.includes('new')) {
-    //     badges.push(<div key="new" className="produ ct-card__badge product-card__badge--new">New</div>);
-    // }
 
     badges = badges.length ? <div className="product-card__badges-list">{badges}</div> : null;
 
@@ -164,7 +156,7 @@ function ProductCard(props) {
                     />
 
                     <AsyncAction
-                        action={() => wishlistAddItem(product)}
+                        action={() =>  wishlist.length > 0 && wishlist.some(item => item.productId === product.productId) ? wishlistRemoveItem(product.productId) : wishlistAddItem(product)}
                         render={({ run, loading }) => (
                             <button
                                 type="button"
@@ -173,7 +165,7 @@ function ProductCard(props) {
                                     'btn-loading': loading,
                                 })}
                             >
-                                <Wishlist16Svg />
+                                { wishlist.length > 0 && wishlist.some(item => item.productId === product.productId) ? <Wishlist16SvgRed /> : <Wishlist16Svg /> }
                             </button>
                         )}
                     />
@@ -216,6 +208,7 @@ const mapDispatchToProps = {
     wishlistAddItem,
     compareAddItem,
     quickviewOpen,
+    wishlistRemoveItem
 };
 
 export default connect(

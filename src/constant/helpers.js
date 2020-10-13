@@ -5,7 +5,7 @@ export default function productObjectConverter(item) {
     if (item.productPhotos.length > 0) {
 
         item.productPhotos.map(image => {
-            images.push(`${IMAGE_URL}/${image.name}`)
+            images.push(`${IMAGE_URL}/products/${image.name}`)
         })
     }
     item.id = item.productId;

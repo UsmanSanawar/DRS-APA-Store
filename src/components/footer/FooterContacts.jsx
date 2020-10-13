@@ -39,7 +39,7 @@ console.log('OrgObject', Org)
                 </li>
                 <li>
                     <i className="footer-contacts__icon fas fa-mobile-alt" />
-                    {`${Org.defaultAddress ? Org.defaultAddress.phoneNo : ""}, ${Org.defaultAddress ? Org.defaultAddress.phoneNo : ""}`}
+                    {`${Org.defaultAddress ? `${Org.defaultAddress.phoneNo ? Org.defaultAddress.phoneNo : ""}, ${Org.defaultAddress ? Org.defaultAddress.whatsappNo: ""}` : ""}`}
                 </li>
                 <li>
                     <i className="footer-contacts__icon far fa-clock" />

@@ -76,23 +76,12 @@ function CategorySidebar(props) {
 
                     parernts.map((item) => {
                         let categoryitem;
-                        // if (item.parentCategoryId == null) { 
-
+                    
                             categoryitem = {
                                 id: item.productCategoryId,
                                 type: "parent",
-                                // count: 75,
                                 name: item.name
                             };
-                        // } 
-                        // else {
-                        //     categoryitem = {
-                        //         id: item.productCategoryId,
-                        //         type: "child",
-                        //         // count: 75,
-                        //         name: item.name
-                        //     }
-                        // }
 
                         catArray.push(categoryitem);
                         let childs = Data.filter(row => row.parentCategoryId == item.productCategoryId)

@@ -118,9 +118,10 @@ class ProductGallery extends Component {
         event.preventDefault();
 
         const { images } = this.props;
+
         const items = images.map((image) => ({
-            src: `${IMAGE_URL}/${image.name}`,
-            msrc: `${IMAGE_URL}/${image.name}`,
+            src: `${IMAGE_URL}/products/${image.name}`,
+            msrc: `${IMAGE_URL}/products/${image.name}`,
             w: 700,
             h: 700,
         }));
@@ -202,9 +203,12 @@ class ProductGallery extends Component {
         const { layout, images } = this.props;
         const { currentIndex } = this.state;
 
+        console.log(images, "sdasdsadsadsad");
+
+
         const featured = images.map((image, index) => (
-            <Link key={index} to={`${IMAGE_URL}/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
-                <img style={{maxHeight: "400px"}}  src={`${IMAGE_URL}/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
+            <Link key={index} to={`${IMAGE_URL}/products/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
+                <img style={{maxHeight: "400px"}}  src={`${IMAGE_URL}/products/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
             </Link>
         ));
 
@@ -220,7 +224,7 @@ class ProductGallery extends Component {
                     onClick={() => this.handleThumbnailClick(index)}
                     className={classes}
                 >
-                    <img className="product-gallery__carousel-image" src={`${IMAGE_URL}/${image.name}`} alt="" />
+                    <img className="product-gallery__carousel-image" src={`${IMAGE_URL}/products/${image.name}`} alt="" />
                 </button>
             );
         });

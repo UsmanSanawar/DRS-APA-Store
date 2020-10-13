@@ -1,41 +1,51 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // data stubs
 import theme from '../../data/theme';
 
 
-export default function FooterNewsletter() {
+export default function FooterNewsletter(props) {
+
+    const [Org, setOrg] = useState({defaultAddress: {}})
+    useEffect(() => {
+    if (props.organization) {
+        setOrg(props.organization)
+    }
+    }, [props.organization])
+
     const socialLinks = [
         {
             key: 'facebook',
-            url: theme.author.profile_url,
+            url: `//${Org ? Org.facebook : ""}`,
             iconClass: 'fab fa-facebook-f',
         },
         {
             key: 'twitter',
-            url: theme.author.profile_url,
+            url: `//${Org ? Org.twitter : ""}`,
             iconClass: 'fab fa-twitter',
         },
         {
             key: 'youtube',
-            url: theme.author.profile_url,
+            url: `//${Org ? Org.youtube : ""}`,
             iconClass: 'fab fa-youtube',
         },
         {
             key: 'instagram',
-            url: theme.author.profile_url,
+            url: `//${Org ? Org.instagram : ""}`,
             iconClass: 'fab fa-instagram',
         },
         {
             key: 'rss',
-            url: theme.author.profile_url,
+            url: `//${Org ? Org.website : ""}`,
             iconClass: 'fas fa-rss',
         },
     ];
 
     const socialLinksList = socialLinks.map((item) => (
         <li key={item.key} className={`footer-newsletter__social-link footer-newsletter__social-link--${item.key}`}>
+        
+{console.log(item, "social link")}
             <a href={item.url} target="_blank" rel="noopener noreferrer">
                 <i className={item.iconClass} />
             </a>
