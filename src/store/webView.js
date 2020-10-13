@@ -1,10 +1,12 @@
 import productObjectConverter from "../constant/helpers";
+import RestService from "./restService/restService"
 
 const initialState = {
     storeView: false,
     menu: [],
     categories: [],
-    relatedProducts: []
+    relatedProducts: [],
+    allCountries: [],
 };
 
 export default function quickviewReducer(state = initialState, action) {
@@ -88,10 +90,36 @@ export default function quickviewReducer(state = initialState, action) {
 
         }
 
+
+        case 'GET_ALL_COUNTRIES': {
+            if (action.response.data.status === 'success') {
+                state.allCountries = action.response.data.data != null ? action.response.data.data : []
+            }
+            return {
+                ...state,
+                allCountries: state.allCountries
+            }
+        }
+
+
         default:
             return state;
     }
+}
 
 
+export function getAllCountries() {
+    // sending request to server, timeout is used as a stub
+    return dispatch => (
+        RestService.getAllCountries().then((response) => {
+            if (response.data) {
 
+                dispatch({
+                    type: 'GET_ALL_COUNTRIES',
+                    response: response
+                })
+
+            }
+        })
+    )
 }

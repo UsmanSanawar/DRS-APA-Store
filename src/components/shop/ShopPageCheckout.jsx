@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 // third-party
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux"
 import { Helmet } from 'react-helmet';
 import { Link, Redirect } from 'react-router-dom';
 
@@ -15,17 +16,68 @@ import { Check9x7Svg } from '../../svg';
 // data stubs
 import payments from '../../data/shopPayments';
 import theme from '../../data/theme';
+import { getAllCountries } from "../../store/webView"
 
+
+
+const initAddr = {
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    street: '',
+    companyName: '',
+    city: '',
+    state: '',
+    country: '',
+    zipCode: '',
+    latitude: '',
+    longitude: '',
+}
 
 class ShopPageCheckout extends Component {
     payments = payments;
-
     constructor(props) {
         super(props);
 
         this.state = {
             payment: 'bank',
+            formValues: {
+                billing: {...initAddr},
+                shipping: initAddr,
+            }
         };
+    }
+
+
+    componentDidMount() {
+        this.props.getAllCountries()
+    }
+
+
+    handleAddressToggle = (event) => {
+        console.log(event.target.checked, 'event.target.checked', event.target);
+        if(event){
+            if(event.target.checked){
+                this.state.formValues.shipping = this.state.formValues.billing
+            }else{
+                this.state.formValues.shipping = initAddr
+            }
+
+            this.setState({
+                formValues: this.state.formValues
+            })
+        }
+    }
+
+    handleChangeInput = (event, addressType = 'billing') => {
+        if (event) {
+            let name = event.target.name;
+            name.replace('shipping-', '')
+            this.state.formValues[addressType][name] = event.target.value;
+            this.setState({ formValues: this.state.formValues })
+        }
+
     }
 
     handlePaymentChange = (event) => {
@@ -141,7 +193,12 @@ class ShopPageCheckout extends Component {
     }
 
     render() {
-        const { cart } = this.props;
+        const { cart, allCountries } = this.props;
+       
+        const { billing, shipping } = this.state.formValues
+
+        console.log(billing, shipping,'allCountries allCountries',this.state.formValues);
+
 
         if (cart.items.length < 1) {
             return <Redirect to="cart" />;
@@ -163,201 +220,408 @@ class ShopPageCheckout extends Component {
 
                 <div className="checkout block">
                     <div className="container">
-                        <div className="row">
-                            <div className="col-12 mb-3">
-                                <div className="alert alert-primary alert-lg">
-                                    Returning customer?
+                        <form onSubmit={(e) => {
+                            e.preventDefault()
+                            alert(1)
+                        }} >
+                            <div className="row">
+                                <div className="col-12 mb-3">
+                                    <div className="alert alert-primary alert-lg">
+                                        Returning customer?
                                     {' '}
-                                    <Link to="/account/login">Click here to login</Link>
+                                        <Link to="/account/login">Click here to login</Link>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="col-12 col-lg-6 col-xl-7">
-                                <div className="card mb-lg-0">
-                                    <div className="card-body">
-                                        <h3 className="card-title">Billing details</h3>
-                                        <div className="form-row">
-                                            <div className="form-group col-md-6">
-                                                <label htmlFor="checkout-first-name">First Name</label>
+                                <div className="col-12 col-lg-6 col-xl-7">
+                                    <div className="card mb-lg-0">
+                                        <div className="card-body">
+                                            <h3 className="card-title">Billing details</h3>
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-first-name">First Name</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="checkout-first-name"
+                                                        placeholder="First Name"
+                                                        value={billing.firstName}
+                                                        name={'firstName'}
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-last-name">Last Name</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="checkout-last-name"
+                                                        placeholder="Last Name"
+                                                        value={billing.lastName}
+                                                        name={'lastName'}
+                                                        onChange={this.handleChangeInput}
+
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="checkout-company-name">
+                                                    Company Name
+                                                {' '}
+                                                    <span className="text-muted">(Optional)</span>
+                                                </label>
                                                 <input
                                                     type="text"
                                                     className="form-control"
-                                                    id="checkout-first-name"
-                                                    placeholder="First Name"
+                                                    id="checkout-company-name"
+                                                    placeholder="Company Name"
+                                                    value={billing.companyName}
+                                                    name={'companyName'}
+                                                    onChange={this.handleChangeInput}
+
                                                 />
                                             </div>
-                                            <div className="form-group col-md-6">
-                                                <label htmlFor="checkout-last-name">Last Name</label>
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-country">Country</label>
+                                                    <select id="checkout-country"
+                                                        className="form-control"
+                                                        value={billing.country}
+                                                        name={'country'}
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    >
+                                                        <option>Select a country...</option>
+                                                        {
+                                                            allCountries && allCountries.map(item => {
+                                                                return <option value={item.countryName}>{item.countryName}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-city">Town / City</label>
+                                                    <input type="text"
+                                                        className="form-control" id="checkout-city"
+                                                        value={billing.city}
+                                                        name={'city'}
+                                                        placeholder="Town / City"
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    />
+                                                </div>
+
+                                            </div>
+
+
+                                            <div className="form-group">
+                                                <label htmlFor="checkout-street-address">Street Address</label>
                                                 <input
                                                     type="text"
                                                     className="form-control"
-                                                    id="checkout-last-name"
-                                                    placeholder="Last Name"
+                                                    id="checkout-street-address"
+                                                    placeholder="Street Address"
+                                                    value={billing.street}
+                                                    name={'street'}
+                                                    onChange={this.handleChangeInput}
+                                                    required
                                                 />
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-company-name">
-                                                Company Name
-                                                {' '}
-                                                <span className="text-muted">(Optional)</span>
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="checkout-company-name"
-                                                placeholder="Company Name"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-country">Country</label>
-                                            <select id="checkout-country" className="form-control">
-                                                <option>Select a country...</option>
-                                                <option>United States</option>
-                                                <option>Russia</option>
-                                                <option>Italy</option>
-                                                <option>France</option>
-                                                <option>Ukraine</option>
-                                                <option>Germany</option>
-                                                <option>Australia</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-street-address">Street Address</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="checkout-street-address"
-                                                placeholder="Street Address"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-address">
-                                                Apartment, suite, unit etc.
-                                                {' '}
-                                                <span className="text-muted">(Optional)</span>
-                                            </label>
-                                            <input type="text" className="form-control" id="checkout-address" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-city">Town / City</label>
-                                            <input type="text" className="form-control" id="checkout-city" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-state">State / County</label>
-                                            <input type="text" className="form-control" id="checkout-state" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-postcode">Postcode / ZIP</label>
-                                            <input type="text" className="form-control" id="checkout-postcode" />
-                                        </div>
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-state">State / County</label>
+                                                    <input type="text" className="form-control"
+                                                        id="checkout-state"
+                                                        value={billing.state}
+                                                        name={'state'}
+                                                        placeholder="State / County"
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    />
+                                                </div>
 
-                                        <div className="form-row">
-                                            <div className="form-group col-md-6">
-                                                <label htmlFor="checkout-email">Email address</label>
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-postcode">Postcode / ZIP</label>
+                                                    <input type="text" className="form-control"
+                                                        id="checkout-postcode"
+                                                        value={billing.zipCode}
+                                                        name={'zipCode'}
+                                                        placeholder='Postcode / ZIP'
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-email">Email address</label>
+                                                    <input
+                                                        type="email"
+                                                        className="form-control"
+                                                        id="checkout-email"
+                                                        placeholder="Email address"
+                                                        value={billing.email}
+                                                        name={'email'}
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-phone">Phone</label>
+                                                    <input type="text" className="form-control"
+                                                        id="checkout-phone" placeholder="Phone"
+                                                        value={billing.phone}
+                                                        name={'phone'}
+                                                        onChange={this.handleChangeInput}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="card-divider" />
+                                        <div className="card-body">
+                                            <h3 className="card-title">Shipping Details</h3>
+
+                                            <div className="form-group">
+                                                <div className="form-check">
+                                                    <span className="form-check-input input-check">
+                                                        <span className="input-check__body">
+                                                            <input className="input-check__input" type="checkbox"
+                                                                id="checkout-different-address"
+                                                                onChange={this.handleAddressToggle}
+                                                            />
+                                                            <span className="input-check__box" />
+                                                            <Check9x7Svg className="input-check__icon" />
+                                                        </span>
+                                                    </span>
+                                                    <label className="form-check-label" htmlFor="checkout-different-address">
+                                                        Same Shipping Address
+                                                </label>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-first-name1">First Name</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        // id="checkout-first-name"
+                                                        placeholder="First Name"
+                                                        value={shipping.firstName}
+                                                        name={'shipping-firstName'}
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-last-name">Last Name</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="checkout-last-name"
+                                                        placeholder="Last Name"
+                                                        value={shipping.lastName}
+                                                        name={'shipping-lastName'}
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="checkout-company-name">
+                                                    Company Name
+                                                {' '}
+                                                    <span className="text-muted">(Optional)</span>
+                                                </label>
                                                 <input
-                                                    type="email"
+                                                    type="text"
                                                     className="form-control"
-                                                    id="checkout-email"
-                                                    placeholder="Email address"
+                                                    id="checkout-company-name"
+                                                    placeholder="Company Name"
+                                                    value={shipping.companyName}
+                                                    name={'shipping-companyName'}
+                                                    onChange={(e) => this.handleChangeInput(e, 'shipping')}
+
                                                 />
                                             </div>
-                                            <div className="form-group col-md-6">
-                                                <label htmlFor="checkout-phone">Phone</label>
-                                                <input type="text" className="form-control" id="checkout-phone" placeholder="Phone" />
-                                            </div>
-                                        </div>
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-country">Country</label>
+                                                    <select id="checkout-country"
+                                                        className="form-control"
+                                                        value={shipping.country}
+                                                        name={'shipping-country'}
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    >
+                                                        <option>Select a country...</option>
+                                                        {
+                                                            allCountries && allCountries.map(item => {
+                                                                return <option value={item.countryName}>{item.countryName}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
 
-                                        <div className="form-group">
-                                            <div className="form-check">
-                                                <span className="form-check-input input-check">
-                                                    <span className="input-check__body">
-                                                        <input className="input-check__input" type="checkbox" id="checkout-create-account" />
-                                                        <span className="input-check__box" />
-                                                        <Check9x7Svg className="input-check__icon" />
-                                                    </span>
-                                                </span>
-                                                <label className="form-check-label" htmlFor="checkout-create-account">
-                                                    Create an account?
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="card-divider" />
-                                    <div className="card-body">
-                                        <h3 className="card-title">Shipping Details</h3>
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-city">Town / City</label>
+                                                    <input type="text"
+                                                        className="form-control" id="checkout-city"
+                                                        value={shipping.city}
+                                                        name={'shipping-city'}
+                                                        placeholder="Town / City"
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    />
+                                                </div>
 
-                                        <div className="form-group">
-                                            <div className="form-check">
-                                                <span className="form-check-input input-check">
-                                                    <span className="input-check__body">
-                                                        <input className="input-check__input" type="checkbox" id="checkout-different-address" />
-                                                        <span className="input-check__box" />
-                                                        <Check9x7Svg className="input-check__icon" />
-                                                    </span>
-                                                </span>
-                                                <label className="form-check-label" htmlFor="checkout-different-address">
-                                                    Ship to a different address?
-                                                </label>
                                             </div>
-                                        </div>
 
-                                        <div className="form-group">
-                                            <label htmlFor="checkout-comment">
-                                                Order notes
+
+                                            <div className="form-group">
+                                                <label htmlFor="checkout-street-address">Street Address</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="checkout-street-address"
+                                                    placeholder="Street Address"
+                                                    value={shipping.street}
+                                                    name={'shipping-street'}
+                                                    onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-state">State / County</label>
+                                                    <input type="text" className="form-control"
+                                                        id="checkout-state"
+                                                        value={shipping.state}
+                                                        name={'shipping-state'}
+                                                        placeholder="State / County"
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-postcode">Postcode / ZIP</label>
+                                                    <input type="text" className="form-control"
+                                                        id="checkout-postcode"
+                                                        value={shipping.zipCode}
+                                                        name={'shipping-zipCode'}
+                                                        placeholder='Postcode / ZIP'
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="form-row">
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-email">Email address</label>
+                                                    <input
+                                                        type="email"
+                                                        className="form-control"
+                                                        id="checkout-email"
+                                                        placeholder="Email address"
+                                                        value={shipping.email}
+                                                        name={'shipping-email'}
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="form-group col-md-6">
+                                                    <label htmlFor="checkout-phone">Phone</label>
+                                                    <input type="text" className="form-control"
+                                                        id="checkout-phone" placeholder="Phone"
+                                                        value={shipping.phone}
+                                                        name={'shipping-phone'}
+                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="card-divider" />
+                                            <br />
+
+                                            <div className="form-group">
+                                                <label htmlFor="checkout-comment">
+                                                    Order notes
                                                 {' '}
-                                                <span className="text-muted">(Optional)</span>
-                                            </label>
-                                            <textarea id="checkout-comment" className="form-control" rows="4" />
+                                                    <span className="text-muted">(Optional)</span>
+                                                </label>
+                                                <textarea id="checkout-comment" className="form-control" rows="4" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0">
-                                <div className="card mb-0">
-                                    <div className="card-body">
-                                        <h3 className="card-title">Your Order</h3>
+                                <div className="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0">
+                                    <div className="card mb-0">
+                                        <div className="card-body">
+                                            <h3 className="card-title">Your Order</h3>
 
-                                        {this.renderCart()}
+                                            {this.renderCart()}
 
-                                        {this.renderPaymentsList()}
+                                            {this.renderPaymentsList()}
 
-                                        <div className="checkout__agree form-group">
-                                            <div className="form-check">
-                                                <span className="form-check-input input-check">
-                                                    <span className="input-check__body">
-                                                        <input className="input-check__input" type="checkbox" id="checkout-terms" />
-                                                        <span className="input-check__box" />
-                                                        <Check9x7Svg className="input-check__icon" />
+                                            <div className="checkout__agree form-group">
+                                                <div className="form-check">
+                                                    <span className="form-check-input input-check">
+                                                        <span className="input-check__body">
+                                                            <input className="input-check__input" type="checkbox" id="checkout-terms" />
+                                                            <span className="input-check__box" />
+                                                            <Check9x7Svg className="input-check__icon" />
+                                                        </span>
                                                     </span>
-                                                </span>
-                                                <label className="form-check-label" htmlFor="checkout-terms">
-                                                    I have read and agree to the website
+                                                    <label className="form-check-label" htmlFor="checkout-terms">
+                                                        I have read and agree to the website
                                                     <Link to="site/terms">terms and conditions</Link>
                                                     *
                                                 </label>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <button type="submit" className="btn btn-primary btn-xl btn-block">Place Order</button>
+                                            <button type="submit" className="btn btn-primary btn-xl btn-block">Place Order</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(
+        {
+            getAllCountries
+        },
+        dispatch
+    );
+}
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
+    allCountries: state.webView.allCountries
 });
 
-const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCheckout);
