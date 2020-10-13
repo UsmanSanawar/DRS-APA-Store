@@ -86,7 +86,7 @@ function Menu(props) {
                     <React.Fragment >
                         <div onClick={()=> toggleView(item)}>
                         {icon}
-                        {`${item.webSubMenuTitle}-55555555`}
+                        {item.webSubMenuTitle}
                         {arrow}
                         </div>
                        
