@@ -43,9 +43,10 @@ class ShopPageCheckout extends Component {
         this.state = {
             payment: 'bank',
             formValues: {
-                billing: {...initAddr},
-                shipping: initAddr,
-            }
+                billing: { ...initAddr, addressType: 'billing' },
+                shipping: {...initAddr, addressType: 'shipping' },
+            },
+            orderNote: '',
         };
     }
 
@@ -54,13 +55,58 @@ class ShopPageCheckout extends Component {
         this.props.getAllCountries()
     }
 
+    handleSubmitCheckout = () => {
+        console.log(this.state.formValues, 'this.state.formValues', this.props.cart);
+
+
+        let saleOrder = {
+            "saleIndentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
+            "isOnlineOrder": true,
+            "isPaymentOnline": true,
+            "onlinePaymentId": Date.now() + Math.floor(Math.random() * 100),
+            "saleOrderDate": new Date().toISOString().slice(0, 20),
+            // "orderDueDate": "2020-10-14T05:45:33.675Z",
+            "isCancelled": false,
+            "cancelReason": "",
+            "saleOrderAmountWithTaxAndDiscount": 0,
+            "saleOrderNotes": this.state.orderNote,
+            "isActive": true,
+            saleOrderAddress: [],
+            saleOrderLines: [],
+
+        }
+
+        saleOrder.saleOrderAddress.push(this.state.formValues.shipping)
+        saleOrder.saleOrderAddress.push(this.state.formValues.billing)
+
+        for (let item of this.props.cart) {
+            let line = {
+                "productId": item.product.id,
+                "productName": item.product.name,
+                "quantity": item.quantity,
+                "unitPrice": item.price,
+                "taxPercentage": 0,
+                "taxClassId": null,
+                "taxClassName": "",
+                "discountId": null,
+                "discountName": "",
+                "discountPercentage": 0,
+                "isProductReturn": false,
+                "returnReason": "",
+                "isActive": true
+            }
+
+            saleOrder.saleOrderLines.push(line)
+        }
+
+    }
 
     handleAddressToggle = (event) => {
         console.log(event.target.checked, 'event.target.checked', event.target);
-        if(event){
-            if(event.target.checked){
+        if (event) {
+            if (event.target.checked) {
                 this.state.formValues.shipping = this.state.formValues.billing
-            }else{
+            } else {
                 this.state.formValues.shipping = initAddr
             }
 
@@ -72,9 +118,12 @@ class ShopPageCheckout extends Component {
 
     handleChangeInput = (event, addressType = 'billing') => {
         if (event) {
+
             let name = event.target.name;
-            name.replace('shipping-', '')
+            name = name.replace("shipping-", "")
             this.state.formValues[addressType][name] = event.target.value;
+            console.log(addressType, 'log tpe of', name, 'name tis the', this.state.formValues[addressType]);
+
             this.setState({ formValues: this.state.formValues })
         }
 
@@ -194,10 +243,10 @@ class ShopPageCheckout extends Component {
 
     render() {
         const { cart, allCountries } = this.props;
-       
+
         const { billing, shipping } = this.state.formValues
 
-        console.log(billing, shipping,'allCountries allCountries',this.state.formValues);
+        // console.log( Date.now() + Math.floor(Math.random() * 100), 'date ist e');
 
 
         if (cart.items.length < 1) {
@@ -222,7 +271,7 @@ class ShopPageCheckout extends Component {
                     <div className="container">
                         <form onSubmit={(e) => {
                             e.preventDefault()
-                            alert(1)
+                            this.handleSubmitCheckout()
                         }} >
                             <div className="row">
                                 <div className="col-12 mb-3">
@@ -564,7 +613,9 @@ class ShopPageCheckout extends Component {
                                                 {' '}
                                                     <span className="text-muted">(Optional)</span>
                                                 </label>
-                                                <textarea id="checkout-comment" className="form-control" rows="4" />
+                                                <textarea id="checkout-comment"
+                                                    className="form-control" rows="4"
+                                                    onChange={(e) => this.setState({ orderNote: e.target.value })} />
                                             </div>
                                         </div>
                                     </div>

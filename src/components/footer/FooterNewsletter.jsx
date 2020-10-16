@@ -44,8 +44,6 @@ export default function FooterNewsletter(props) {
 
     const socialLinksList = socialLinks.map((item) => (
         <li key={item.key} className={`footer-newsletter__social-link footer-newsletter__social-link--${item.key}`}>
-        
-{console.log(item, "social link")}
             <a href={item.url} target="_blank" rel="noopener noreferrer">
                 <i className={item.iconClass} />
             </a>

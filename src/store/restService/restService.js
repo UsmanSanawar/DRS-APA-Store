@@ -58,8 +58,9 @@ const RestService = {
 
     getOrganizationsByCode: (code) => axios.get(`${BASE_URL}/masterdata/Organization/${code}`, RestService.getHeader()),
 
-
     getAllCountries:() => axios.get(`${BASE_URL}/masterdata/Countries/0/0`, RestService.getHeader()),
+
+    postSaleOrder: (FormData) => axios.post(`${BASE_URL}/masterdata/SaleOrders`, FormData, RestService.getHeader()),
 
 
 };
