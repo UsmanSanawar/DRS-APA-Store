@@ -1,4 +1,4 @@
-import productObjectConverter from "../constant/helpers";
+import {productObjectConverter} from "../constant/helpers";
 import RestService from "./restService/restService"
 
 const initialState = {

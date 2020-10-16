@@ -1,8 +1,11 @@
 import {IMAGE_URL} from "./constants";
 
-export default function productObjectConverter(item) {
+export function productObjectConverter(item) {
+
+    console.log(item, "Object Passed")
+
     let images = [];
-    if (item.productPhotos.length > 0) {
+    if (item.productPhotos && item.productPhotos.length > 0) {
 
         item.productPhotos.map(image => {
             images.push(`${IMAGE_URL}/products/${image.name}`)
@@ -25,5 +28,8 @@ export default function productObjectConverter(item) {
         {name: 'Weight', value: item.weight + " " + (item.weightUnitName != null ? item.weightUnitName : "")},
     ];
     item.options = item.productOptions;
+
+    console.log(item, "product Object Converter")
+
     return item
 }

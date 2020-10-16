@@ -13,7 +13,7 @@ import {Filters16Svg, LayoutGrid16x16Svg, LayoutGridWithDetails16x16Svg, LayoutL
 import {sidebarOpen} from '../../store/sidebar';
 import RestService from "../../store/restService/restService";
 import CircularLoader from "../../assets/loaders";
-import productObjectConverter from "../../constant/helpers";
+import {productObjectConverter} from "../../constant/helpers";
 
 
 class ProductsView extends Component {

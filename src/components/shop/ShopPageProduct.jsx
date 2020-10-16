@@ -23,7 +23,7 @@ import products from '../../data/shopProducts';
 import theme from '../../data/theme';
 import RestService from '../../store/restService/restService';
 import {useDispatch, useSelector} from "react-redux";
-import productObjectConverter from "../../constant/helpers";
+import {productObjectConverter} from "../../constant/helpers";
 
 
 function ShopPageProduct(props) {

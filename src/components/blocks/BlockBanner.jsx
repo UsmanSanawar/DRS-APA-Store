@@ -3,6 +3,7 @@ import React from 'react';
 
 // third-party
 import { Link } from 'react-router-dom';
+import banner from "../../assets/imgs/banner-1.jpg"
 
 
 export default function BlockBanner() {
@@ -12,7 +13,7 @@ export default function BlockBanner() {
                 <Link to="/" className="block-banner__body">
                     <div
                         className="block-banner__image block-banner__image--desktop"
-                        style={{ backgroundImage: 'url("images/banners/banner-1.jpg")' }}
+                        style={{ backgroundImage: `url(${banner})` }}
                     />
                     <div
                         className="block-banner__image block-banner__image--mobile"

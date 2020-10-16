@@ -29,6 +29,9 @@ function ProductCard(props) {
         wishlistRemoveItem
     } = props;
 
+
+  console.log(product, "card Props Product")
+
     const { wishlist } = useSelector(state => state)
 
     const containerClasses = classNames('product-card', {

@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 // reducer
 import rootReducer from './rootReducer';
 
-
 function load() {
     let state;
 
@@ -25,7 +24,7 @@ function load() {
 
 const store = createStore(rootReducer, load(), compose(
     applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 ));
 
 function save() {
@@ -35,7 +34,7 @@ function save() {
         // eslint-disable-next-line no-console
         console.error(error);
     }
-} 
+}
 
 store.subscribe(() => save());
 

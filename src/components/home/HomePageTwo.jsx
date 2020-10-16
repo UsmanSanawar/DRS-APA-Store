@@ -5,7 +5,7 @@ import CommonCom from "../../components/common"
 
 function HomePageTwo() {     
     
-    return ( 
+    return (
         <React.Fragment>
             {/* {getPreviewHTML()} */}
             <CommonCom slug="home" />
