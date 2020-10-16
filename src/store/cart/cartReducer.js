@@ -1,4 +1,4 @@
-import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES } from './cartActionTypes';
+import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,POST_SALE_ORDER,ERROR } from './cartActionTypes';
 
 
 /**
@@ -183,6 +183,13 @@ export default function cartReducer(state = initialState, action) {
 
     case CART_UPDATE_QUANTITIES:
         return updateQuantities(state, action.quantities);
+
+    case POST_SALE_ORDER:{
+        alert(1)
+        return {
+            ...state
+        }
+    }
 
     default:
         return state;

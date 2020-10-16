@@ -1,5 +1,31 @@
 import { toast } from 'react-toastify';
-import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES } from './cartActionTypes';
+import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,ERROR,POST_SALE_ORDER} from './cartActionTypes';
+import RestService from '../restService/restService';
+
+
+export function postSaleOrder(formData) {
+    console.log(formData, 'formData 1');
+    
+    return (dispatch) => {
+    console.log(formData, 'formData 2');
+
+      RestService.postSaleOrder(formData).then(response => {
+    console.log(formData, 'formData 3', response);
+        if (response.data) {
+          dispatch({
+            type: POST_SALE_ORDER,
+            response: response
+          });
+        } else {
+          dispatch({
+            type: ERROR,
+            response: response,
+          });
+        }
+      })
+    }
+  }
+
 
 
 export function cartAddItemSuccess(product, options = [], quantity = 1) {

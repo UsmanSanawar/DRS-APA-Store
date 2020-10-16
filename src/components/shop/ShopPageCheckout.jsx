@@ -17,7 +17,7 @@ import { Check9x7Svg } from '../../svg';
 import payments from '../../data/shopPayments';
 import theme from '../../data/theme';
 import { getAllCountries } from "../../store/webView"
-
+import { postSaleOrder } from "../../store//cart"
 
 
 const initAddr = {
@@ -65,7 +65,7 @@ class ShopPageCheckout extends Component {
             "isPaymentOnline": true,
             "onlinePaymentId": Date.now() + Math.floor(Math.random() * 100),
             "saleOrderDate": new Date().toISOString().slice(0, 20),
-            // "orderDueDate": "2020-10-14T05:45:33.675Z",
+            "orderDueDate": null,
             "isCancelled": false,
             "cancelReason": "",
             "saleOrderAmountWithTaxAndDiscount": 0,
@@ -79,7 +79,7 @@ class ShopPageCheckout extends Component {
         saleOrder.saleOrderAddress.push(this.state.formValues.shipping)
         saleOrder.saleOrderAddress.push(this.state.formValues.billing)
 
-        for (let item of this.props.cart) {
+        for (let item of this.props.cart.items) {
             let line = {
                 "productId": item.product.id,
                 "productName": item.product.name,
@@ -99,6 +99,7 @@ class ShopPageCheckout extends Component {
             saleOrder.saleOrderLines.push(line)
         }
 
+        this.props.postSaleOrder(saleOrder)
     }
 
     handleAddressToggle = (event) => {
@@ -646,7 +647,11 @@ class ShopPageCheckout extends Component {
                                                 </label>
                                                 </div>
                                             </div>
-
+                                            <a href="https://www.payatrader.com/trader_certificate.php?id=1073424" target="_blank">
+                                                <img src="https://paya-group-images.s3-eu-west-1.amazonaws.com/merchant-portal/payment-buttons/pay-medium.png" 
+                                                alt="Credit and Debit Card Acceptance for small business with Paya Card Processing Services" 
+                                                title="Authorised to accept card payments with Paya Card Processing Services" border="0" />
+                                                </a>
                                             <button type="submit" className="btn btn-primary btn-xl btn-block">Place Order</button>
                                         </div>
                                     </div>
@@ -663,7 +668,8 @@ class ShopPageCheckout extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         {
-            getAllCountries
+            getAllCountries,
+            postSaleOrder
         },
         dispatch
     );
