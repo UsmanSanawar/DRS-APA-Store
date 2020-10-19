@@ -159,16 +159,16 @@ const initialState = {
     items: [],
     subtotal: 0,
     extraLines: [ // shipping, taxes, fees, .etc
-        {
-            type: 'shipping',
-            title: 'Shipping',
-            price: 25,
-        },
-        {
-            type: 'tax',
-            title: 'Tax',
-            price: 0,
-        },
+        // {
+        //     type: 'shipping',
+        //     title: 'Shipping',
+        //     price: 25,
+        // },
+        // {
+        //     type: 'tax',
+        //     title: 'Tax',
+        //     price: 0,
+        // },
     ],
     total: 0,
 };

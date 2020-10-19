@@ -8,6 +8,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
 // application
+import { useDispatch, useSelector } from 'react-redux';
 import Footer from './footer';
 import Header from './header';
 import MobileHeader from './mobile/MobileHeader';
@@ -37,13 +38,11 @@ import ShopPageCategory from './shop/ShopPageCategory';
 
 // data stubs
 import theme from '../data/theme';
-import CommonComp from "../components/common"
+import CommonComp from './common';
 import RestService from '../store/restService/restService';
-import { useDispatch, useSelector } from 'react-redux';
 
 function Layout(props) {
     const { match, headerLayout, homeComponent } = props;
-
 
     const dispatch = useDispatch();
     const { menu } = useSelector(({ webView }) => webView);
@@ -51,34 +50,31 @@ function Layout(props) {
     const [organization, setOrganization] = useState({});
 
     useEffect(() => {
-        RestService.getWebMenu().then(res => {
-            if (res.data.status == "success") {
-                dispatch({ type: "SAVE_WEB_MENU", data: res.data.data })
+        RestService.getWebMenu().then((res) => {
+            if (res.data.status == 'success') {
+                dispatch({ type: 'SAVE_WEB_MENU', data: res.data.data });
             }
-        })
+        });
 
-        RestService.getAllCategories().then(res => {
-            if (res.data.status == "success") {
-                dispatch({ type: "SAVE_CATEGORIES", data: res.data.data })
+        RestService.getAllCategories().then((res) => {
+            if (res.data.status == 'success') {
+                dispatch({ type: 'SAVE_CATEGORIES', data: res.data.data });
             }
-        })
+        });
 
-        RestService.getOrganizationsByCode("ORG").then(res => {
-             if (res.data.status === "success") {
-                 let org = {};
-              org = res.data.data;
-              let addresses = res.data.data && res.data.data.locations ? res.data.data.locations : [];
-              addresses = res.data.data.locations.filter(item => item.isDefault === true);
-              if (addresses.length > 0) {
-                org.defaultAddress = addresses[0]
-              } 
+        RestService.getOrganizationsByCode('ORG').then((res) => {
+            if (res.data.status === 'success') {
+                let org = {};
+                org = res.data.data;
+                let addresses = res.data.data && res.data.data.locations ? res.data.data.locations : [];
+                addresses = res.data.data.locations.filter((item) => item.isDefault === true);
+                if (addresses.length > 0) {
+                    org.defaultAddress = addresses[0];
+                }
                 setOrganization(org);
             }
-          });
-    
-          
-    }, [])
-
+        });
+    }, []);
 
     return (
         <React.Fragment>
@@ -141,7 +137,7 @@ function Layout(props) {
                                 <ShopPageCategory {...props} columns={3} viewMode="list" sidebarPosition="start" />
                             )}
                         />
-                        
+
                         <Route
                             exact
                             path="/shop/category-right-sidebar"
@@ -238,29 +234,47 @@ function Layout(props) {
                         <Redirect exact from="/site" to="/site/about-us" />
 
                         {
-                           menu && menu.map(item => {
-
-                                return <Route path={`/:slug`}
+                            menu && menu.map((item) => (
+                                <Route
+                                    path="/:slug"
                                     render={(props) => (
                                         <CommonComp slug={item.slug} {...props} />
-                                    )} />
-
-                            })
+                                    )}
+                                />
+                            ))
                         }
 
-                        <Route exact path="/site/about-us" component={SitePageAboutUs}
+                        <Route
+                            exact
+                            path="/site/about-us"
+                            component={SitePageAboutUs}
                         />
 
-                        <Route exact path="/site/contact-us-alt"
-                            component={SitePageContactUsAlt} />
-                        <Route exact path="/site/not-found"
-                            rcomponent={SitePageNotFound} />
-                        <Route exact path="/site/faq"
-                            component={SitePageFaq} />
-                        <Route exact path="/site/terms"
-                            component={SitePageTerms} />
-                        <Route exact path="/site/typography"
-                            component={SitePageTypography} />
+                        <Route
+                            exact
+                            path="/site/contact-us-alt"
+                            component={SitePageContactUsAlt}
+                        />
+                        <Route
+                            exact
+                            path="/site/not-found"
+                            rcomponent={SitePageNotFound}
+                        />
+                        <Route
+                            exact
+                            path="/site/faq"
+                            component={SitePageFaq}
+                        />
+                        <Route
+                            exact
+                            path="/site/terms"
+                            component={SitePageTerms}
+                        />
+                        <Route
+                            exact
+                            path="/site/typography"
+                            component={SitePageTypography}
+                        />
 
                         {/*
                         // Page Not Found

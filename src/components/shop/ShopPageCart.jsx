@@ -18,7 +18,6 @@ import { Cross12Svg } from '../../svg';
 // data stubs
 import theme from '../../data/theme';
 
-
 class ShopPageCart extends Component {
     constructor(props) {
         super(props);
@@ -214,9 +213,9 @@ class ShopPageCart extends Component {
                     </table>
                     <div className="cart__actions">
                         <form className="cart__coupon-form">
-                            <label htmlFor="input-coupon-code" className="sr-only">Password</label>
+                            {/* <label htmlFor="input-coupon-code" className="sr-only">Password</label>
                             <input type="text" className="form-control" id="input-coupon-code" placeholder="Coupon Code" />
-                            <button type="submit" className="btn btn-primary">Apply Coupon</button>
+                            <button type="submit" className="btn btn-primary">Apply Coupon</button> */}
                         </form>
                         <div className="cart__buttons">
                             <Link to="/store" className="btn btn-light">Continue Shopping</Link>

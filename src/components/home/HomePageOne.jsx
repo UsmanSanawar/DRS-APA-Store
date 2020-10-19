@@ -100,7 +100,7 @@ function HomePageOne() {
 
       {/* <BlockPosts title="Latest News" layout="list-sm" posts={posts}/> */}
 
-      <BlockBrands/>
+      {/* <BlockBrands/> */}
 
       {/* <BlockProductColumns columns={columns}/> */}
     </React.Fragment>
