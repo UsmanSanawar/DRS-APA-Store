@@ -430,11 +430,11 @@ class Product extends Component {
                         <div className="product__prices">
                             {this.state.slectedPr.optionPrice ?
                                 this.state.slectedPr.priceParam === "equal" ?
-                                    "$" + (this.state.slectedPr.optionPrice.toFixed(2))
+                                <Currency value={this.state.slectedPr.optionPrice} />
                                     : this.state.slectedPr.priceParam === "plus" ?
-                                        "$" + (this.state.slectedPr.optionPrice + product.price).toFixed(2)
+                                       <Currency value={(this.state.slectedPr.optionPrice + product.price)} />
                                         : this.state.slectedPr.priceParam === "minus" ?
-                                            "$" + (this.state.slectedPr.optionPrice - product.price).toFixed(2)
+                                             <Currency value={(this.state.slectedPr.optionPrice - product.price)} />
                                             : 0
                                 : prices
                             }
