@@ -165,7 +165,7 @@ class Product extends Component {
 
     render() {
 
-        console.log(window.addthis, 'sdfaf');
+        console.log(window.addthis, 'sdfaf',this.state.options);
 
         // if(window.addthis){
         //     if(document.getElementById('share-btn') != null){
@@ -185,7 +185,7 @@ class Product extends Component {
             compareAddItem,
             cartAddItem,
         } = this.props;
-        console.log(this.state.slectedPr, "slectedPr", product);
+        console.log(this.state.options, "slectedPr", product);
 
         let CartObj = localStorage.getItem("state");
         if (CartObj) {
@@ -196,6 +196,9 @@ class Product extends Component {
         const { quantity } = this.state;
         let prices;
 
+        const handleAddToCart = () =>{
+            
+        }
 
         const handleOptionValues = (options) => {
             let SelectOptions;
@@ -465,9 +468,8 @@ class Product extends Component {
                                     <div className="product__actions-item product__actions-item--addtocart">
                                         <AsyncAction
                                             action={() => {
-                                                let prr = product
                                                 // prr.productOptions = this.state.productPlusOptions
-                                                return cartAddItem(prr, [], quantity)
+                                                return cartAddItem( product, this.state.options, quantity)
                                             }}
                                             render={({ run, loading }) => (
                                                 <button

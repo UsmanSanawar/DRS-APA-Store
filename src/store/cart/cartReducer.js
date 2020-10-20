@@ -185,7 +185,7 @@ export default function cartReducer(state = initialState, action) {
         return updateQuantities(state, action.quantities);
 
     case POST_SALE_ORDER:{
-        alert(1)
+        // alert(1)
         return {
             ...state
         }

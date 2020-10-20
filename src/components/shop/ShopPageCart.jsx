@@ -28,6 +28,14 @@ class ShopPageCart extends Component {
         };
     }
 
+    getSeletedOptionValue = (option) =>{
+        let index = option.optionValues.findIndex(item => item.optionValueId == option.value);
+        if(index > -1){
+            return option.optionValues[index].name
+        }
+        return ""
+    }
+
     getItemQuantity(item) {
         const { quantities } = this.state;
         const quantity = quantities.find((x) => x.itemId === item.id);
@@ -77,7 +85,7 @@ class ShopPageCart extends Component {
                 options = (
                     <ul className="cart-table__options">
                         {item.options.map((option, index) => (
-                            <li key={index}>{`${option.optionTitle}: ${option.valueTitle}`}</li>
+                            <li key={index}>{`${option.optionName}: ${this.getSeletedOptionValue(option)}`}</li>
                         ))}
                     </ul>
                 );
@@ -255,6 +263,9 @@ class ShopPageCart extends Component {
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
         ];
+
+        console.log(cart, 'cart list is not empty');
+        
 
         let content;
 

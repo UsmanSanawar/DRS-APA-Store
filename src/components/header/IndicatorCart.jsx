@@ -40,6 +40,15 @@ function IndicatorCart(props) {
         );
     }
 
+
+   const getSeletedOptionValue = (option) =>{
+        let index = option.optionValues.findIndex(item => item.optionValueId == option.value);
+        if(index > -1){
+            return option.optionValues[index].name
+        }
+        return ""
+    }
+
     const items = cart.items.map((item) => {
         let options;
         let image;
@@ -48,7 +57,7 @@ function IndicatorCart(props) {
             options = (
                 <ul className="dropcart__product-options">
                     {item.options.map((option, index) => (
-                        <li key={index}>{`${option.optionTitle}: ${option.valueTitle}`}</li>
+                        <li key={index}>{`${option.optionName}: ${getSeletedOptionValue(option)}`}</li>
                     ))}
                 </ul>
             );
