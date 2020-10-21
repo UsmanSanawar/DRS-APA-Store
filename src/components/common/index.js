@@ -68,6 +68,9 @@ function CommonComp(props) {
       case 'FiPaymentSecurity48Svg':
         tag = <FiPaymentSecurity48Svg />
         break;
+
+        default:
+        break
     }
     return tag
   }
