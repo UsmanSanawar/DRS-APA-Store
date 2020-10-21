@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {IMAGE_URL } from "../../constant/constants"
-
+import SliderImage from 'react-zoom-slider';
 // application
 import SlickWithPreventSwipeClick from './SlickWithPreventSwipeClick';
 
@@ -108,6 +108,19 @@ class ProductGallery extends Component {
         }
 
         this.unmounted = true;
+    }
+
+    getImages = () =>{
+        const {images} = this.props;
+        let imagesArr = []
+        if (images && images.length > 0) {
+          for (const [i, item] of images.entries()) {
+            imagesArr.push({ image: `${IMAGE_URL}/products/${item.name}`, text: `${i+1}/${images.length}` })
+          }
+        }
+        console.log(imagesArr, 'imagesArr imagesArr');
+        
+        return imagesArr
     }
 
     handleFeaturedClick = (event, index) => {
@@ -232,21 +245,29 @@ class ProductGallery extends Component {
         return (
             <div className="product__gallery">
                 <div className="product-gallery">
-                    <div className="product-gallery__featured">
-                        <SlickWithPreventSwipeClick
+                    {/* <div className="product-gallery__featured"> */}
+                    {
+              images && images.length > 0 ?
+            <SliderImage
+              data={this.getImages()}
+              showDescription={true}
+              direction="right"
+            />
+             : null}
+                        {/* <SlickWithPreventSwipeClick
                             ref={this.setSlickFeaturedRef}
                             {...slickSettingsFeatured}
                             beforeChange={this.handleFeaturedBeforeChange}
                             afterChange={this.handleFeaturedAfterChange}
                         >
                             {featured}
-                        </SlickWithPreventSwipeClick>
-                    </div>
-                    <div className="product-gallery__carousel">
+                        </SlickWithPreventSwipeClick> */}
+                    {/* </div> */}
+                    {/* <div className="product-gallery__carousel">
                         <SlickWithPreventSwipeClick {...slickSettingsThumbnails[layout]}>
                             {thumbnails}
                         </SlickWithPreventSwipeClick>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         );

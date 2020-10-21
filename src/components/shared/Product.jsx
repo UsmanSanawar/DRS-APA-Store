@@ -20,6 +20,7 @@ import { Compare16Svg, Wishlist16Svg } from '../../svg';
 import { wishlistAddItem } from '../../store/wishlist';
 import "../../assets/CSS/customStylesForInputs.css";
 import RestService from '../../store/restService/restService';
+
 import { BASE_URL, IMAGE_URL } from "../../constant/constants"
 
 class Product extends Component {
@@ -61,26 +62,6 @@ class Product extends Component {
         if (this.props.product != prevProps.product) {
             const { product } = this.props
             const { prForShar } = this.state
-            //  prForShar.data_url = 'http://192.3.213.101:2550/#/store/product/104'
-            //  prForShar.data_title = product.productName
-            //  prForShar.data_media = product.productPhotos.length > 0 ? `${IMAGE_URL}/${product.productPhotos[0].name}`: ''
-
-            // this.setState({
-            //     prForShar
-            // },()=>{
-            //     if(window.addthis){
-            //         window.addthis.layers.refresh();
-            //     }
-            // })
-
-
-
-            // window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png');
-            // window.addthis.update('share', 'url', 'http://192.3.213.101:2550/#/store/product/104');
-
-
-            console.log(product.productPhotos.length > 0 ? IMAGE_URL + '/' + product.productPhotos[0].name : '', 'product.productPhotos[0].name image');
-
 
             this.getProductOptionCombination()
             this.setState({
@@ -167,38 +148,16 @@ class Product extends Component {
 
         console.log(window.addthis, 'sdfaf', this.state.options);
 
-        // if(window.addthis){
-        //     if(document.getElementById('share-btn') != null){
-        //         document.getElementById('share-btn').setAttribute('data-media', 'http://i.imgur.com/sI5mrZP.png')
-        //     }
-
-        //     window.addthis.update('share', 'media', 'http://i.imgur.com/sI5mrZP.png');
-        //     window.addthis.media = "http://i.imgur.com/sI5mrZP.png";
-        //     window.addthis.toolbox(".addthis_toolbox");
-        // }
-
-
         const {
             product,
             layout,
             wishlistAddItem,
             compareAddItem,
             cartAddItem,
-        } = this.props;
-        console.log(this.state.options, "slectedPr", product);
-
-        let CartObj = localStorage.getItem("state");
-        if (CartObj) {
-            let Cart = JSON.parse(CartObj).cart;
-        }
+        } = this.props; 
 
 
         const { quantity } = this.state;
-        let prices;
-
-        const handleAddToCart = () => {
-
-        }
 
         const handleOptionValues = (options) => {
             let SelectOptions;
@@ -224,7 +183,7 @@ class Product extends Component {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input required onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} name={item.optionName} id="exampleText" />
+                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} name={item.optionName} id="exampleText" />
                 </div>
 
             } else if (item.optionTypeName === "Checkbox") {
@@ -300,7 +259,6 @@ class Product extends Component {
             }
             return price
         }
-
 
 
         return (

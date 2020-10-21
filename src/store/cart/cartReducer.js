@@ -41,12 +41,12 @@ function calcTotal(subtotal, extraLines) {
 }
 
 function addItem(state, product, options, quantity) {
-    const itemIndex = findItemIndex(state.items, product, options);
+    // const itemIndex = findItemIndex(state.items, product, options);
 
     let newItems;
     let { lastItemId } = state;
 
-    if (itemIndex === -1) {
+    // if (itemIndex === -1) {
         lastItemId += 1;
         newItems = [...state.items, {
             id: lastItemId,
@@ -56,19 +56,19 @@ function addItem(state, product, options, quantity) {
             total: product.price * quantity,
             quantity,
         }];
-    } else {
-        const item = state.items[itemIndex];
+    // } else {
+    //     const item = state.items[itemIndex];
 
-        newItems = [
-            ...state.items.slice(0, itemIndex),
-            {
-                ...item,
-                quantity: item.quantity + quantity,
-                total: (item.quantity + quantity) * item.price,
-            },
-            ...state.items.slice(itemIndex + 1),
-        ];
-    }
+    //     newItems = [
+    //         ...state.items.slice(0, itemIndex),
+    //         {
+    //             ...item,
+    //             quantity: item.quantity + quantity,
+    //             total: (item.quantity + quantity) * item.price,
+    //         },
+    //         ...state.items.slice(itemIndex + 1),
+    //     ];
+    // }
 
     const subtotal = calcSubtotal(newItems);
     const total = calcTotal(subtotal, state.extraLines);

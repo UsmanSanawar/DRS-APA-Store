@@ -154,7 +154,7 @@ function CommonComp(props) {
     return <div>
       {
         dataList.map(item => {
-          return <iframe width={getWith(item.videoPlayerSize)} height="550" src={item.videoUrl}>
+          return <iframe width={getWith(item.videoPlayerSize)} frameborder="0"  height="600" src={item.videoUrl}>
           </iframe>
         })
       }
