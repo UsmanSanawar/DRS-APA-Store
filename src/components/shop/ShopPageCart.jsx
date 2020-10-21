@@ -85,7 +85,7 @@ class ShopPageCart extends Component {
                 options = (
                     <ul className="cart-table__options">
                         {item.options.map((option, index) => (
-                            <li key={index}>{`${option.optionName}:  ${option.optionTypeId == 1 || option.optionTypeId == 2 ? this.getSeletedOptionValue(option) : option.optionTypeId == 3 ? option.value == undefined || option.value == false ? 'No' : 'Yes' : option.optionTypeId == 6 ? option.value: ""}`}</li>
+                            <li key={index}>{`${option.optionName}:  ${option.optionTypeId == 1 || option.optionTypeId == 2 ? this.getSeletedOptionValue(option) : option.optionTypeId == 3 ? option.value == undefined || option.value == false ? false : true : option.optionTypeId == 6 ? option.value: ""}`}</li>
                         ))}
                     </ul>
                 );
