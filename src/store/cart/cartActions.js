@@ -28,9 +28,9 @@ export function postSaleOrder(formData) {
 
 
 
-export function cartAddItemSuccess(product, options = [], quantity = 1) {
+export function cartAddItemSuccess(product, options = [], quantity = 1,price) {
     toast.success(`Product "${product.productName ? product.productName : product.name}" added to cart!`);
-
+    product.price = price != 0 && price != null ? price : product.price
     return {
         type: CART_ADD_ITEM,
         product,
@@ -53,12 +53,12 @@ export function cartUpdateQuantitiesSuccess(quantities) {
     };
 }
 
-export function cartAddItem(product, options = [], quantity = 1) {
+export function cartAddItem(product, options = [], quantity = 1, price=0) {
     // sending request to server, timeout is used as a stub
     return dispatch => (
         new Promise((resolve) => {
             setTimeout(() => {
-                dispatch(cartAddItemSuccess(product, options, quantity));
+                dispatch(cartAddItemSuccess(product, options, quantity, price));
                 resolve();
             }, 500);
         })

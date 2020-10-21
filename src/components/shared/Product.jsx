@@ -144,12 +144,12 @@ class Product extends Component {
         if (event != undefined && optionId != undefined) {
 
             let index = this.state.options.findIndex(item => {
-                return item.optionValues.some(comb => comb.optionId === optionId)
-                //   return item.optionId === optionId
+                // return item.optionValues.some(comb => comb.optionId === optionId)
+                  return item.optionId == optionId
             })
             //    alert(index)
             if (index > -1) {
-                this.state.options[index].value = event.target.value;
+                this.state.options[index].value = event.target.type == 'checkbox' ? event.target.checked : event.target.value;
                 this.setState({
                     options: this.state.options
                 }, () => {
@@ -165,7 +165,7 @@ class Product extends Component {
 
     render() {
 
-        console.log(window.addthis, 'sdfaf',this.state.options);
+        console.log(window.addthis, 'sdfaf', this.state.options);
 
         // if(window.addthis){
         //     if(document.getElementById('share-btn') != null){
@@ -196,8 +196,8 @@ class Product extends Component {
         const { quantity } = this.state;
         let prices;
 
-        const handleAddToCart = () =>{
-            
+        const handleAddToCart = () => {
+
         }
 
         const handleOptionValues = (options) => {
@@ -210,43 +210,21 @@ class Product extends Component {
 
         const handleSelect = (item) => {
 
-
             if (item.optionTypeName === "Select") {
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
                     <div className="select">
-                        <select name={item.optionName} onChange={e => this.handleInputChange(e, item.optionId)}>
-                            <option value={null}>{'N/A'}</option>
+                        <select required name={item.optionName} onChange={e => this.handleInputChange(e, item.optionId)}>
+                            <option value={''}>{'N/A'}</option>
                             {handleOptionValues(item.optionValues)}
                         </select>
                     </div>
                 </div>
-            } else if (item.optionTypeName === "File") {
-
-                return <div>
-                    <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} type="file" name={item.optionName} id="exampleFile" />
-                </div>
-
             } else if (item.optionTypeName === "Text") {
 
                 return <div>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} name={item.optionName} id="exampleText" />
-                </div>
-
-            } else if (item.optionTypeName === "Date") {
-
-                return <div>
-                    <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} type={"date"} name={item.optionName} id="exampleText" />
-                </div>
-
-            } else if (item.optionTypeName === "TextArea") {
-
-                return <div>
-                    <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} type="textarea" name={item.optionName} id="exampleTextArea" />
+                    <Input required onChange={e => this.handleInputChange(e, item.optionId)} style={{ width: "55%" }} name={item.optionName} id="exampleText" />
                 </div>
 
             } else if (item.optionTypeName === "Checkbox") {
@@ -256,26 +234,26 @@ class Product extends Component {
                     <Input onChange={e => this.handleInputChange(e, item.optionId)} className="checkbox" style={{ display: "block", marginLeft: "10px" }} type="checkbox" name={item.optionName} />
                 </div>
 
-            } else if (item.optionTypeName === "Time") {
-
-                return <div>
-                    <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ width: "55%" }} type="time" />
-                </div>
-
             } else if (item.optionTypeName === "Radio") {
-
                 return <div>
+                    <FormGroup check required>
                     <Label for="exampleSelect">{item.optionName}</Label>
-                    <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" />
+                    {
+                        item.optionValues && item.optionValues.map(optValue => (
+                            <FormGroup check required> 
+                                <Label check>
+                                    <Input required type="radio" name={item.optionName}
+                                    onChange={e => this.handleInputChange(e, item.optionId)}
+                                    value={optValue.optionValueId} />{' '}
+                              {optValue.name}
+                            </Label>
+                            </FormGroup>
+                        ))
+                    }
+                    </FormGroup>
+                    {/* <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" /> */}
                 </div>
 
-            } else if (item.optionTypeName === "Date & Time") {
-
-                return <div>
-                    <Label for="exampleSelect">{item.optionName}</Label>
-                    <input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ width: "55%" }} type="datetime-local" />
-                </div>
             }
 
         }
@@ -292,24 +270,39 @@ class Product extends Component {
             }
         }
 
-        if (product.compareAtPrice) {
-            prices = (
-                <React.Fragment>
-                    <span className="product__new-price"><Currency value={product.price} /></span>
-                    {' '}
-                    <span className="product__old-price"><Currency value={product.compareAtPrice} /></span>
-                </React.Fragment>
-            );
-        } else {
-            prices = <Currency value={product.price} />;
-        }
-
         const getRatingCal = () => {
             return product.totalRating / product.totalReviewsCount
 
         }
 
         console.log(layout, "|LAayout")
+
+        const getNewPrice = () => {
+            let price = product.price;
+            if (this.state.slectedPr.optionPrice) {
+                switch (this.state.slectedPr.priceParam) {
+                    case 'equal':
+                        price = this.state.slectedPr.optionPrice
+                        break;
+
+                    case 'plus':
+                        price = this.state.slectedPr.optionPrice + product.price
+                        break;
+
+                    case 'minus':
+                        price = this.state.slectedPr.optionPrice - product.price
+                        break;
+
+                    default:
+                        price = product.price;
+                        break;
+                }
+            }
+            return price
+        }
+
+
+
         return (
             <div className={`product product--layout--${layout}`}>
 
@@ -428,27 +421,18 @@ class Product extends Component {
                         </div>
 
                         <div className="product__prices">
-                            {this.state.slectedPr.optionPrice ?
-                                this.state.slectedPr.priceParam === "equal" ?
-                                <Currency value={this.state.slectedPr.optionPrice} />
-                                    : this.state.slectedPr.priceParam === "plus" ?
-                                       <Currency value={(this.state.slectedPr.optionPrice + product.price)} />
-                                        : this.state.slectedPr.priceParam === "minus" ?
-                                             <Currency value={(this.state.slectedPr.optionPrice - product.price)} />
-                                            : 0
-                                : prices
-                            }
+                            <Currency value={getNewPrice()} />
                         </div>
 
-                        <form className="product__options">
+                        <form className="product__options" onSubmit={e => {
+                            e.preventDefault();
+                            cartAddItem(product, this.state.options, quantity, getNewPrice())
+                            // alert(2)
+                        }}>
                             <div className="form-group product__option">
                                 <h4>Available Options</h4>
                                 <div className="input-radio-label">
-                                    <Form>
-
                                         {renderOptions()}
-
-                                    </Form>
                                 </div>
                             </div>
                             <div className="form-group product__option">
@@ -466,23 +450,23 @@ class Product extends Component {
                                         />
                                     </div>
                                     <div className="product__actions-item product__actions-item--addtocart">
-                                        <AsyncAction
+                                        {/* <AsyncAction
                                             action={() => {
                                                 // prr.productOptions = this.state.productPlusOptions
-                                                return cartAddItem( product, this.state.options, quantity)
+                                                return cartAddItem(product, this.state.options, quantity, getNewPrice())
                                             }}
-                                            render={({ run, loading }) => (
+                                            render={({ run, loading }) => ( */}
                                                 <button
-                                                    type="button"
-                                                    onClick={run}
+                                                    type="submit"
+                                                    // onClick={run}
                                                     className={classNames('btn btn-primary btn-lg', {
-                                                        'btn-loading': loading,
+                                                        'btn-loading': '',
                                                     })}
                                                 >
                                                     Add to cart
                                                 </button>
-                                            )}
-                                        />
+                                            {/* )}
+                                        /> */}
                                     </div>
 
                                 </div>
@@ -491,14 +475,6 @@ class Product extends Component {
                     </div>
 
                     <div className="product__footer">
-                        <div className="product__tags tags">
-                            {/*<div className="tags__list">*/}
-                            {/*    <Link to="/">Mounts</Link>*/}
-                            {/*    <Link to="/">Electrodes</Link>*/}
-                            {/*    <Link to="/">Chainsaws</Link>*/}
-                            {/*</div>*/}
-                        </div>
-
                         <div className="product__share-links share-links">
                             {/* <div className="addthis_inline_share_toolbox" data-url={'http://192.3.213.101:2550/#/store/product/104'}
                         data-description={product.description}
@@ -506,20 +482,8 @@ class Product extends Component {
                         ></div> */}
 
                             <div className="addthis_inline_share_toolbox"
-
-                                data-url="http://192.3.213.101:2550/#/store/product/104"
-                                // data-title="The AddThis Blog"
-                                // data-media="http://192.3.213.101:3450/Uploads/800px_COLOURBOX2650448.jpg"
-
+                               data-url="http://192.3.213.101:2550/#/store/product/104"
                             ></div>
-                            {/* <ul className="share-links__list">
-                                <li className="share-links__item share-links__item--type--like"><Link to="/">Like</Link>
-                                </li>
-                                <li className="share-links__item share-links__item--type--tweet"><Link
-                                    to="/">Tweet</Link></li>
-                                <li className="share-links__item share-links__item--type--pin"><Link to="/">Pin
-                                    It</Link></li>
-                            </ul> */}
                         </div>
                     </div>
                 </div>
