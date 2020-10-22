@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import departmentsAria from '../../services/departmentsArea';
 import SlickWithPreventSwipeClick from '../shared/SlickWithPreventSwipeClick';
 import RestService from '../../store/restService/restService';
+import { IMAGE_URL } from "../../constant/constants";
 
 
 const slickSettings = {
@@ -22,52 +23,18 @@ const slickSettings = {
 };
 
 export default class BlockSlideShow extends Component {
-
     constructor(props) {
         super(props)
-    
+
         this.state = {
-             slides: []
+            slides: [],
+            carousal: {}
         }
     }
-    
 
-    componentDidMount() {
-        RestService.getWebCarousal().then(res => {
-            if (res.data.status === "success") {
-                console.log(res.data.data[0])
-            }
-        })
-    }
-    
 
     departmentsAreaRef = null;
-
     media = window.matchMedia('(min-width: 992px)');
-
-    slides = [
-        {
-            title: 'Big choice of<br>Plumbing products',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-            image_classic: 'https://p1.pxfuel.com/preview/896/948/929/door-entrance-house-hotel.jpg',
-            image_full: 'https://p1.pxfuel.com/preview/896/948/929/door-entrance-house-hotel.jpg',
-            image_mobile: 'images/slides/slide-1-mobile.jpg',
-        },
-        {
-            title: 'Screwdrivers<br>Professional Tools',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-            image_classic: 'https://media.architecturaldigest.in/wp-content/uploads/2020/05/Rimadesio-AD-loves-Salone-1366x768.jpg',
-            image_full: 'https://media.architecturaldigest.in/wp-content/uploads/2020/05/Rimadesio-AD-loves-Salone-1366x768.jpg',
-            image_mobile: 'images/slides/slide-2-mobile.jpg',
-        },
-        {
-            title: 'One more<br>Unique header',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-            image_classic: 'https://www.treacyshotelwaterford.com/wp-content/uploads/2019/10/waterford-crystal-1366x768-fp_mm-fpoff_0_0.jpg',
-            image_full: 'https://www.treacyshotelwaterford.com/wp-content/uploads/2019/10/waterford-crystal-1366x768-fp_mm-fpoff_0_0.jpg',
-            image_mobile: 'images/slides/slide-3-mobile.jpg',
-        },
-    ];
 
     componentDidMount() {
         if (this.media.addEventListener) {
@@ -75,6 +42,36 @@ export default class BlockSlideShow extends Component {
         } else {
             this.media.addListener(this.onChangeMedia);
         }
+
+        RestService.getWebCarousal().then(res => {
+            // buttonColor: "#e218cb"
+            // buttonText: "Buy"
+            // headerText: "SomeHeaderText"
+            // headerTextColor: "#ee1717"
+            // isActive: true
+            // pageSlug: "store"
+            // showButton: true
+            // subText: "SomeSubText"
+            // subTextColor: "#34f10e"
+
+            if (res.data.status === "success") {
+                if (res.data.data.length > 0) {
+                    let array = [];
+                    let carousal = res.data.data[0];
+                    // eslint-disable-next-line array-callback-return
+                    carousal.webCarousalPhotos.map(item => {
+                        array.push({
+                            title: carousal.headerText ? carousal.headerText : "",
+                            text: carousal.subText ? carousal.subText : "",
+                            image_classic: `${IMAGE_URL}/carousalPhotos/${item.photoURL}`,
+                            image_full: `${IMAGE_URL}/carousalPhotos/${item.photoURL}`,
+                            image_mobile: `${IMAGE_URL}/carousalPhotos/${item.photoURL}`,
+                        })
+                    })
+                    return this.setState({ slides: array, carousal: carousal })
+                }
+            }
+        })
     }
 
     componentWillUnmount() {
@@ -103,6 +100,7 @@ export default class BlockSlideShow extends Component {
 
     render() {
         const { withDepartments } = this.props;
+        const { carousal } = this.state;
 
         const blockClasses = classNames(
             'block-slideshow block',
@@ -120,7 +118,7 @@ export default class BlockSlideShow extends Component {
             },
         );
 
-        const slides = this.slides.map((slide, index) => {
+        const slides = this.state.slides.map((slide, index) => {
             const image = withDepartments ? slide.image_classic : slide.image_full;
 
             return (
@@ -140,15 +138,21 @@ export default class BlockSlideShow extends Component {
                     <div className="block-slideshow__slide-content">
                         <div
                             className="block-slideshow__slide-title"
+                            style={{ color: `${carousal.headerTextColor}` }}
                             dangerouslySetInnerHTML={{ __html: slide.title }}
                         />
                         <div
                             className="block-slideshow__slide-text"
+                            style={{ color: `${carousal.subTextColor}` }}
                             dangerouslySetInnerHTML={{ __html: slide.text }}
                         />
                         <div className="block-slideshow__slide-button">
-                            <Link to="/" className="btn btn-primary btn-lg">Shop Now</Link>
+                            {carousal.showButton ?
+                                <Link to="/" style={{ backgroundColor: `${carousal.buttonColor}` }} className="btn btn-primary btn-lg border-0">{carousal.buttonText}</Link>
+                                : null
+                            }
                         </div>
+
                     </div>
                 </div>
             );
