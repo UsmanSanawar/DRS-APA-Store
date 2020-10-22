@@ -21,10 +21,9 @@ class ProductsView extends Component {
         super(props);
 
         this.state = {
-            pageNumber: 1,
             itemLength: 10,
             products: [],
-            headers: {},
+            pagination: {currentPage: 1, totalCount: 10},
             filters: {}
         };
     }
@@ -38,49 +37,33 @@ class ProductsView extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-
-
         if (prevProps.sideFilters != this.props.sideFilters) {
-            this.state.pageNumber = 1;
-            this.handleGetProducts(this.state.pageNumber, this.state.itemLength, this.props.sideFilters, true);
-
-            this.setState({
-                pageNumber: this.state.pageNumber
-            })
+            this.state.pagination.currentPage = 1;
+            this.handleGetProducts(this.state.pagination.currentPage, this.state.itemLength, this.props.sideFilters, true);
         }
     }
 
 
     productAPI = (pageNumber, itemLength, filter) => {
         RestService.getProductsByPageAndFilter(pageNumber, itemLength, filter).then(res => {
-
-            if (res) {
-                this.setState({
-                    headers: JSON.parse(res.headers["x-pagination"])
-                })
-            }
-
             if (res.data.status === "success") {
                 let data = res.data.data;
                 let array = [];
                 data.map(item => {
-
                     array.push(
                         productObjectConverter(item)
                     )
                 })
 
                 this.setState({
-                    products: [...this.state.products, ...array].filter((v, i, a) => a.findIndex(t => (JSON.stringify(t) === JSON.stringify(v))) === i)
+                    products: [...this.state.products, ...array].filter((v, i, a) => a.findIndex(t => (JSON.stringify(t) === JSON.stringify(v))) === i),
+                    pagination: JSON.parse(res.headers["x-pagination"])
                 })
             }
         })
-
-    }
-
+    } 
 
     handleGetProducts = (pageNumber, itemLength, filter, didUpdate) => {
-
         if (didUpdate) {
             this.setState({
                 products: []
@@ -90,8 +73,6 @@ class ProductsView extends Component {
         } else {
             this.productAPI(pageNumber, itemLength, filter);
         }
-
-
     }
 
     // handlePageChange = (page) => {
@@ -99,22 +80,14 @@ class ProductsView extends Component {
     // };
 
     fetchMoreData = () => {
-
-
         let page = 1
-        if (this.state.headers.totalPages != this.state.pageNumber) {
-            page = this.state.pageNumber + 1;
-
+        if (this.state.pagination.totalPages != this.state.pagination.currentPage) {
+            page = this.state.pagination.currentPage + 1;
             this.handleGetProducts(parseInt(page), this.state.itemLength, this.props.sideFilters);
         }
-
-        this.setState({
-            pageNumber: page
-        })
     }
 
     render() {
-
         console.log("render this.State", this.state)
 
         const {
@@ -124,7 +97,7 @@ class ProductsView extends Component {
             sidebarOpen,
         } = this.props;
 
-        const {page, layout: stateLayout, products, headers} = this.state;
+        const {page, layout: stateLayout, products, pagination} = this.state;
         const layout = stateLayout || propsLayout;
 
         let viewModes = [
@@ -156,6 +129,8 @@ class ProductsView extends Component {
             'view-options--offcanvas--mobile': offcanvas === 'mobile',
         });
 
+        console.log(this.state.products.length , pagination.totalCount, 'this.state.products.length === headers.totalCount');
+
         return (
             <div className="products-view">
                 <div className="products-view__options">
@@ -185,15 +160,6 @@ class ProductsView extends Component {
                                 </select>
                             </div>
                         </div>
-                        {/*<div className="view-options__control">*/}
-                        {/*    <label htmlFor="view-options-limit">Show</label>*/}
-                        {/*    <div>*/}
-                        {/*        <select className="form-control form-control-sm" name="" id="view-options-limit">*/}
-                        {/*            <option value="10">10</option>*/}
-                        {/*            <option value="20">20</option>*/}
-                        {/*        </select>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
                     </div>
                 </div>
 
@@ -202,13 +168,10 @@ class ProductsView extends Component {
                     data-layout={layout !== 'list' ? grid : layout}
                     data-with-features={layout === 'grid-with-features' ? 'true' : 'false'}
                 >
-
-                    {console.log(this.state.products.length, !(this.state.products.length === headers.totalCount), headers.totalCount)}
-
                     <InfiniteScroll
                         dataLength={this.state.products.length} //it needs to be setted to the current data we have
                         next={this.fetchMoreData}
-                        hasMore={!(this.state.products.length === headers.totalCount)}
+                        hasMore={!(this.state.products.length === pagination.totalCount)}
                         loader={<div style={{textAlign: "center"}}><CircularLoader/></div>}
                         scrollableTarget
                         endMessage={

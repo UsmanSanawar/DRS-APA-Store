@@ -134,7 +134,7 @@ function Layout(props) {
                             exact
                             path="/store/products"
                             render={(props) => (
-                                <ShopPageCategory {...props} columns={3} viewMode="list" sidebarPosition="start" />
+                                <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="start" />
                             )}
                         />
 
