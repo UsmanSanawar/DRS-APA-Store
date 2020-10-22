@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 import axios from 'axios';
 
@@ -62,6 +62,8 @@ const RestService = {
 
     getAllHomePageCollection: () => axios.get(`${BASE_URL}/masterdata/HomePageCollection/0/0`, RestService.getHeader()),
 
-    getWebBanner: () => axios.get(`${BASE_URL}/website/WebBanner`)
+    getWebBanner: () => axios.get(`${BASE_URL}/website/WebBanner`),
+    
+    getWebCarousal: () => axios.get(`${BASE_URL}/website/WebCarousal`)
 };
 export default RestService;

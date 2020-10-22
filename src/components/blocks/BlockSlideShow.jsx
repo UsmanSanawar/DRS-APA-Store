@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 // application
 import departmentsAria from '../../services/departmentsArea';
 import SlickWithPreventSwipeClick from '../shared/SlickWithPreventSwipeClick';
+import RestService from '../../store/restService/restService';
 
 
 const slickSettings = {
@@ -21,6 +22,25 @@ const slickSettings = {
 };
 
 export default class BlockSlideShow extends Component {
+
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+             slides: []
+        }
+    }
+    
+
+    componentDidMount() {
+        RestService.getWebCarousal().then(res => {
+            if (res.data.status === "success") {
+                console.log(res.data.data[0])
+            }
+        })
+    }
+    
+
     departmentsAreaRef = null;
 
     media = window.matchMedia('(min-width: 992px)');
