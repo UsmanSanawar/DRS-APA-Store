@@ -62,5 +62,6 @@ const RestService = {
 
     getAllHomePageCollection: () => axios.get(`${BASE_URL}/masterdata/HomePageCollection/0/0`, RestService.getHeader()),
 
+    getWebBanner: () => axios.get(`${BASE_URL}/website/WebBanner`)
 };
 export default RestService;

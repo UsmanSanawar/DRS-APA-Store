@@ -1,35 +1,51 @@
 // react
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // third-party
 import { Link } from 'react-router-dom';
-import banner from "../../assets/imgs/banner-1.jpg"
+import RestService from '../../store/restService/restService';
+import { IMAGE_URL } from "../../constant/constants";
+import { Button } from 'reactstrap';
 
 
 export default function BlockBanner() {
+    const [Banner, setBanner] = useState({})
+    useEffect(() => {
+        RestService.getWebBanner().then(res => {
+            if (res.data.status === "success") {
+                if (res.data.data.length > 0) {
+                    setBanner(res.data.data[0]);
+                }
+            }
+        })
+    }, [])
+
+    console.log(Banner, "bannerData is as");
+
     return (
         <div className="block block-banner">
             <div className="container">
-                <Link to="/" className="block-banner__body">
+                <Link to={Banner.buttonUrl} className="block-banner__body">
                     <div
                         className="block-banner__image block-banner__image--desktop"
-                        style={{ backgroundImage: `url(${banner})` }}
+                        style={{ backgroundImage: `url(${IMAGE_URL}/webBanner/${Banner.photoUrl})` }}
                     />
                     <div
                         className="block-banner__image block-banner__image--mobile"
-                        style={{ backgroundImage: 'url("images/banners/banner-1-mobile.jpg")' }}
+                        style={{ backgroundImage: `url(${IMAGE_URL}/webBanner/${Banner.photoUrl})` }}
                     />
-                    <div className="block-banner__title">
-                        Hundreds
-                        <br className="block-banner__mobile-br" />
-                        Hand Tools
+                    <div style={{ color: `${Banner.headerTextColor}` }} className="block-banner__title">
+                        {Banner.headerText}
                     </div>
-                    <div className="block-banner__text">
-                        Hammers, Chisels, Universal Pliers, Nippers, Jigsaws, Saws
+                    <div style={{ color: `${Banner.subTextColor}` }} className="block-banner__text">
+                        {Banner.subText}
                     </div>
-                    <div className="block-banner__button">
-                        <span className="btn btn-sm btn-primary">Shop Now</span>
-                    </div>
+                    {Banner.showButton ?
+                        <div className="block-banner__button">
+                            <Button className="btn btn-sm" style={{ backgroundColor: `${Banner.buttonColor}`, border: `1px solid ${Banner.buttonColor}` }}>{Banner.buttonText}</Button>
+                        </div>
+                        : null
+                    }
                 </Link>
             </div>
         </div>
