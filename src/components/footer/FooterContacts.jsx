@@ -7,39 +7,36 @@ import theme from '../../data/theme';
 
 export default function FooterContacts(props) {
 
-    const [Org, setOrg] = useState({defaultAddress: {}})
+    const [Org, setOrg] = useState({ defaultAddress: {} })
     useEffect(() => {
-    if (props.organization) {
-        setOrg(props.organization)
-    }
+        if (props.organization) {
+            setOrg(props.organization)
+        }
     }, [props.organization])
-
-console.log('OrgObject', Org)
 
     return (
         <div className="site-footer__widget footer-contacts">
             <h5 className="footer-contacts__title">Contact Us</h5>
 
             <div className="footer-contacts__text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in feugiat
-                lorem. Pellentque ac placerat tellus.
+                {Org ? Org.description : ""}
             </div>
 
             <ul className="footer-contacts__contacts">
                 <li className="text-justify">
-                    {Org.defaultAddress
+                    {Org && Org.defaultAddress
                         ? <div>
                             <p className="m-0"> <i className="footer-contacts__icon fas fa-globe-americas" />{`${Org.defaultAddress.address}, ${Org.defaultAddress.city} ${Org.defaultAddress.postCode},`}</p>
-                            <p className="m-0">{`${ Org.defaultAddress.country}`}</p>
+                            <p className="m-0">{`${Org.defaultAddress.country}`}</p>
                         </div> : ""}
                 </li>
                 <li>
                     <i className="footer-contacts__icon far fa-envelope" />
-                    {Org.defaultAddress ? Org.defaultAddress.email : ""}
+                    {Org && Org.defaultAddress ? Org.defaultAddress.email : ""}
                 </li>
                 <li>
                     <i className="footer-contacts__icon fas fa-mobile-alt" />
-                    {`${Org.defaultAddress ? `${Org.defaultAddress.phoneNo ? Org.defaultAddress.phoneNo : ""}, ${Org.defaultAddress ? Org.defaultAddress.whatsappNo: ""}` : ""}`}
+                    {`${Org && Org.defaultAddress ? `${Org.defaultAddress.phoneNo ? Org.defaultAddress.phoneNo : ""}, ${Org.defaultAddress ? Org.defaultAddress.phoneNo2 : ""}` : ""}`}
                 </li>
                 <li>
                     <i className="footer-contacts__icon far fa-clock" />

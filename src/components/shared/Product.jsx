@@ -37,7 +37,7 @@ class Product extends Component {
 
 
     componentDidMount() {
-        console.log(window.addthis.layers(), 'wondow addt this c');
+        // console.log(window.addthis.layers(), 'wondow addt this c');
 
         if (window.addthis && window.addthis.layers) {
             window.addthis.layers();

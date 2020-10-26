@@ -12,12 +12,13 @@ import Collapse from '../shared/Collapse';
 import Currency from '../shared/Currency';
 import PageHeader from '../shared/PageHeader';
 import { Check9x7Svg } from '../../svg';
+import PaypalButtons from "./PayPalButtons";
 
 // data stubs
 import payments from '../../data/shopPayments';
 import theme from '../../data/theme';
-import { getAllCountries } from "../../store/webView"
-import { postSaleOrder } from "../../store//cart"
+import { getAllCountries } from "../../store/webView";
+import { postSaleOrder } from "../../store//cart";
 
 
 const initAddr = {
@@ -44,15 +45,34 @@ class ShopPageCheckout extends Component {
             payment: 'bank',
             formValues: {
                 billing: { ...initAddr, addressType: 'billing' },
-                shipping: {...initAddr, addressType: 'shipping' },
+                shipping: { ...initAddr, addressType: 'shipping' },
             },
             orderNote: '',
+            showPaypal: false,
+            total: 0,
+            currency: {},
+            termNcondition: false
+
         };
     }
 
 
+
+    showPaypalButtons = () => {
+        if(this.state.payment === "paypal"){
+        this.setState({ showPaypal: true });
+    }
+    };
+
     componentDidMount() {
-        this.props.getAllCountries()
+        this.props.getAllCountries();
+        let total = JSON.parse(localStorage.getItem("state")).cart.total ? JSON.parse(localStorage.getItem("state")).cart.total : 0;
+        let currency = JSON.parse(localStorage.getItem("state")).currency
+
+        this.setState({
+            total: total,
+            currency: currency
+        })
     }
 
     handleSubmitCheckout = () => {
@@ -196,6 +216,7 @@ class ShopPageCheckout extends Component {
     }
 
     renderPaymentsList() {
+        
         const { payment: currentPayment } = this.state;
 
         const payments = this.payments.map((payment) => {
@@ -243,9 +264,11 @@ class ShopPageCheckout extends Component {
     }
 
     render() {
+        console.log(this.state)
         const { cart, allCountries } = this.props;
+        const { billing, shipping } = this.state.formValues;
+        const { showPaypal, payment, termNcondition } = this.state;
 
-        const { billing, shipping } = this.state.formValues
 
         // console.log( Date.now() + Math.floor(Math.random() * 100), 'date ist e');
 
@@ -259,6 +282,8 @@ class ShopPageCheckout extends Component {
             { title: 'Shopping Cart', url: '/store/cart' },
             { title: 'Checkout', url: '' },
         ];
+
+
 
         return (
             <React.Fragment>
@@ -635,24 +660,36 @@ class ShopPageCheckout extends Component {
                                                 <div className="form-check">
                                                     <span className="form-check-input input-check">
                                                         <span className="input-check__body">
-                                                            <input className="input-check__input" type="checkbox" id="checkout-terms" />
+                                                            <input className="input-check__input" type="checkbox" onChange={e => this.setState({termNcondition: e.target.checked})} id="checkout-terms" />
                                                             <span className="input-check__box" />
                                                             <Check9x7Svg className="input-check__icon" />
                                                         </span>
                                                     </span>
                                                     <label className="form-check-label" htmlFor="checkout-terms">
-                                                        I have read and agree to the website
+                                                        I have read and agree to the website {" "}
                                                     <Link to="site/terms">terms and conditions</Link>
                                                     *
                                                 </label>
                                                 </div>
                                             </div>
-                                            <a href="https://www.payatrader.com/trader_certificate.php?id=1073424" target="_blank">
+
+                                            {showPaypal && payment === "paypal" ?
+                                                <PaypalButtons total={this.state.total} currency={this.state.currency} />
+                                                : null}
+                                            {/* <a href="https://www.payatrader.com/trader_certificate.php?id=1073424" target="_blank">
                                                 <img src="https://paya-group-images.s3-eu-west-1.amazonaws.com/merchant-portal/payment-buttons/pay-medium.png" 
                                                 alt="Credit and Debit Card Acceptance for small business with Paya Card Processing Services" 
                                                 title="Authorised to accept card payments with Paya Card Processing Services" border="0" />
-                                                </a>
-                                            <button type="submit" className="btn btn-primary btn-xl btn-block">Place Order</button>
+                                                </a> */}
+                                            {!showPaypal ? 
+                                                <button
+                                                    // type="submit"
+                                                    type="button"
+                                                    disabled={!termNcondition}
+                                                    onClick={this.showPaypalButtons}
+                                                    className="btn btn-primary btn-xl btn-block"
+                                                >Place Order</button>
+                                            : null}
                                         </div>
                                     </div>
                                 </div>
