@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const CLIENT = {
     sandbox: "Ac43TGQt3nINl_4vGPrtvaM7IDXD8kMe5PWENT7xAPLclAUbq-m0Fk_2PU-2YjPgKq6NzwJv5vatxBKm",
-    //   production:"product_key_here"
+      production:"Ac43TGQt3nINl_4vGPrtvaM7IDXD8kMe5PWENT7xAPLclAUbq-m0Fk_2PU-2YjPgKq6NzwJv5vatxBKm"
 };
 
 const CLIENT_ID =
@@ -50,10 +50,12 @@ class PaypalButton extends React.Component {
                     ReactDOM
                 });
                 this.setState({ loading: false, showButtons: true });
-            }
-        }
+            }  else this.props.onError()
+        } 
     }
+
     createOrder = (data, actions) => {
+        console.log(data, 'createOrder' ,actions);
         return actions.order.create({
             purchase_units: [
                 {
@@ -68,15 +70,32 @@ class PaypalButton extends React.Component {
     };
 
     onApprove = (data, actions) => {
+        console.log(data, 'onApprove' ,actions);
+
         actions.order.capture().then(details => {
+            console.log(details, "orderDetails")
             const paymentData = {
                 payerID: data.payerID,
                 orderID: data.orderID
             };
             console.log("Payment Approved: ", paymentData);
             this.setState({ showButtons: false, paid: true });
+            if (details.status === "COMPLETED") {
+                this.props.handleSubmitCheckout(paymentData.orderID)
+            }
         });
     };
+
+    postSaleOrderOnce = (function() {
+        var executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                // this.props.handleSubmitCheckout()
+
+            }
+        };
+    })();
 
     render() {
         const { showButtons, loading, paid } = this.state;
