@@ -15,7 +15,6 @@ import RestService from "../../store/restService/restService";
 import CircularLoader from "../../assets/loaders";
 import {productObjectConverter} from "../../constant/helpers";
 
-
 class ProductsView extends Component {
     constructor(props) {
         super(props);
@@ -24,7 +23,6 @@ class ProductsView extends Component {
             itemLength: 10,
             products: [],
             pagination: {currentPage: 1, totalCount: 10},
-            filters: {}
         };
     }
 
@@ -75,10 +73,6 @@ class ProductsView extends Component {
         }
     }
 
-    // handlePageChange = (page) => {
-    //     this.setState(() => ({ page }));
-    // };
-
     fetchMoreData = () => {
         let page = 1
         if (this.state.pagination.totalPages != this.state.pagination.currentPage) {
@@ -88,7 +82,6 @@ class ProductsView extends Component {
     }
 
     render() {
-        console.log("render this.State", this.state)
 
         const {
             grid,
@@ -194,15 +187,6 @@ class ProductsView extends Component {
                     </InfiniteScroll>
 
                 </div>
-
-                {/*<div className="products-view__pagination">*/}
-                {/*    <Pagination*/}
-                {/*        current={page}*/}
-                {/*        siblings={2}*/}
-                {/*        total={10}*/}
-                {/*        onPageChange={this.handlePageChange}*/}
-                {/*    />*/}
-                {/*</div>*/}
             </div>
         );
     }

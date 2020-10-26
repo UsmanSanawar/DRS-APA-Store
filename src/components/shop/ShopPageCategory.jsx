@@ -21,6 +21,7 @@ function ShopPageCategory(props) {
         priceRange: [],
         manufacturers: [],
         category: null,
+        searchString: '',
     });
 
     function onChange(key, value) {

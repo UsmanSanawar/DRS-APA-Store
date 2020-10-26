@@ -39,7 +39,7 @@ const RestService = {
             }
         }
         return axios.get(
-            `${BASE_URL}/masterdata/Products/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category}&${manufacturers.join('&')}`,
+            `${BASE_URL}/masterdata/Products/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category}&${manufacturers.join('&')}&seachString=${filters.searchString}`,
             RestService.getHeader(),
         );
     },
