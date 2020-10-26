@@ -75,15 +75,14 @@ class ShopPageCheckout extends Component {
         })
     }
 
-    handleSubmitCheckout = () => {
+    handleSubmitCheckout = (orderId) => {
         console.log(this.state.formValues, 'this.state.formValues', this.props.cart);
-
 
         let saleOrder = {
             "saleIndentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
             "isOnlineOrder": true,
             "isPaymentOnline": true,
-            "onlinePaymentId": Date.now() + Math.floor(Math.random() * 100),
+            "onlinePaymentId": orderId ? orderId : null,
             "saleOrderDate": new Date().toISOString().slice(0, 20),
             "orderDueDate": null,
             "isCancelled": false,
@@ -674,7 +673,7 @@ class ShopPageCheckout extends Component {
                                             </div>
 
                                             {showPaypal && payment === "paypal" ?
-                                                <PaypalButtons total={this.state.total} currency={this.state.currency} />
+                                                <PaypalButtons handleSubmitCheckout={this.handleSubmitCheckout} total={this.state.total} currency={this.state.currency} />
                                                 : null}
                                             {/* <a href="https://www.payatrader.com/trader_certificate.php?id=1073424" target="_blank">
                                                 <img src="https://paya-group-images.s3-eu-west-1.amazonaws.com/merchant-portal/payment-buttons/pay-medium.png" 
@@ -682,6 +681,7 @@ class ShopPageCheckout extends Component {
                                                 title="Authorised to accept card payments with Paya Card Processing Services" border="0" />
                                                 </a> */}
                                             {!showPaypal ? 
+                                            <div>
                                                 <button
                                                     // type="submit"
                                                     type="button"
@@ -689,6 +689,7 @@ class ShopPageCheckout extends Component {
                                                     onClick={this.showPaypalButtons}
                                                     className="btn btn-primary btn-xl btn-block"
                                                 >Place Order</button>
+                                                </div>
                                             : null}
                                         </div>
                                     </div>
