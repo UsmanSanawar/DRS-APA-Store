@@ -42,7 +42,7 @@ class ShopPageCheckout extends Component {
         super(props);
 
         this.state = {
-            payment: 'bank',
+            payment: 'payaTrader',
             formValues: {
                 billing: { ...initAddr, addressType: 'billing' },
                 shipping: { ...initAddr, addressType: 'shipping' },
@@ -294,10 +294,10 @@ class ShopPageCheckout extends Component {
 
                 <div className="checkout block">
                     <div className="container">
-                        <form onSubmit={(e) => {
+                        {/* <form onSubmit={(e) => {
                             e.preventDefault()
                             this.handleSubmitCheckout()
-                        }} >
+                        }} > */}
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <div className="alert alert-primary alert-lg">
@@ -680,7 +680,25 @@ class ShopPageCheckout extends Component {
                                                 alt="Credit and Debit Card Acceptance for small business with Paya Card Processing Services" 
                                                 title="Authorised to accept card payments with Paya Card Processing Services" border="0" />
                                                 </a> */}
-                                            {!showPaypal ? 
+
+{
+    this.state.payment === 'payaTrader' ? <form action="https://www.payatrader.com/secure_ecommerce/test_process_payment.php" method="post">
+         <input type="hidden" name="site_code" value="107342401" />
+    <input type="hidden" name="site_url" value="http://192.3.213.101:2550" />
+    <input type="hidden" name= "posturl" value="http://192.3.213.101:2550" />
+    <input type="hidden" name= "returnurl" value="http://www.tradersite.com/thanks.html" /> 
+    <input type="hidden" name= "traderdisplayname" value="Test Trader" />
+    <input type="hidden" name="customer_name" value="Mr A Customer" />
+    <input type="hidden" name="customer_email" value="a.customer@hotmail.com" /> 
+    <input type="hidden" name="customer_telephone" value="01234567890" />
+    <input type="hidden" name="customer_postcode" value="NN4 7PA" />
+    <input type="hidden" name="customer_house_name_or_number" value="XXXXXXXXXXXXXXX" /> 
+    <input type="hidden" name="transaction_value_pence" value="10" />
+    <input type="hidden" name="order_number" value="999999999" />
+    <input type="hidden" name="invoice_number" value="999999999" />
+    <input type="hidden" name="email_alert" value="y" />
+    <input type="submit" value="Pay Now" className="btn btn-primary btn-xl btn-block" />
+    </form> : !showPaypal ? 
                                             <div>
                                                 <button
                                                     // type="submit"
@@ -695,7 +713,7 @@ class ShopPageCheckout extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        {/* </form> */}
                     </div>
                 </div>
             </React.Fragment >
