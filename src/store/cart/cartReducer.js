@@ -1,4 +1,4 @@
-import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,POST_SALE_ORDER,ERROR } from './cartActionTypes';
+import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,POST_SALE_ORDER,ERROR,RESET_CART_PAID } from './cartActionTypes';
 
 
 /**
@@ -158,6 +158,7 @@ const initialState = {
     quantity: 0,
     items: [],
     subtotal: 0,
+    paid: false,
     extraLines: [ // shipping, taxes, fees, .etc
         // {
         //     type: 'shipping',
@@ -186,7 +187,15 @@ export default function cartReducer(state = initialState, action) {
 
     case POST_SALE_ORDER:{
         return {
-            ...initialState
+            ...initialState,
+            paid: true
+        };
+    }
+
+    case RESET_CART_PAID:{
+        return {
+            ...initialState,
+            paid: false
         };
     }
 

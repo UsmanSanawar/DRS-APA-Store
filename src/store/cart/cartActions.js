@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,ERROR,POST_SALE_ORDER} from './cartActionTypes';
+import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,ERROR,POST_SALE_ORDER,RESET_CART_PAID} from './cartActionTypes';
 import RestService from '../restService/restService';
 
 
@@ -88,3 +88,15 @@ export function cartUpdateQuantities(quantities) {
         })
     );
 }
+
+export function resetCartPaid(quantities) {
+    // sending request to server, timeout is used as a stub
+    return dispatch => (
+        dispatch({
+            type: RESET_CART_PAID,
+            quantities,
+        })
+    );
+}
+
+

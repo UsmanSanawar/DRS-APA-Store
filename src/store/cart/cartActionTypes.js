@@ -3,3 +3,5 @@ export const CART_REMOVE_ITEM = 'CART_REMOVE_ITEM';
 export const CART_UPDATE_QUANTITIES = 'CART_UPDATE_QUANTITIES';
 export const POST_SALE_ORDER = 'POST_SALE_ORDER';
 export const ERROR = 'ERROR';
+export const RESET_CART_PAID = 'RESET_CART_PAID';
+
