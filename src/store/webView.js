@@ -75,10 +75,9 @@ export default function quickviewReducer(state = initialState, action) {
             let newArr = [];
 
             for (let category of dataList) {
-                console.log(category, 'category of list');
                 
                 let obj = createObj(category);
-                console.log(obj, 'category obj of list');
+                // console.log(obj, 'category obj of list');
 
                 if (obj.parentCategoryId == null) {
                     newArr.push(obj)

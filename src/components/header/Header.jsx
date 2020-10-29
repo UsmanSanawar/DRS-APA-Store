@@ -10,7 +10,7 @@ import Search from './Search';
 import Topbar from './Topbar';
 import logofull from "../../assets/imgs/logo-full.png";
 
-function Header(props) { console.log(props.organization, "headerProps");
+function Header(props) { 
     const {layout} = props;
     let bannerSection;
 

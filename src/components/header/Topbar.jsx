@@ -20,9 +20,6 @@ useEffect(() => {
     setOrganization(props.organization)
 
 }, [props.organization])
-
-    
-    console.log(props.organization, "aadadaprops")
     
     const links = [
         { title: <FormattedMessage id="topbar.aboutUs" defaultMessage="About Us" />, url: '/site/about-us' },

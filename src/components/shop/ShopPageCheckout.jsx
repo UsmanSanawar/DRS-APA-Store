@@ -66,6 +66,33 @@ class ShopPageCheckout extends Component {
     };
 
     componentDidMount() {
+
+
+        console.log( window, 'window 0001', window.PayJS);
+
+        const {PayJS} = window
+        
+        PayJS(['PayJS/UI'], // loading the UI module...
+        function($UI) { // ... and assigning it to a variable
+            $UI.Initialize({
+                elementId: "paymentButton",
+                // identifiers (no keys!):
+                clientId: "myClientId", // https://developer.sagepayments.com/user/register
+                merchantId: "107342401",
+                // auth, covered later:
+                authKey: "ABCD==",
+                salt: "DEFG==",
+                // config:
+                requestType: "payment", // or "vault" to tokenize a card for later
+                amount: "1.00",
+                orderNumber: "Invoice12345",
+                // convenience:
+                addFakeData: true,
+            });
+        });
+
+        ``
+
         this.props.getAllCountries();
         let total = JSON.parse(localStorage.getItem("state")).cart.total ? JSON.parse(localStorage.getItem("state")).cart.total : 0;
         let currency = JSON.parse(localStorage.getItem("state")).currency
@@ -721,6 +748,8 @@ this.props.resetCartPaid()
                                                         >Place Order</button>
                                                     </div>
                                                     : null}
+
+<button id="paymentButton">Pay Now</button>
                                     </div>
                                 </div>
                             </div>
