@@ -721,10 +721,10 @@ this.props.resetCartPaid()
                                         {
                                             this.state.payment === 'payaTrader' ? <form action="https://www.payatrader.com/secure_ecommerce/test_process_payment.php" method="post">
                                                 <input type="hidden" name="site_code" value="107342401" />
-                                                <input type="hidden" name="site_url" value="http://192.3.213.101:2550/#/store" />
-                                                {/* <input type="hidden" name="posturl" value="http://192.3.213.101:3450/api.aspx" /> */}
-                                                <input type="hidden" name="posturl" value="http://192.3.213.101:3450/api/DRS.APA/masterdata/SaleOrders/PaymentConfirmation" />
-                                                <input type="hidden" name="returnurl" value="http://192.3.213.101:2550/" />
+                                                <input type="hidden" name="site_url" value="https://drsapa.ddns.net:2550/#/store" />
+                                                {/* <input type="hidden" name="posturl" value="https://drsapa.ddns.net:3450/api.aspx" /> */}
+                                                <input type="hidden" name="posturl" value="https://drsapa.ddns.net:3450/api/DRS.APA/masterdata/SaleOrders/PaymentConfirmation" />
+                                                <input type="hidden" name="returnurl" value="https://drsapa.ddns.net:2550/" />
                                                 <input type="hidden" name="traderdisplayname" value="Test Trader" />
                                                 <input type="hidden" name="customer_name" value="Mr A Customer" />
                                                 <input type="hidden" name="customer_email" value="a.customer@hotmail.com" />

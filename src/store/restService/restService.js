@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 import axios from 'axios';
 
-const BASE_URL = 'https://192.3.213.101:3450/api/DRS.APA';
+const BASE_URL = 'https://drsapa.ddns.net:3450/api/DRS.APA';
 
 const RestService = {
     getHeader: () => ({

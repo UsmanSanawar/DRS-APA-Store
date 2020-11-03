@@ -268,8 +268,8 @@ class Product extends Component {
                     <title>{`FAQ — ${product.productName}`}</title>
                     <meta property="og:title" content="European Travel Destinations" />
                     <meta property="og:description" content="Offering tour packages for individuals or groups." />
-                    <meta property="og:image" content="http://192.3.213.101:3450/Uploads/800px_COLOURBOX2650448.jpg" />
-                    <meta property="og:url" content="http://192.3.213.101:2550/#/store/product/104"></meta>
+                    <meta property="og:image" content="https://drsapa.ddns.net:3450/Uploads/800px_COLOURBOX2650448.jpg" />
+                    <meta property="og:url" content="https://drsapa.ddns.net:2550/#/store/product/104"></meta>
                 </Helmet>
 
                 <div className="product__content">
@@ -434,13 +434,13 @@ class Product extends Component {
 
                     <div className="product__footer">
                         <div className="product__share-links share-links">
-                            {/* <div className="addthis_inline_share_toolbox" data-url={'http://192.3.213.101:2550/#/store/product/104'}
+                            {/* <div className="addthis_inline_share_toolbox" data-url={'http://drsapa.ddns.net:2550/#/store/product/104'}
                         data-description={product.description}
                         data-title={product.productName} data-media={`${IMAGE_URL}/${product.productPhotos && product.productPhotos.length > 0 ? product.productPhotos[0].name: ''}`  }
                         ></div> */}
 
                             <div className="addthis_inline_share_toolbox"
-                               data-url="http://192.3.213.101:2550/#/store/product/104"
+                               data-url="https://drsapa.ddns.net:2550/#/store/product/104"
                             ></div>
                         </div>
                     </div>

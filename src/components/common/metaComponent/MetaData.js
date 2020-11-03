@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 export default function HelmetMetaData(props) {
     let location = useLocation();
-   let currentUrl = "http://192.3.213.101:2550/#" + location.pathname;
+   let currentUrl = "https://drsapa.ddns.net:2550/#" + location.pathname;
    let quote = props.quote !== undefined ? props.quote : "";
    let title = props.title !== undefined ? props.title : "CampersTribe - World is yours to explore";
    let image = props.image !== undefined ? props.image : "https://storage.googleapis.com/cmperstribe_storage_usha/Banner/IMG_3640.JPG";
