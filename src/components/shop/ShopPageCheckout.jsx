@@ -91,7 +91,6 @@ class ShopPageCheckout extends Component {
             });
         });
 
-        ``
 
         this.props.getAllCountries();
         let total = JSON.parse(localStorage.getItem("state")).cart.total ? JSON.parse(localStorage.getItem("state")).cart.total : 0;
