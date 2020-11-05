@@ -115,7 +115,7 @@ class ProductGallery extends Component {
         let imagesArr = []
         if (images && images.length > 0) {
           for (const [i, item] of images.entries()) {
-            imagesArr.push({ image: `${IMAGE_URL}/products/${item.name}`, text: `${i+1}/${images.length}` })
+            imagesArr.push({ image: `${IMAGE_URL}/images/${item.name}`, text: `${i+1}/${images.length}` })
           }
         }
         console.log(imagesArr, 'imagesArr imagesArr');
@@ -133,8 +133,8 @@ class ProductGallery extends Component {
         const { images } = this.props;
 
         const items = images.map((image) => ({
-            src: `${IMAGE_URL}/products/${image.name}`,
-            msrc: `${IMAGE_URL}/products/${image.name}`,
+            src: `${IMAGE_URL}/images/${image.name}`,
+            msrc: `${IMAGE_URL}/images/${image.name}`,
             w: 700,
             h: 700,
         }));
@@ -220,8 +220,8 @@ class ProductGallery extends Component {
 
 
         const featured = images.map((image, index) => (
-            <Link key={index} to={`${IMAGE_URL}/products/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
-                <img style={{maxHeight: "400px"}}  src={`${IMAGE_URL}/products/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
+            <Link key={index} to={`${IMAGE_URL}/images/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
+                <img style={{maxHeight: "400px"}}  src={`${IMAGE_URL}/images/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
             </Link>
         ));
 
@@ -237,7 +237,7 @@ class ProductGallery extends Component {
                     onClick={() => this.handleThumbnailClick(index)}
                     className={classes}
                 >
-                    <img className="product-gallery__carousel-image" src={`${IMAGE_URL}/products/${image.name}`} alt="" />
+                    <img className="product-gallery__carousel-image" src={`${IMAGE_URL}/images/${image.name}`} alt="" />
                 </button>
             );
         });

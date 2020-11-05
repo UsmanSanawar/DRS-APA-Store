@@ -53,7 +53,7 @@ function HomePageOne() {
         let images = [];
         if (product.product && product.product.productPhotos && product.product.productPhotos.length > 0) {
           product.product.productPhotos.map(image => {
-            images.push(`${IMAGE_URL}/products/${image.name}`)
+            images.push(`${IMAGE_URL}/images/${image.name}`)
           })
         }
         item.id = product.product.productId;

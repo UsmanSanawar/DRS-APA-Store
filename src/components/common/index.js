@@ -123,7 +123,7 @@ function CommonComp(props) {
         dataList.map(item => {
           return <div className={`col-lg-${getWith(item.photoSize, true)}`}>
             <div style={{
-              backgroundImage: `url(${IMAGE_URL}/fileLibrary/${item.photoUrl})`,
+              backgroundImage: `url(${IMAGE_URL}/images/${item.photoUrl})`,
               width: "100%",
               borderRadius: 20,
               marginBottom: 15,
