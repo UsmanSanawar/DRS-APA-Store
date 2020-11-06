@@ -78,7 +78,7 @@ class PaypalButton extends React.Component {
                 payerID: data.payerID,
                 orderID: data.orderID
             };
-            console.log("Payment Approved: ", paymentData);
+            // console.log("Payment Approved: ", paymentData);
             this.setState({ showButtons: false, paid: true });
             if (details.status === "COMPLETED") {
                 this.props.handleSubmitCheckout(paymentData.orderID)
