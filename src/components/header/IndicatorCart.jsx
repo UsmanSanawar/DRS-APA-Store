@@ -21,7 +21,7 @@ function IndicatorCart(props) {
 
     console.log(cart, "Cart items... 34")
 
-    if (cart.extraLines.length > 0) {
+    if (cart && cart.extraLines.length > 0) {
         const extraLines = cart.extraLines.map((extraLine, index) => (
             <tr key={index}>
                 <th>{extraLine.title}</th>
