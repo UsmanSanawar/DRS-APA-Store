@@ -9,7 +9,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import Currency from "../shared/Currency";
 import {Redirect} from "react-router-dom";
-
+import StripPayment from "../stripePayment";
 class paymentOptionsPage extends Component {
   payments = payments;
 
@@ -105,6 +105,9 @@ class paymentOptionsPage extends Component {
 
 
   componentDidMount() {
+
+
+
     let Order = JSON.parse(localStorage.getItem("orders")) && JSON.parse(localStorage.getItem("orders")).length > 0 ? JSON.parse(localStorage.getItem("orders")) : []
 
     if (Order.length > 0) {
@@ -166,10 +169,11 @@ class paymentOptionsPage extends Component {
 
 
                     {this.state.payment === "stripe" &&
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-xl btn-block"
-                    >Pay Now ({this.state.order.orderAmountWithTaxAndDiscount})</button>
+<StripPayment />
+                    // <button
+                    //   type="button"
+                    //   className="btn btn-primary btn-xl btn-block"
+                    // >Pay Now ({this.state.order.orderAmountWithTaxAndDiscount})</button>
 
                     }
                 </div>
