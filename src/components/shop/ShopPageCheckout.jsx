@@ -20,7 +20,7 @@ import payments from '../../data/shopPayments';
 import theme from '../../data/theme';
 import { getAllCountries } from "../../store/webView";
 import { postSaleOrder, resetCartPaid } from "../../store/cart";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 
 const initAddr = {
@@ -69,7 +69,7 @@ class ShopPageCheckout extends Component {
 	componentDidMount() {
 		this.props.getAllCountries();
 		let total = JSON.parse(localStorage.getItem("state")).cart.total ?
-					JSON.parse(localStorage.getItem("state")).cart.total : 0;
+			JSON.parse(localStorage.getItem("state")).cart.total : 0;
 		let currency = JSON.parse(localStorage.getItem("state")).currency
 
 		this.setState({
@@ -117,7 +117,24 @@ class ShopPageCheckout extends Component {
 				"discountPercentage": 0,
 				"isProductReturn": false,
 				"returnReason": "",
-				"isActive": true
+				"isActive": true,
+				orderLineProductOptions: []
+			}
+
+			for (let prOp of item.product.productOptions) {
+				let success = false
+				for (let op of item.options) {
+					if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value)) {
+						success = true
+					} else {
+						success = false
+					}
+				}
+
+				if (success) {
+					prOp.orderLineProductOptionCombinations = prOp.productOptionCombination
+					line.orderLineProductOptions.push(prOp)
+				}
 			}
 
 			saleOrder.orderLines.push(line)
