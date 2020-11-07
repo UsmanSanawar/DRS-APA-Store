@@ -18,6 +18,7 @@ import 'react-input-range/lib/css/index.css';
 import './scss/style.scss';
 
 
+
 ReactDOM.render((
     // eslint-disable-next-line react/jsx-filename-extension
     <Provider store={store}>
