@@ -6,15 +6,15 @@ export default [
     //         + 'Your order will not be shipped until the funds have cleared in our account.',
     // },
     {
-        key: 'payaTrader',
-        title: 'Paya Traders',
-        description: 'Pay via Credit Card / Debit Card',
+        key: 'stripe',
+        title: 'Stripe',
+        description: 'Pay via Stripe',
     },
-    {
-        key: 'cash',
-        title: 'Cash on delivery',
-        description: 'Pay with cash upon delivery.',
-    },
+    // {
+    //     key: 'cash',
+    //     title: 'Cash on delivery',
+    //     description: 'Pay with cash upon delivery.',
+    // },
     {
         key: 'paypal',
         title: 'PayPal',

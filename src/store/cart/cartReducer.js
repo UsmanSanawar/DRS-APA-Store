@@ -1,4 +1,10 @@
-import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_UPDATE_QUANTITIES,POST_SALE_ORDER,ERROR,RESET_CART_PAID } from './cartActionTypes';
+import {
+    CART_ADD_ITEM,
+    CART_REMOVE_ITEM,
+    CART_UPDATE_QUANTITIES,
+    POST_SALE_ORDER,
+    RESET_CART_PAID
+} from './cartActionTypes';
 
 
 /**
@@ -159,6 +165,7 @@ const initialState = {
     items: [],
     subtotal: 0,
     paid: false,
+    saleOrder: [],
     extraLines: [ // shipping, taxes, fees, .etc
         // {
         //     type: 'shipping',
@@ -186,9 +193,18 @@ export default function cartReducer(state = initialState, action) {
         return updateQuantities(state, action.quantities);
 
     case POST_SALE_ORDER:{
+        console.log(state, "Request")
+        let responseData = action.response.data
+        if (responseData.status === "success") {
+            let order = []
+            order.push(responseData.data)
+
+            localStorage.setItem('orders', JSON.stringify(order&&order.length > 0 ? order : []))
+        }
         return {
             ...initialState,
-            paid: true
+            paid: true,
+            // saleOrder: state.saleOrder
         };
     }
 

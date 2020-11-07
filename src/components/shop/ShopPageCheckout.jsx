@@ -1,3 +1,4 @@
+/* eslint-disable react/no-direct-mutation-state */
 // react
 import React, { Component } from 'react';
 
@@ -19,294 +20,324 @@ import payments from '../../data/shopPayments';
 import theme from '../../data/theme';
 import { getAllCountries } from "../../store/webView";
 import { postSaleOrder, resetCartPaid } from "../../store/cart";
-import PaymentSuccess from "../../assets/imgs/imagesuccessful.png";
+import {toast} from "react-toastify";
 
 
 const initAddr = {
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    street: '',
-    companyName: '',
-    city: '',
-    state: '',
-    country: '',
-    zipCode: '',
-    latitude: '',
-    longitude: '',
+	firstName: '',
+	lastName: '',
+	phone: '',
+	email: '',
+	street: '',
+	companyName: '',
+	city: '',
+	state: '',
+	country: '',
+	zipCode: '',
+	latitude: '',
+	longitude: '',
 }
 
 class ShopPageCheckout extends Component {
-    payments = payments;
-    constructor(props) {
-        super(props);
+	payments = payments;
+	constructor(props) {
+		super(props);
 
-        this.state = {
-            payment: '',
-            formValues: {
-                billing: { ...initAddr, addressType: 'billing' },
-                shipping: { ...initAddr, addressType: 'shipping' },
-            },
-            orderNote: '',
-            showPaypal: false,
-            total: 0,
-            currency: {},
-            termNcondition: false
+		this.state = {
+			payment: '',
+			formValues: {
+				billing: { ...initAddr, addressType: 'billing' },
+				shipping: { ...initAddr, addressType: 'shipping' },
+			},
+			orderNote: '',
+			showPaypal: false,
+			total: 0,
+			currency: {},
+			termNcondition: false
 
-        };
-    }
+		};
+	}
 
 
 
-    showPaypalButtons = () => {
-        if (this.state.payment === "paypal") {
-            this.setState({ showPaypal: true });
-        }
-    };
+	showPaypalButtons = () => {
+		if (this.state.payment === "paypal") {
+			this.setState({ showPaypal: true });
+		}
+	};
 
-    componentDidMount() {
+	componentDidMount() {
 
-        this.props.getAllCountries();
-        let total = JSON.parse(localStorage.getItem("state")).cart.total ? JSON.parse(localStorage.getItem("state")).cart.total : 0;
-        let currency = JSON.parse(localStorage.getItem("state")).currency
 
-        this.setState({
-            total: total,
-            currency: currency
-        })
-    }
+		console.log(window, 'window 0001', window.PayJS);
 
-    handleSubmitCheckout = (orderId) => {
-        console.log(this.state.formValues, 'this.state.formValues', this.props.cart);
+		const { PayJS } = window
 
-        let saleOrder = {
-            "saleIndentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
-            "isOnlineOrder": true,
-            "isPaymentOnline": true,
-            "onlinePaymentId": orderId ? orderId : null,
-            "saleOrderDate": new Date().toISOString().slice(0, 20),
-            "orderDueDate": null,
-            "isCancelled": false,
-            "cancelReason": "",
-            "saleOrderAmountWithTaxAndDiscount": this.props.cart.total,
-            "saleOrderNotes": this.state.orderNote,
-            "isActive": true,
-            saleOrderAddress: [],
-            saleOrderLines: [],
+		PayJS(['PayJS/UI'], // loading the UI module...
+			function ($UI) { // ... and assigning it to a variable
+				$UI.Initialize({
+					elementId: "paymentButton",
+					// identifiers (no keys!):
+					clientId: "myClientId", // https://developer.sagepayments.com/user/register
+					merchantId: "107342401",
+					// auth, covered later:
+					authKey: "ABCD==",
+					salt: "DEFG==",
+					// config:
+					requestType: "payment", // or "vault" to tokenize a card for later
+					amount: "1.00",
+					orderNumber: "Invoice12345",
+					// convenience:
+					addFakeData: true,
+				});
+			});
 
-        }
 
-        saleOrder.saleOrderAddress.push(this.state.formValues.shipping)
-        saleOrder.saleOrderAddress.push(this.state.formValues.billing)
+		this.props.getAllCountries();
+		let total = JSON.parse(localStorage.getItem("state")).cart.total ?
+					JSON.parse(localStorage.getItem("state")).cart.total : 0;
+		let currency = JSON.parse(localStorage.getItem("state")).currency
 
-        for (let item of this.props.cart.items) {
-            let line = {
-                "productId": item.product.id,
-                "productName": item.product.name,
-                "quantity": item.quantity,
-                "unitPrice": item.price,
-                "taxPercentage": 0,
-                "taxClassId": null,
-                "taxClassName": "",
-                "discountId": null,
-                "discountName": "",
-                "discountPercentage": 0,
-                "isProductReturn": false,
-                "returnReason": "",
-                "isActive": true
-            }
+		this.setState({
+			total: total,
+			currency: currency
+		})
+	}
 
-            saleOrder.saleOrderLines.push(line)
-        }
+	handleSubmitCheckout = (orderId) => {
 
-        this.props.postSaleOrder(saleOrder)
-    }
+		console.log(this.state.formValues, 'this.state.formValues', this.props.cart);
 
-    handleAddressToggle = (event) => {
-        console.log(event.target.checked, 'event.target.checked', event.target);
-        if (event) {
-            if (event.target.checked) {
-                this.state.formValues.shipping = this.state.formValues.billing
-            } else {
-                this.state.formValues.shipping = initAddr
-            }
+		let saleOrder = {
+			"orderIdentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
+			"isOnlineOrder": true,
+			"isPaymentOnline": true,
+			"onlinePaymentId": orderId ? orderId : null,
+			"orderDate": new Date().toISOString().slice(0, 20),
+			"orderDueDate": null,
+			"isCancelled": false,
+			"cancelReason": "",
+			"orderAmountWithTaxAndDiscount": this.props.cart.total,
+			"orderNotes": this.state.orderNote,
+			"orderStatusId": 6,
+			"isActive": true,
+			orderAddress: [],
+			orderLines: [],
 
-            this.setState({
-                formValues: this.state.formValues
-            })
-        }
-    }
+		}
 
-    handleChangeInput = (event, addressType = 'billing') => {
-        if (event) {
+		saleOrder.orderAddress.push(this.state.formValues.shipping)
+		saleOrder.orderAddress.push(this.state.formValues.billing)
 
-            let name = event.target.name;
-            name = name.replace("shipping-", "")
-            this.state.formValues[addressType][name] = event.target.value;
-            console.log(addressType, 'log tpe of', name, 'name tis the', this.state.formValues[addressType]);
+		for (let item of this.props.cart.items) {
+			let line = {
+				"productId": item.product.id,
+				"productName": item.product.name,
+				"quantity": item.quantity,
+				"unitPrice": item.price,
+				"taxPercentage": 0,
+				"taxClassId": null,
+				"taxClassName": "",
+				"discountId": null,
+				"discountName": "",
+				"discountPercentage": 0,
+				"isProductReturn": false,
+				"returnReason": "",
+				"isActive": true
+			}
 
-            this.setState({ formValues: this.state.formValues })
-        }
+			saleOrder.orderLines.push(line)
+		}
+		if (this.props.cart.items.length < 1) {
+			toast.error('Cart is empty')
+		} else {
+			this.props.postSaleOrder(saleOrder)
+			console.log(this.props.cart.paid, 'paidCart')
+		}
+	}
 
-    }
+	handleAddressToggle = (event) => {
+		console.log(event.target.checked, 'event.target.checked', event.target);
+		if (event) {
+			if (event.target.checked) {
+				this.state.formValues.shipping = this.state.formValues.billing
+			} else {
+				this.state.formValues.shipping = initAddr
+			}
 
-    handlePaymentChange = (event) => {
-        if (event.target.checked) {
-            this.setState({ payment: event.target.value });
-        }
-    };
+			this.setState({
+				formValues: this.state.formValues
+			})
+		}
+	}
 
-    renderTotals() {
-        const { cart } = this.props;
+	handleChangeInput = (event, addressType = 'billing') => {
+		if (event) {
 
-        if (cart.extraLines.length <= 0) {
-            return null;
-        }
+			let name = event.target.name;
+			name = name.replace("shipping-", "")
+			// eslint-disable-next-line react/no-direct-mutation-state
+			this.state.formValues[addressType][name] = event.target.value;
+			console.log(addressType, 'log tpe of', name, 'name tis the', this.state.formValues[addressType]);
 
-        const extraLines = cart.extraLines.map((extraLine, index) => (
-            <tr key={index}>
-                <th>{extraLine.title}</th>
-                <td><Currency value={extraLine.price} /></td>
-            </tr>
-        ));
+			this.setState({ formValues: this.state.formValues })
+		}
 
-        return (
-            <React.Fragment>
-                <tbody className="checkout__totals-subtotals">
-                    <tr>
-                        <th>Subtotal</th>
-                        <td><Currency value={cart.subtotal} /></td>
-                    </tr>
-                    {extraLines}
-                </tbody>
-            </React.Fragment>
-        );
-    }
+	}
 
-    renderCart() {
-        const { cart } = this.props;
+	handlePaymentChange = (event) => {
+		if (event.target.checked) {
+			this.setState({ payment: event.target.value });
+		}
+	};
 
-        const items = cart.items.map((item) => (
-            <tr key={item.id}>
-                <td>{`${item.product.name} × ${item.quantity}`}</td>
-                <td><Currency value={item.total} /></td>
-            </tr>
-        ));
+	renderTotals() {
+		const { cart } = this.props;
 
-        return (
-            <table className="checkout__totals">
-                <thead className="checkout__totals-header">
-                    <tr>
-                        <th>Product</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody className="checkout__totals-products">
-                    {items}
-                </tbody>
-                {this.renderTotals()}
-                <tfoot className="checkout__totals-footer">
-                    <tr>
-                        <th>Total</th>
-                        <td><Currency value={cart.total} /></td>
-                    </tr>
-                </tfoot>
-            </table>
-        );
-    }
+		if (cart.extraLines.length <= 0) {
+			return null;
+		}
 
-    renderPaymentsList() {
+		const extraLines = cart.extraLines.map((extraLine, index) => (
+			<tr key={index}>
+				<th>{extraLine.title}</th>
+				<td><Currency value={extraLine.price} /></td>
+			</tr>
+		));
 
-        const { payment: currentPayment } = this.state;
+		return (
+			<React.Fragment>
+				<tbody className="checkout__totals-subtotals">
+					<tr>
+						<th>Subtotal</th>
+						<td><Currency value={cart.subtotal} /></td>
+					</tr>
+					{extraLines}
+				</tbody>
+			</React.Fragment>
+		);
+	}
 
-        const payments = this.payments.map((payment) => {
-            const renderPayment = ({ setItemRef, setContentRef }) => (
-                <li className="payment-methods__item" ref={setItemRef}>
-                    <label className="payment-methods__item-header">
-                        <span className="payment-methods__item-radio input-radio">
-                            <span className="input-radio__body">
-                                <input
-                                    type="radio"
-                                    className="input-radio__input"
-                                    name="checkout_payment_method"
-                                    value={payment.key}
-                                    checked={currentPayment === payment.key}
-                                    onChange={this.handlePaymentChange}
-                                />
-                                <span className="input-radio__circle" />
-                            </span>
-                        </span>
-                        <span className="payment-methods__item-title">{payment.title}</span>
-                    </label>
-                    <div className="payment-methods__item-container" ref={setContentRef}>
-                        <div className="payment-methods__item-description text-muted">{payment.description}</div>
-                    </div>
-                </li>
-            );
+	renderCart() {
+		const { cart } = this.props;
 
-            return (
-                <Collapse
-                    key={payment.key}
-                    open={currentPayment === payment.key}
-                    toggleClass="payment-methods__item--active"
-                    render={renderPayment}
-                />
-            );
-        });
+		const items = cart.items.map((item) => (
+			<tr key={item.id}>
+				<td>{`${item.product.name} × ${item.quantity}`}</td>
+				<td><Currency value={item.total} /></td>
+			</tr>
+		));
 
-        return (
-            <div className="payment-methods">
-                <ul className="payment-methods__list">
-                    {payments}
-                </ul>
-            </div>
-        );
-    }
+		return (
+			<table className="checkout__totals">
+				<thead className="checkout__totals-header">
+					<tr>
+						<th>Product</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody className="checkout__totals-products">
+					{items}
+				</tbody>
+				{this.renderTotals()}
+				<tfoot className="checkout__totals-footer">
+					<tr>
+						<th>Total</th>
+						<td><Currency value={cart.total} /></td>
+					</tr>
+				</tfoot>
+			</table>
+		);
+	}
 
-    componentWillUnmount() {
-        this.props.resetCartPaid()
-    }
+	renderPaymentsList() {
 
-    render() {
-        console.log(this.state)
-        const { cart, allCountries } = this.props;
-        const { billing, shipping } = this.state.formValues;
-        const { showPaypal, payment, termNcondition } = this.state;
+		const { payment: currentPayment } = this.state;
 
-        // if (cart.items.length < 1) {
-        //     return <Redirect to="cart" />;
-        // }
+		const payments = this.payments.map((payment) => {
+			const renderPayment = ({ setItemRef, setContentRef }) => (
+				<li className="payment-methods__item" ref={setItemRef}>
+					<label className="payment-methods__item-header">
+						<span className="payment-methods__item-radio input-radio">
+							<span className="input-radio__body">
+								<input
+									type="radio"
+									className="input-radio__input"
+									name="checkout_payment_method"
+									value={payment.key}
+									checked={currentPayment === payment.key}
+									onChange={this.handlePaymentChange}
+								/>
+								<span className="input-radio__circle" />
+							</span>
+						</span>
+						<span className="payment-methods__item-title">{payment.title}</span>
+					</label>
+					<div className="payment-methods__item-container" ref={setContentRef}>
+						<div className="payment-methods__item-description text-muted">{payment.description}</div>
+					</div>
+				</li>
+			);
 
-        const breadcrumb = [
-            { title: 'Home', url: '' },
-            { title: 'Shopping Cart', url: '/store/cart' },
-            { title: 'Checkout', url: '' },
-        ];
+			return (
+				<Collapse
+					key={payment.key}
+					open={currentPayment === payment.key}
+					toggleClass="payment-methods__item--active"
+					render={renderPayment}
+				/>
+			);
+		});
 
-        return (
-            <React.Fragment>
-                <Helmet>
-                    <title>{`Checkout — ${theme.name}`}</title>
-                </Helmet>
+		return (
+			<div className="payment-methods">
+				<ul className="payment-methods__list">
+					{payments}
+				</ul>
+			</div>
+		);
+	}
 
-                <PageHeader header="Checkout" breadcrumb={breadcrumb} />
+	componentWillUnmount() {
+		this.props.resetCartPaid()
+	}
 
-                <div className="checkout block">
+	render() {
+		console.log(this.state)
+		const { cart, allCountries } = this.props;
+		const { billing, shipping } = this.state.formValues;
+		const { showPaypal, payment, termNcondition } = this.state;
 
-                    {this.props.cart.paid ? (
-                        <div className="main">
-                            <img alt="payment-success" style={{ width: "100%" }} src={PaymentSuccess} />
-                            <div style={{ textAlign: "center" }}>
-                                <Link to="/store" className="btn btn-sm btn-success mx-auto">Continue Shopping</Link>
-                            </div>
-                        </div>)
-                        :
+		// if (cart.items.length < 1) {
+		// 	return <Redirect to="cart" />;
+		// }
 
-                        (<div className="container">
+		if (cart.paid) {
+			return <Redirect to="/store/payments-cashier" />;
+		}
 
-                            <div className="row">
-                                {/* <div className="col-12 mb-3">
+		const breadcrumb = [
+			{ title: 'Home', url: '' },
+			{ title: 'Shopping Cart', url: '/store/cart' },
+			{ title: 'Checkout', url: '' },
+		];
+
+		return (
+			<React.Fragment>
+				<Helmet>
+					<title>{`Checkout — ${theme.name}`}</title>
+				</Helmet>
+
+				<PageHeader header="Checkout" breadcrumb={breadcrumb} />
+
+				<div className="checkout block">
+					<div className="container">
+						<form onSubmit={(e) => {
+							e.preventDefault()
+							this.handleSubmitCheckout()
+						}} >
+							<div className="row">
+								{/* <div className="col-12 mb-3">
                                 <div className="alert alert-primary alert-lg">
                                     Returning customer?
                                     {' '}
@@ -314,419 +345,429 @@ class ShopPageCheckout extends Component {
                                 </div>
                             </div> */}
 
-                                <div className="col-12 col-lg-6 col-xl-7">
-                                    <form onSubmit={(e) => {
-                                        e.preventDefault()
-                                        this.handleSubmitCheckout()
-                                    }} >
-                                        <div className="card mb-lg-0">
-                                            <div className="card-body">
-                                                <h3 className="card-title">Billing details</h3>
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-first-name">First Name</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="checkout-first-name"
-                                                            placeholder="First Name"
-                                                            value={billing.firstName}
-                                                            name={'firstName'}
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-last-name">Last Name</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="checkout-last-name"
-                                                            placeholder="Last Name"
-                                                            value={billing.lastName}
-                                                            name={'lastName'}
-                                                            onChange={this.handleChangeInput}
+								<div className="col-12 col-lg-6 col-xl-7">
 
-                                                        />
-                                                    </div>
-                                                </div>
+									<div className="card mb-lg-0">
+										<div className="card-body">
+											<h3 className="card-title">Billing details</h3>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-first-name">First Name</label>
+													<input
+														type="text"
+														className="form-control"
+														id="checkout-first-name"
+														placeholder="First Name"
+														value={billing.firstName}
+														name={'firstName'}
+														onChange={this.handleChangeInput}
+														required
+													/>
+												</div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-last-name">Last Name</label>
+													<input
+														type="text"
+														className="form-control"
+														id="checkout-last-name"
+														placeholder="Last Name"
+														value={billing.lastName}
+														name={'lastName'}
+														onChange={this.handleChangeInput}
 
-                                                <div className="form-group">
-                                                    <label htmlFor="checkout-company-name">
-                                                        Company Name
+													/>
+												</div>
+											</div>
+
+											<div className="form-group">
+												<label htmlFor="checkout-company-name">
+													Company Name
                                                 {' '}
-                                                        <span className="text-muted">(Optional)</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="checkout-company-name"
-                                                        placeholder="Company Name"
-                                                        value={billing.companyName}
-                                                        name={'companyName'}
-                                                        onChange={this.handleChangeInput}
+													<span className="text-muted">(Optional)</span>
+												</label>
+												<input
+													type="text"
+													className="form-control"
+													id="checkout-company-name"
+													placeholder="Company Name"
+													value={billing.companyName}
+													name={'companyName'}
+													onChange={this.handleChangeInput}
 
-                                                    />
-                                                </div>
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-country">Country</label>
-                                                        <select id="checkout-country"
-                                                            className="form-control"
-                                                            value={billing.country}
-                                                            name={'country'}
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        >
-                                                            <option>Select a country...</option>
-                                                            {
-                                                                allCountries && allCountries.map(item => {
-                                                                    return <option value={item.countryName}>{item.countryName}</option>
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
+												/>
+											</div>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-country">Country</label>
+													<select id="checkout-country"
+														className="form-control"
+														value={billing.country}
+														name={'country'}
+														onChange={this.handleChangeInput}
+														required
+													>
+														<option>Select a country...</option>
+														{
+															allCountries && allCountries.map(item => {
+																return <option value={item.countryName}>{item.countryName}</option>
+															})
+														}
+													</select>
+												</div>
 
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-city">Town / City</label>
-                                                        <input type="text"
-                                                            className="form-control" id="checkout-city"
-                                                            value={billing.city}
-                                                            name={'city'}
-                                                            placeholder="Town / City"
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        />
-                                                    </div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-city">Town / City</label>
+													<input type="text"
+														className="form-control" id="checkout-city"
+														value={billing.city}
+														name={'city'}
+														placeholder="Town / City"
+														onChange={this.handleChangeInput}
+														required
+													/>
+												</div>
 
-                                                </div>
+											</div>
 
 
-                                                <div className="form-group">
-                                                    <label htmlFor="checkout-street-address">Street Address</label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="checkout-street-address"
-                                                        placeholder="Street Address"
-                                                        value={billing.street}
-                                                        name={'street'}
-                                                        onChange={this.handleChangeInput}
-                                                        required
-                                                    />
-                                                </div>
+											<div className="form-group">
+												<label htmlFor="checkout-street-address">Street Address</label>
+												<input
+													type="text"
+													className="form-control"
+													id="checkout-street-address"
+													placeholder="Street Address"
+													value={billing.street}
+													name={'street'}
+													onChange={this.handleChangeInput}
+													required
+												/>
+											</div>
 
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-state">State / County</label>
-                                                        <input type="text" className="form-control"
-                                                            id="checkout-state"
-                                                            value={billing.state}
-                                                            name={'state'}
-                                                            placeholder="State / County"
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        />
-                                                    </div>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-state">State / County</label>
+													<input type="text" className="form-control"
+														id="checkout-state"
+														value={billing.state}
+														name={'state'}
+														placeholder="State / County"
+														onChange={this.handleChangeInput}
+														required
+													/>
+												</div>
 
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-postcode">Postcode / ZIP</label>
-                                                        <input type="text" className="form-control"
-                                                            id="checkout-postcode"
-                                                            value={billing.zipCode}
-                                                            name={'zipCode'}
-                                                            placeholder='Postcode / ZIP'
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-postcode">Postcode / ZIP</label>
+													<input type="text" className="form-control"
+														id="checkout-postcode"
+														value={billing.zipCode}
+														name={'zipCode'}
+														placeholder='Postcode / ZIP'
+														onChange={this.handleChangeInput}
+														required
+													/>
+												</div>
+											</div>
 
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-email">Email address</label>
-                                                        <input
-                                                            type="email"
-                                                            className="form-control"
-                                                            id="checkout-email"
-                                                            placeholder="Email address"
-                                                            value={billing.email}
-                                                            name={'email'}
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-phone">Phone</label>
-                                                        <input type="text" className="form-control"
-                                                            id="checkout-phone" placeholder="Phone"
-                                                            value={billing.phone}
-                                                            name={'phone'}
-                                                            onChange={this.handleChangeInput}
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-email">Email address</label>
+													<input
+														type="email"
+														className="form-control"
+														id="checkout-email"
+														placeholder="Email address"
+														value={billing.email}
+														name={'email'}
+														onChange={this.handleChangeInput}
+														required
+													/>
+												</div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-phone">Phone</label>
+													<input type="text" className="form-control"
+														id="checkout-phone" placeholder="Phone"
+														value={billing.phone}
+														name={'phone'}
+														onChange={this.handleChangeInput}
+														required
+													/>
+												</div>
+											</div>
 
-                                            </div>
-                                            <div className="card-divider" />
-                                            <div className="card-body">
-                                                <h3 className="card-title">Shipping Details</h3>
+										</div>
+										<div className="card-divider" />
+										<div className="card-body">
+											<h3 className="card-title">Shipping Details</h3>
 
-                                                <div className="form-group">
-                                                    <div className="form-check">
-                                                        <span className="form-check-input input-check">
-                                                            <span className="input-check__body">
-                                                                <input className="input-check__input" type="checkbox"
-                                                                    id="checkout-different-address"
-                                                                    onChange={this.handleAddressToggle}
-                                                                />
-                                                                <span className="input-check__box" />
-                                                                <Check9x7Svg className="input-check__icon" />
-                                                            </span>
-                                                        </span>
-                                                        <label className="form-check-label" htmlFor="checkout-different-address">
-                                                            Same Shipping Address
+											<div className="form-group">
+												<div className="form-check">
+													<span className="form-check-input input-check">
+														<span className="input-check__body">
+															<input className="input-check__input" type="checkbox"
+																id="checkout-different-address"
+																onChange={this.handleAddressToggle}
+															/>
+															<span className="input-check__box" />
+															<Check9x7Svg className="input-check__icon" />
+														</span>
+													</span>
+													<label className="form-check-label" htmlFor="checkout-different-address">
+														Same Shipping Address
                                                 </label>
-                                                    </div>
-                                                </div>
+												</div>
+											</div>
 
 
 
 
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-first-name1">First Name</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            // id="checkout-first-name"
-                                                            placeholder="First Name"
-                                                            value={shipping.firstName}
-                                                            name={'shipping-firstName'}
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-last-name">Last Name</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="checkout-last-name"
-                                                            placeholder="Last Name"
-                                                            value={shipping.lastName}
-                                                            name={'shipping-lastName'}
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-first-name1">First Name</label>
+													<input
+														type="text"
+														className="form-control"
+														// id="checkout-first-name"
+														placeholder="First Name"
+														value={shipping.firstName}
+														name={'shipping-firstName'}
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													/>
+												</div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-last-name">Last Name</label>
+													<input
+														type="text"
+														className="form-control"
+														id="checkout-last-name"
+														placeholder="Last Name"
+														value={shipping.lastName}
+														name={'shipping-lastName'}
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
 
-                                                        />
-                                                    </div>
-                                                </div>
+													/>
+												</div>
+											</div>
 
-                                                <div className="form-group">
-                                                    <label htmlFor="checkout-company-name">
-                                                        Company Name
+											<div className="form-group">
+												<label htmlFor="checkout-company-name">
+													Company Name
                                                 {' '}
-                                                        <span className="text-muted">(Optional)</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="checkout-company-name"
-                                                        placeholder="Company Name"
-                                                        value={shipping.companyName}
-                                                        name={'shipping-companyName'}
-                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
+													<span className="text-muted">(Optional)</span>
+												</label>
+												<input
+													type="text"
+													className="form-control"
+													id="checkout-company-name"
+													placeholder="Company Name"
+													value={shipping.companyName}
+													name={'shipping-companyName'}
+													onChange={(e) => this.handleChangeInput(e, 'shipping')}
 
-                                                    />
-                                                </div>
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-country">Country</label>
-                                                        <select id="checkout-country"
-                                                            className="form-control"
-                                                            value={shipping.country}
-                                                            name={'shipping-country'}
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        >
-                                                            <option>Select a country...</option>
-                                                            {
-                                                                allCountries && allCountries.map(item => {
-                                                                    return <option value={item.countryName}>{item.countryName}</option>
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
+												/>
+											</div>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-country">Country</label>
+													<select id="checkout-country"
+														className="form-control"
+														value={shipping.country}
+														name={'shipping-country'}
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													>
+														<option>Select a country...</option>
+														{
+															allCountries && allCountries.map(item => {
+																return <option value={item.countryName}>{item.countryName}</option>
+															})
+														}
+													</select>
+												</div>
 
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-city">Town / City</label>
-                                                        <input type="text"
-                                                            className="form-control" id="checkout-city"
-                                                            value={shipping.city}
-                                                            name={'shipping-city'}
-                                                            placeholder="Town / City"
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        />
-                                                    </div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-city">Town / City</label>
+													<input type="text"
+														className="form-control" id="checkout-city"
+														value={shipping.city}
+														name={'shipping-city'}
+														placeholder="Town / City"
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													/>
+												</div>
 
-                                                </div>
+											</div>
 
 
-                                                <div className="form-group">
-                                                    <label htmlFor="checkout-street-address">Street Address</label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="checkout-street-address"
-                                                        placeholder="Street Address"
-                                                        value={shipping.street}
-                                                        name={'shipping-street'}
-                                                        onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                        required
-                                                    />
-                                                </div>
+											<div className="form-group">
+												<label htmlFor="checkout-street-address">Street Address</label>
+												<input
+													type="text"
+													className="form-control"
+													id="checkout-street-address"
+													placeholder="Street Address"
+													value={shipping.street}
+													name={'shipping-street'}
+													onChange={(e) => this.handleChangeInput(e, 'shipping')}
+													required
+												/>
+											</div>
 
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-state">State / County</label>
-                                                        <input type="text" className="form-control"
-                                                            id="checkout-state"
-                                                            value={shipping.state}
-                                                            name={'shipping-state'}
-                                                            placeholder="State / County"
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        />
-                                                    </div>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-state">State / County</label>
+													<input type="text" className="form-control"
+														id="checkout-state"
+														value={shipping.state}
+														name={'shipping-state'}
+														placeholder="State / County"
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													/>
+												</div>
 
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-postcode">Postcode / ZIP</label>
-                                                        <input type="text" className="form-control"
-                                                            id="checkout-postcode"
-                                                            value={shipping.zipCode}
-                                                            name={'shipping-zipCode'}
-                                                            placeholder='Postcode / ZIP'
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-postcode">Postcode / ZIP</label>
+													<input type="text" className="form-control"
+														id="checkout-postcode"
+														value={shipping.zipCode}
+														name={'shipping-zipCode'}
+														placeholder='Postcode / ZIP'
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													/>
+												</div>
+											</div>
 
-                                                <div className="form-row">
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-email">Email address</label>
-                                                        <input
-                                                            type="email"
-                                                            className="form-control"
-                                                            id="checkout-email"
-                                                            placeholder="Email address"
-                                                            value={shipping.email}
-                                                            name={'shipping-email'}
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className="form-group col-md-6">
-                                                        <label htmlFor="checkout-phone">Phone</label>
-                                                        <input type="text" className="form-control"
-                                                            id="checkout-phone" placeholder="Phone"
-                                                            value={shipping.phone}
-                                                            name={'shipping-phone'}
-                                                            onChange={(e) => this.handleChangeInput(e, 'shipping')}
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
+											<div className="form-row">
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-email">Email address</label>
+													<input
+														type="email"
+														className="form-control"
+														id="checkout-email"
+														placeholder="Email address"
+														value={shipping.email}
+														name={'shipping-email'}
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													/>
+												</div>
+												<div className="form-group col-md-6">
+													<label htmlFor="checkout-phone">Phone</label>
+													<input type="text" className="form-control"
+														id="checkout-phone" placeholder="Phone"
+														value={shipping.phone}
+														name={'shipping-phone'}
+														onChange={(e) => this.handleChangeInput(e, 'shipping')}
+														required
+													/>
+												</div>
+											</div>
 
-                                                <div className="card-divider" />
-                                                <br />
+											<div className="card-divider" />
+											<br />
 
-                                                <div className="form-group">
-                                                    <label htmlFor="checkout-comment">
-                                                        Order notes
+											<div className="form-group">
+												<label htmlFor="checkout-comment">
+													Order notes
                                                 {' '}
-                                                        <span className="text-muted">(Optional)</span>
-                                                    </label>
-                                                    <textarea id="checkout-comment"
-                                                        className="form-control" rows="4"
-                                                        onChange={(e) => this.setState({ orderNote: e.target.value })} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+													<span className="text-muted">(Optional)</span>
+												</label>
+												<textarea id="checkout-comment"
+													className="form-control" rows="4"
+													onChange={(e) => this.setState({ orderNote: e.target.value })} />
+											</div>
+										</div>
+									</div>
 
-                                <div className="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0">
-                                    <div className="card mb-0">
-                                        <div className="card-body">
-                                            <h3 className="card-title">Your Order</h3>
+								</div>
 
-                                            {this.renderCart()}
+								<div className="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0">
+									<div className="card mb-0">
+										<div className="card-body">
+											<h3 className="card-title">Your Order</h3>
 
-                                            {this.renderPaymentsList()}
+											{this.renderCart()}
 
-                                            <div className="checkout__agree form-group">
-                                                <div className="form-check">
-                                                    <span className="form-check-input input-check">
-                                                        <span className="input-check__body">
-                                                            <input className="input-check__input" type="checkbox" onChange={e => this.setState({ termNcondition: e.target.checked })} id="checkout-terms" />
-                                                            <span className="input-check__box" />
-                                                            <Check9x7Svg className="input-check__icon" />
-                                                        </span>
-                                                    </span>
-                                                    <label className="form-check-label" htmlFor="checkout-terms">
-                                                        I have read and agree to the website {" "}
-                                                        <Link to="site/terms">terms and conditions</Link>
+											{/* {this.renderPaymentsList()} */}
+
+											<div className="checkout__agree form-group">
+												<div className="form-check">
+													<span className="form-check-input input-check">
+														<span className="input-check__body">
+															<input className="input-check__input" type="checkbox" onChange={e => this.setState({ termNcondition: e.target.checked })} id="checkout-terms" />
+															<span className="input-check__box" />
+															<Check9x7Svg className="input-check__icon" />
+														</span>
+													</span>
+													<label style={{ fontSize: '13px', fontWeight: "bold" }} className="form-check-label" htmlFor="checkout-terms">
+														I have read and agree to the website {" "}
+														<Link to="site/terms">terms and conditions</Link>
                                                     *
                                                 </label>
-                                                </div>
-                                            </div>
+												</div>
+											</div>
 
-                                            {showPaypal && payment === "paypal" ?
-                                                <PaypalButtons handleSubmitCheckout={this.handleSubmitCheckout} total={this.state.total} currency={this.state.currency} />
-                                                : null}
+											<button
+												type="submit"
+												disabled={!termNcondition}
+												className="btn btn-primary btn-xl btn-block"
+											>
+												Place Order
+											</button>
 
-                                            <div>
-                                            {!this.props.cart.paid &&
-                                                <button
-                                                    type="submit"
-                                                    // type="button"
-                                                    disabled={!termNcondition}
-                                                    onClick={this.showPaypalButtons}
-                                                    className="btn btn-primary btn-xl btn-block"
-                                                >Place Order</button>
-                                                }
-                                            </div>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+											{/*
+										{showPaypal && payment === "paypal" ?
+											<PaypalButtons handleSubmitCheckout={this.handleSubmitCheckout} total={this.state.total} currency={this.state.currency} />
+											: null}
 
-                        )}
-                </div>
-            </React.Fragment >
-        );
-    }
+										<div>
+										{!this.props.cart.paid ?
+											<button
+												type="submit"
+												// type="button"
+												disabled={!termNcondition}
+												onClick={this.showPaypalButtons}
+												className="btn btn-primary btn-xl btn-block"
+											>Place Order</button>
+											: <div/>
+										}							
+										</div> */}
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</form>
+
+					</div>
+
+				</div>
+			</React.Fragment >
+		);
+	}
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(
-        {
-            getAllCountries,
-            postSaleOrder,
-            resetCartPaid
-        },
-        dispatch
-    );
+	return bindActionCreators(
+		{
+			getAllCountries,
+			postSaleOrder,
+			resetCartPaid
+		},
+		dispatch
+	);
 }
 
 const mapStateToProps = (state) => ({
-    cart: state.cart,
-    allCountries: state.webView.allCountries
+	cart: state.cart,
+	allCountries: state.webView.allCountries
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCheckout);

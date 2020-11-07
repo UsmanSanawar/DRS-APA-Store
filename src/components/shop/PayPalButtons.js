@@ -113,14 +113,15 @@ class PaypalButton extends React.Component {
                     </div>
                 )}
 
-                {paid && (
+                {paid ? (
                     <div className="main">
+                        {this.props.handlePaid(true)}
                         <img alt="payment-success" style={{width: "100%"}} src={PaymentSuccess} />
                         <div style={{textAlign: "center"}}>
                         <Link to="/store" className="btn btn-sm btn-success mx-auto">Continue Shopping</Link>
                         </div>
                     </div>
-                )}
+                ) : null}
             </div>
         );
     }
