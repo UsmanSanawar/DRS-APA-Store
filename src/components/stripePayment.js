@@ -9,7 +9,6 @@ import {
   Elements,
 } from '@stripe/react-stripe-js';
 import useResponsiveFontSize from "./useResponsiveFontSize";
-import "./style.css";
 
 
 const stripePromise = loadStripe('pk_test_6awA8Z1Thz08dGIG0blDxRZ900nlIQurIk');
