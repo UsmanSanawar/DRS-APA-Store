@@ -36,6 +36,8 @@ import SitePageTypography from './site/SitePageTypography';
 import PageWishlist from './shop/ShopPageWishlist';
 import ShopPageCategory from './shop/ShopPageCategory';
 import PaymentOptionsPage from "./shop/PaymentOptionsPage";
+import PaymentSuccess from "./site/paymentSuccess"
+import PaymentError from "./site/paymentError"
 
 // data stubs
 import theme from '../data/theme';
@@ -136,6 +138,23 @@ function Layout(props) {
                             path="/store/products"
                             render={(props) => (
                                 <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="start" />
+                            )}
+                        />
+
+
+                        <Route
+                            exact
+                            path="/payment/success"
+                            render={(props) => (
+                                <PaymentSuccess {...props}  />
+                            )}
+                        />
+
+<Route
+                            exact
+                            path="/payment/error"
+                            render={(props) => (
+                                <PaymentError {...props}  />
                             )}
                         />
 

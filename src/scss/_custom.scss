@@ -50,3 +50,54 @@
 .pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span{
   border-radius: unset
 }
+
+
+.card-body{
+  margin: 50px;
+} 
+
+.p-c-heading{
+  align-self: center!important;
+  text-align: center
+}
+.p-c-description{
+  align-self: center!important;
+  text-align: center
+}
+.p-c-button{
+  align-self: center!important;
+  max-width: 200px;
+}
+
+.p-c-icon{
+  align-self: center!important;
+}
+
+
+
+.p-c-s-icon{
+  align-self: center!important;
+}
+
+.p-c-e-icon{
+  align-self: center!important;
+}
+
+.p-c-s-icon i {
+  font-size: 7em;
+  color: #28a745;
+  margin-bottom: 20px;
+  
+}
+
+.p-c-e-icon i {
+  font-size: 7em;
+  color: #f32f2fe0;
+  margin-bottom: 20px;
+  
+}
+
+
+.m-r-10{
+  margin-right: 10px;
+}

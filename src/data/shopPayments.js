@@ -7,8 +7,8 @@ export default [
     // },
     {
         key: 'stripe',
-        title: 'Stripe',
-        description: 'Pay via Stripe',
+        title: 'Debit or Credit Card',
+        description: 'Pay via Debit or Credit Card',
     },
     // {
     //     key: 'cash',

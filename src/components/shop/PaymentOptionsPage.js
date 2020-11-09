@@ -9,7 +9,6 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import Currency from "../shared/Currency";
 import {Redirect} from "react-router-dom";
-import "../style.css";
 import StripPayment from "../stripePayment";
 class paymentOptionsPage extends Component {
   payments = payments;

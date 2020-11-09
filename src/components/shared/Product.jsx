@@ -91,8 +91,8 @@ class Product extends Component {
             for (let prOption of this.props.product.productOptions) {
                 let success = 0;
                 for (let combination of prOption.productOptionCombination) {
-                    console.log(combination, 'option ptions combination ', this.state.options);
-                    if (this.state.options.some(option => option.optionId == combination.optionId && option.value == combination.optionValueId)) {
+                    console.log(combination, 'option ptions combination ', prOption);
+                    if (this.state.options.some(option => option.optionId == combination.optionId && (option.value == combination.optionValueId || combination.optionTypeId == 6))) {
                         success++
                     }
                 }

@@ -121,10 +121,11 @@ class ShopPageCheckout extends Component {
 				orderLineProductOptions: []
 			}
 
+			if(item.product.productOptions){
 			for (let prOp of item.product.productOptions) {
 				let success = false
 				for (let op of item.options) {
-					if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value)) {
+					if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value || comb.optionTypeId == 6)) {
 						success = true
 					} else {
 						success = false
@@ -136,6 +137,7 @@ class ShopPageCheckout extends Component {
 					line.orderLineProductOptions.push(prOp)
 				}
 			}
+		}
 
 			saleOrder.orderLines.push(line)
 		}

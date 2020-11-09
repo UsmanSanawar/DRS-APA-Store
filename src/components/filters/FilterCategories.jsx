@@ -31,6 +31,9 @@ function FilterCategories(props) {
     return (
         <div className="filter-categories">
             <ul className="filter-categories__list">
+            <li key={''} className={`filter-categories__item filter-categories__item--${sideFilters.category == null ? 'current' :''}`}>
+                <p style={{cursor: "pointer"}} onClick={()=>props.onChange("category" ,null)}>All Products</p>
+            </li>
                 {categoriesList}
             </ul>
         </div>

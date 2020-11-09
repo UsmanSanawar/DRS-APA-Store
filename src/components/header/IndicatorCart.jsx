@@ -59,7 +59,7 @@ function IndicatorCart(props) {
             options = (
                 <ul className="dropcart__product-options">
                     {item.options.map((option, index) => (
-                        <li key={index}>{`${option.optionName}:  ${option.optionTypeId == 1 || option.optionTypeId == 2 ? getSeletedOptionValue(option) : option.optionTypeId == 3 ? option.value == undefined || option.value == false ? false : true : option.optionTypeId == 6 ? option.value: ""}`}</li>
+                        <li key={index}>{`${option.optionName}:  ${option.optionTypeId == 1 || option.optionTypeId == 2 ? getSeletedOptionValue(option) : option.optionTypeId == 3 ? option.value == undefined || option.value == false ? false : true : option.optionTypeId == 6 ? option.value ? option.value : '': ""}`}</li>
                     ))}
                 </ul>
             );
