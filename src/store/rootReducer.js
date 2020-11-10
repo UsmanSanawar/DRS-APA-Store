@@ -9,7 +9,8 @@ import mobileMenuReducer from './mobile-menu';
 import quickviewReducer from './quickview';
 import sidebarReducer from './sidebar';
 import wishlistReducer from './wishlist';
-import webView from './webView';
+import webView from './webView'; 
+import auth from './auth'; 
 
 
 export default combineReducers({
@@ -22,4 +23,5 @@ export default combineReducers({
     sidebar: sidebarReducer,
     wishlist: wishlistReducer,
     webView:webView,
+    auth:auth,
 });

@@ -6,7 +6,9 @@ import PropTypes from "prop-types";
 import { HashRouter, Route, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
-
+import { makeAuthenticator, makeUserManager, Callback } from 'react-oidc'
+import userManager from "../userManager"
+import store from "../store/store";
 // application
 import messages from "../i18n";
 
@@ -16,6 +18,7 @@ import HomePageOne from './home/HomePageOne';
 import HomePageTwo from './home/HomePageTwo';
 import ScrollToTop from "./scrollToTop"
 
+// export const store = configureStore();
 class Root extends Component {
     componentDidMount() {
         setTimeout(() => {
@@ -34,6 +37,7 @@ class Root extends Component {
 
     render() {
         const { locale } = this.props;
+        
 
         return (
             <IntlProvider locale={locale} messages={messages[locale]}>
@@ -47,6 +51,32 @@ class Root extends Component {
                                 <Layout {...props} headerLayout="compact" homeComponent={HomePageOne} />
                             )}
                         />
+
+
+<Route
+          path="/callback"
+          render={routeProps => (
+            <Callback
+              onSuccess={user => {
+                console.log(user, 'user on success')
+                // alert(2)
+                if (user && user != null) {
+                  store.dispatch({ type: 'SIGNIN_USER_SUCCESS', payload: user })
+                //   store.dispatch(getUserRoleByName(user.profile.role))
+                  // `user.state` will reflect the state that was passed in via signinArgs.
+                  routeProps.history.push('/dashboard')
+                }
+              }}
+              onError={(err) => {
+                console.log(err, 'error si the')
+                // alert(3)
+                userManager.signinRedirect()
+              }}
+              userManager={userManager}
+            />
+          )}
+        />
+
                         <Route
                             path="/"
                             render={(props) => (

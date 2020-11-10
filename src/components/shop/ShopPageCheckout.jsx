@@ -21,7 +21,7 @@ import theme from '../../data/theme';
 import { getAllCountries } from "../../store/webView";
 import { postSaleOrder, resetCartPaid } from "../../store/cart";
 import { toast } from "react-toastify";
-
+import userManager from "../../userManager"
 
 const initAddr = {
 	firstName: '',
@@ -80,7 +80,11 @@ class ShopPageCheckout extends Component {
 
 	handleSubmitCheckout = (orderId) => {
 
-		console.log(this.state.formValues, 'this.state.formValues', this.props.cart);
+		// if(!this.props.authUser || this.props.authUser == null || this.props.authUser == null){
+		// 	userManager.signinRedirect();
+		// }else{
+		
+		console.log(this.props.authUser, 'this.state.formValues', !this.props.authUser , this.props.authUser == null , this.props.authUser == null);
 
 		let saleOrder = {
 			"orderIdentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
@@ -148,6 +152,7 @@ class ShopPageCheckout extends Component {
 			console.log(this.props.cart.paid, 'paidCart')
 		}
 	}
+// }
 
 	handleAddressToggle = (event) => {
 		console.log(event.target.checked, 'event.target.checked', event.target);
@@ -296,6 +301,11 @@ class ShopPageCheckout extends Component {
 	}
 
 	render() {
+
+
+	console.log(this.props.authUser, 'this.props.authUser', this.props.state);
+	
+
 		console.log(this.state)
 		const { cart, allCountries } = this.props;
 		const { billing, shipping } = this.state.formValues;
@@ -330,16 +340,8 @@ class ShopPageCheckout extends Component {
 							this.handleSubmitCheckout()
 						}} >
 							<div className="row">
-								{/* <div className="col-12 mb-3">
-                                <div className="alert alert-primary alert-lg">
-                                    Returning customer?
-                                    {' '}
-                                    <Link to="/account/login">Click here to login</Link>
-                                </div>
-                            </div> */}
 
 								<div className="col-12 col-lg-6 col-xl-7">
-
 									<div className="card mb-lg-0">
 										<div className="card-body">
 											<h3 className="card-title">Billing details</h3>
@@ -713,25 +715,6 @@ class ShopPageCheckout extends Component {
 												Place Order
 											</button>
 
-
-											{/*
-										{showPaypal && payment === "paypal" ?
-											<PaypalButtons handleSubmitCheckout={this.handleSubmitCheckout} total={this.state.total} currency={this.state.currency} />
-											: null}
-
-										<div>
-										{!this.props.cart.paid ?
-											<button
-												type="submit"
-												// type="button"
-												disabled={!termNcondition}
-												onClick={this.showPaypalButtons}
-												className="btn btn-primary btn-xl btn-block"
-											>Place Order</button>
-											: <div/>
-										}							
-										</div> */}
-
 										</div>
 									</div>
 								</div>
@@ -760,7 +743,8 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = (state) => ({
 	cart: state.cart,
-	allCountries: state.webView.allCountries
+	allCountries: state.webView.allCountries,
+	authUser: state.auth.authUser,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCheckout);

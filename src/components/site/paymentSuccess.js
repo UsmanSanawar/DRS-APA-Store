@@ -13,7 +13,7 @@ function App() {
           <CardText className="p-c-description">
             Thank you! Your payment is complete and your payment reference is : XXXXX
           </CardText>
-          <Button outline color="success" className="p-c-button">Go to Home</Button>
+          <Button href="/" outline color="success" className="p-c-button">Go to Home</Button>
         </Card>
     </div>
   );

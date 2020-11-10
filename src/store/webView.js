@@ -7,6 +7,7 @@ const initialState = {
     categories: [],
     relatedProducts: [],
     allCountries: [],
+
 };
 
 export default function quickviewReducer(state = initialState, action) {
@@ -102,6 +103,11 @@ export default function quickviewReducer(state = initialState, action) {
                 ...state,
                 allCountries: state.allCountries
             }
+        }
+
+
+        case 'SIGNIN_USER_SUCCESS':{
+            return{...state, authUser: action.payload}
         }
 
 

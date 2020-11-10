@@ -37,7 +37,7 @@ function FilterCategories(props) {
                 {categoriesList}
             </ul>
         </div>
-    );
+    ); 
 }
 
 FilterCategories.propTypes = {
