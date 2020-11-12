@@ -40,7 +40,7 @@ class ProductTabs extends Component {
             { key: 'custom-tab', title: product ? product.newTabName : '' , content: <div dangerouslySetInnerHTML={{__html:product? product.newTabContent: ''}} /> },
             { key: 'reviews', title: 'Reviews', content: <ProductTabReviews productId={product.productId}  /> },
         ];
-        // newTabContent
+        // newTabContent 
         const tabsButtons = tabs.map((tab) => {
             const classes = classNames('product-tabs__item', {
                 'product-tabs__item--active': currentTab === tab.key,

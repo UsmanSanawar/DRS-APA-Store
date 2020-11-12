@@ -12,7 +12,7 @@ function App() {
     const stripe = await stripePromise;
 
     // Call your backend to create the Checkout Session
-    const response = await fetch(`${BASE_URL}/api/DRS.APA/masterdata/SaleOrders/create-checkout-session`, {method: 'POST'});
+    const response = await fetch(`${BASE_URL}/api/DRS.APA/masterdata/SaleOrders/create-checkout-session-by-id/1`, {method: 'POST'});
 
     console.log(response, 'response is the');
     if(response){
@@ -35,7 +35,6 @@ function App() {
         // using `result.error.message`.
       }
     }
-
   };
 
   return (
