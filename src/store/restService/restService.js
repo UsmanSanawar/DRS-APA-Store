@@ -17,6 +17,11 @@ const RestService = {
         RestService.getHeader(),
     ),
 
+    getAttachmentsByPrId: (id) => {
+        return axios.get(`${BASE_URL}/masterdata/Attachments/1/50?productId=${id}`,
+          RestService.getHeader());
+      },
+
     postReview: (FormData) => axios.post(`${BASE_URL}/masterdata/Reviews`, FormData, RestService.getHeader()),
 
     getWebPageComponentByPageId: (id) => axios.get(`${BASE_URL}/website/WebPageComponent/GetWebPageComponentsOnPageId/${id}`, RestService.getHeader()),

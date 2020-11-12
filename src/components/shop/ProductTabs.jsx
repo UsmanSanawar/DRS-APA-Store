@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import ProductTabDescription from './ProductTabDescription';
 import ProductTabSpecification from './ProductTabSpecification';
 import ProductTabReviews from './ProductTabReviews';
+import ProductTabAttachments from './ProductTabAttachments';
 
 
 class ProductTabs extends Component {
@@ -39,7 +40,10 @@ class ProductTabs extends Component {
             { key: 'specification', title: 'Specification', content: <ProductTabSpecification product={product} /> },
             { key: 'custom-tab', title: product ? product.newTabName : '' , content: <div dangerouslySetInnerHTML={{__html:product? product.newTabContent: ''}} /> },
             { key: 'reviews', title: 'Reviews', content: <ProductTabReviews productId={product.productId}  /> },
+            { key: 'downloads', title: 'Downloads' , content: <ProductTabAttachments productId={product.productId}  />  },
+        
         ];
+          
         // newTabContent 
         const tabsButtons = tabs.map((tab) => {
             const classes = classNames('product-tabs__item', {
