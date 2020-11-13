@@ -10,7 +10,6 @@ export function postSaleOrder(formData) {
     console.log(formData, 'formData 2');
 
       RestService.postSaleOrder(formData).then(response => {
-    console.log(formData, 'formData 3', response);
         if (response.data) {
           dispatch({
             type: POST_SALE_ORDER,

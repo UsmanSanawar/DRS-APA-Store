@@ -22,6 +22,7 @@ import { getAllCountries } from "../../store/webView";
 import { postSaleOrder, resetCartPaid } from "../../store/cart";
 import { toast } from "react-toastify";
 import userManager from "../../userManager"
+import RestService from '../../store/restService/restService';
 
 const initAddr = {
 	firstName: '',
@@ -97,7 +98,7 @@ class ShopPageCheckout extends Component {
 			"cancelReason": "",
 			"orderAmountWithTaxAndDiscount": this.props.cart.total,
 			"orderNotes": this.state.orderNote,
-			"orderStatusId": 6,
+			"orderStatusId": 11,
 			"isActive": true,
 			orderAddress: [],
 			orderLines: [],
@@ -149,7 +150,6 @@ class ShopPageCheckout extends Component {
 			toast.error('Cart is empty')
 		} else {
 			this.props.postSaleOrder(saleOrder)
-			console.log(this.props.cart.paid, 'paidCart')
 		}
 	}
 // }
@@ -303,7 +303,7 @@ class ShopPageCheckout extends Component {
 	render() {
 
 
-	console.log(this.props.authUser, 'this.props.authUser', this.props.state);
+	console.log(this.props, 'this.props.authUser', this.props.state);
 	
 
 		console.log(this.state)
@@ -311,12 +311,12 @@ class ShopPageCheckout extends Component {
 		const { billing, shipping } = this.state.formValues;
 		const { showPaypal, payment, termNcondition } = this.state;
 
-		// if (cart.items.length < 1) {
-		// 	return <Redirect to="cart" />;
-		// }
 
-		if (cart.paid) {
-			return <Redirect to="/store/payments-cashier" />;
+		if (cart.paid && cart.orderId != null) {
+			return <Redirect to={{
+				pathname: `/store/payments-cashier/${cart.orderId}`,
+				state: {order: cart.orderId}
+				}} />;
 		}
 
 		const breadcrumb = [

@@ -1,8 +1,8 @@
  /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 import axios from 'axios';
-
-const BASE_URL = 'https://drsapa.ddns.net:3450/api/DRS.APA';
+import {BASE_URL} from "../../constant/constants"
+const BASE_URL_API = `${BASE_URL}/api/DRS.APA`;
 
 const RestService = {
     getHeader: () => ({
@@ -11,26 +11,38 @@ const RestService = {
         },
     }),
 
+    getHeader2: () => ({
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer sk_test_zP6oE2wlbpaT39EQsqPNQGMn00VQlIJP4H'
+        },
+    }),
+
+    getTransactionBySession: (sessionId) => axios.get(
+        `https://api.stripe.com/v1/checkout/sessions/cs_test_g1KUqbHTYsEqHJjf6XOoqb1265ynVIphfXeD5KF1QPuNiOwGVCh9zhed`,
+        RestService.getHeader2(),
+    ),
+
     getReviews: (prId = 0, currentPage = 1, pageSize = 10) => axios.get(
-        `${BASE_URL}/masterdata/Reviews/${currentPage}/${pageSize}?productId=${prId}`,
+        `${BASE_URL_API}/masterdata/Reviews/${currentPage}/${pageSize}?productId=${prId}`,
         FormData,
         RestService.getHeader(),
     ),
 
     getAttachmentsByPrId: (id) => {
-        return axios.get(`${BASE_URL}/masterdata/Attachments/1/50?productId=${id}`,
+        return axios.get(`${BASE_URL_API}/masterdata/Attachments/1/50?productId=${id}`,
           RestService.getHeader());
       },
 
-    postReview: (FormData) => axios.post(`${BASE_URL}/masterdata/Reviews`, FormData, RestService.getHeader()),
+    postReview: (FormData) => axios.post(`${BASE_URL_API}/masterdata/Reviews`, FormData, RestService.getHeader()),
 
-    getWebPageComponentByPageId: (id) => axios.get(`${BASE_URL}/website/WebPageComponent/GetWebPageComponentsOnPageId/${id}`, RestService.getHeader()),
+    getWebPageComponentByPageId: (id) => axios.get(`${BASE_URL_API}/website/WebPageComponent/GetWebPageComponentsOnPageId/${id}`, RestService.getHeader()),
 
-    getWebPageComponentByPageSlug: (slug) => axios.get(`${BASE_URL}/website/WebPageComponent/GetWebPageComponentsOnSlug/${slug}`, RestService.getHeader()),
+    getWebPageComponentByPageSlug: (slug) => axios.get(`${BASE_URL_API}/website/WebPageComponent/GetWebPageComponentsOnSlug/${slug}`, RestService.getHeader()),
 
-    getWebMenu: () => axios.get(`${BASE_URL}/website/WebMenu/0/0`, RestService.getHeader()),
+    getWebMenu: () => axios.get(`${BASE_URL_API}/website/WebMenu/0/0`, RestService.getHeader()),
 
-    getProducts: () => axios.get(`${BASE_URL}/masterdata/Products/0/0`, RestService.getHeader()),
+    getProducts: () => axios.get(`${BASE_URL_API}/masterdata/Products/0/0`, RestService.getHeader()),
 
     getProductsByPageAndFilter: (pageNumber, pageSize, filters) => {
         const priceArray = filters.priceRange;
@@ -44,31 +56,31 @@ const RestService = {
             }
         }
         return axios.get(
-            `${BASE_URL}/masterdata/Products/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category}&${manufacturers.join('&')}&seachString=${filters.searchString}`,
+            `${BASE_URL_API}/masterdata/Products/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category}&${manufacturers.join('&')}&seachString=${filters.searchString}`,
             RestService.getHeader(),
         );
     },
 
-    getProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/${prId}`, RestService.getHeader()),
+    getProductById: (prId) => axios.get(`${BASE_URL_API}/masterdata/Products/${prId}`, RestService.getHeader()),
 
-    getRelatedProductById: (prId) => axios.get(`${BASE_URL}/masterdata/Products/GetRelatedProductsByProductId/${prId}`, RestService.getHeader()),
+    getRelatedProductById: (prId) => axios.get(`${BASE_URL_API}/masterdata/Products/GetRelatedProductsByProductId/${prId}`, RestService.getHeader()),
 
-    getAllCategories: () => axios.get(`${BASE_URL}/masterdata/ProductCategories/0/0`, RestService.getHeader()),
+    getAllCategories: () => axios.get(`${BASE_URL_API}/masterdata/ProductCategories/0/0`, RestService.getHeader()),
 
-    getProductOptionCombination: (prId) => axios.get(`${BASE_URL}/masterdata/ProductOptionCombination/onProductId/${prId}`, RestService.getHeader()),
+    getProductOptionCombination: (prId) => axios.get(`${BASE_URL_API}/masterdata/ProductOptionCombination/onProductId/${prId}`, RestService.getHeader()),
 
-    getAllManufacturer: () => axios.get(`${BASE_URL}/masterdata/Manufacturers/0/0`, RestService.getHeader()),
+    getAllManufacturer: () => axios.get(`${BASE_URL_API}/masterdata/Manufacturers/0/0`, RestService.getHeader()),
 
-    getOrganizationsByCode: (code) => axios.get(`${BASE_URL}/masterdata/Organization/${code}`, RestService.getHeader()),
+    getOrganizationsByCode: (code) => axios.get(`${BASE_URL_API}/masterdata/Organization/${code}`, RestService.getHeader()),
 
-    getAllCountries: () => axios.get(`${BASE_URL}/masterdata/Countries/0/0`, RestService.getHeader()),
+    getAllCountries: () => axios.get(`${BASE_URL_API}/masterdata/Countries/0/0`, RestService.getHeader()),
 
-    postSaleOrder: (FormData) => axios.post(`${BASE_URL}/masterdata/Orders`, FormData, RestService.getHeader()),
+    postSaleOrder: (FormData) => axios.post(`${BASE_URL_API}/masterdata/Orders`, FormData, RestService.getHeader()),
+    getOrderById: (orderId) => axios.get(`${BASE_URL_API}/masterdata/Orders/${orderId}`, RestService.getHeader()),
+    getAllHomePageCollection: () => axios.get(`${BASE_URL_API}/masterdata/HomePageCollection/0/0`, RestService.getHeader()),
 
-    getAllHomePageCollection: () => axios.get(`${BASE_URL}/masterdata/HomePageCollection/0/0`, RestService.getHeader()),
-
-    getWebBanner: () => axios.get(`${BASE_URL}/website/WebBanner`),
+    getWebBanner: () => axios.get(`${BASE_URL_API}/website/WebBanner`),
     
-    getWebCarousal: () => axios.get(`${BASE_URL}/website/WebCarousal`)
+    getWebCarousal: () => axios.get(`${BASE_URL_API}/website/WebCarousal`)
 };
 export default RestService;

@@ -143,8 +143,8 @@ function Layout(props) {
 
 
                         <Route
-                            exact
-                            path="/payment/success"
+                            
+                            path="/payment/success/:sessionId"
                             render={(props) => (
                                 <PaymentSuccess {...props}  />
                             )}
@@ -194,7 +194,7 @@ function Layout(props) {
                         <Route exact path="/store/wishlist" component={PageWishlist} />
                         <Route exact path="/shop/compare" component={PageCompare} />
                         <Route exact path="/shop/track-order" component={ShopPageTrackOrder} />
-                        <Route exact path="/store/payments-cashier" component={PaymentOptionsPage} />
+                        <Route path="/store/payments-cashier/:orderId" component={PaymentOptionsPage} />
 
                         {/*
                         // Blog

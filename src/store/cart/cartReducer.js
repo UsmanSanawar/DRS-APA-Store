@@ -179,6 +179,8 @@ const initialState = {
         // },
     ],
     total: 0,
+    orderId: null,
+    
 };
 
 export default function cartReducer(state = initialState, action) {
@@ -194,16 +196,18 @@ export default function cartReducer(state = initialState, action) {
 
     case POST_SALE_ORDER:{
         console.log(state, "Request")
-        let responseData = action.response.data
+        let responseData = action.response.data;
+        let orderId = null
         if (responseData.status === "success") {
             let order = []
             order.push(responseData.data)
-
+            state.orderId=responseData.data.orderId
             localStorage.setItem('orders', JSON.stringify(order&&order.length > 0 ? order : []))
         }
         return {
             ...initialState,
             paid: true,
+            orderId: state.orderId
             // saleOrder: state.saleOrder
         };
     }
@@ -211,7 +215,8 @@ export default function cartReducer(state = initialState, action) {
     case RESET_CART_PAID:{
         return {
             ...initialState,
-            paid: false
+            paid: false,
+            orderId: null
         };
     }
 
