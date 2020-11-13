@@ -4,28 +4,28 @@ import React from 'react';
 // third-party
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {connect, useSelector} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 // application
 import AsyncAction from './AsyncAction';
 import Currency from './Currency';
 import Rating from './Rating';
-import { cartAddItem } from '../../store/cart';
-import { Compare16Svg, Quickview16Svg, Wishlist16Svg, Wishlist16SvgRed } from '../../svg';
-import { compareAddItem } from '../../store/compare';
-import { quickviewOpen } from '../../store/quickview';
-import { wishlistAddItem, wishlistRemoveItem } from '../../store/wishlist';
+import {cartAddItem} from '../../store/cart';
+import {Wishlist16Svg, Wishlist16SvgRed} from '../../svg';
+import {compareAddItem} from '../../store/compare';
+import {quickviewOpen} from '../../store/quickview';
+import {wishlistAddItem, wishlistRemoveItem} from '../../store/wishlist';
 
 
 function ProductCard(props) {
-    const {
-        product,
-        layout,
-        quickviewOpen,
-        cartAddItem,
-        wishlistAddItem,
-        compareAddItem,
+  const {
+    product,
+    layout,
+    quickviewOpen,
+    cartAddItem,
+    wishlistAddItem,
+    compareAddItem,
         wishlistRemoveItem
     } = props;
 
@@ -112,9 +112,6 @@ function ProductCard(props) {
                     <div className=" product-card__rating-legend">{`${product.reviews} Reviews`}</div>
                 </div>
                 {features}
-
-
-                {/*//*/}
 
             </div>
             <div className="product-card__actions">
