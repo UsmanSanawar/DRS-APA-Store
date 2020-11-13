@@ -83,6 +83,7 @@ class ProductsView extends Component {
 
     render() {
 
+
         const {
             grid,
             offcanvas,
@@ -123,6 +124,7 @@ class ProductsView extends Component {
         });
 
         console.log(this.state.products.length , pagination.totalCount, 'this.state.products.length === headers.totalCount');
+        console.log(this.state.products.length , parseInt(this.state.products.length) === parseInt(pagination.totalCount), this.state.products.length, "hasMoreOrNot")
 
         return (
             <div className="products-view">
@@ -158,17 +160,19 @@ class ProductsView extends Component {
 
                 <div
                     className="products-view__list products-list"
+                    id="InfinityJinx"
                     data-layout={layout !== 'list' ? grid : layout}
                     data-with-features={layout === 'grid-with-features' ? 'true' : 'false'}
                 >
                     <InfiniteScroll
+                        style={{overflowX: "hidden"}}
                         dataLength={this.state.products.length} //it needs to be setted to the current data we have
                         next={this.fetchMoreData}
                         hasMore={!(this.state.products.length === pagination.totalCount)}
-                        loader={<div style={{textAlign: "center"}}><CircularLoader/></div>}
-                        scrollableTarget
+                        loader={<div style={{textAlign: "center",  marginTop: 75}}><CircularLoader/></div>}
+                        // scrollableTarget={'InfinityJinx'}
                         endMessage={
-                            <p style={{textAlign: "center", marginTop: 10}}>
+                            <p style={{textAlign: "center", marginTop: 75}}>
                                 <b>No further records found !</b>
                             </p>
                         }
