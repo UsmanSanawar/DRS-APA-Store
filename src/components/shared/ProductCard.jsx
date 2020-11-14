@@ -129,31 +129,29 @@ function ProductCard(props) {
                 {price}
 
                 <div className="product-card__buttons">
-                    <AsyncAction
+                    {/* <AsyncAction
                         action={() => cartAddItem(product)}
-                        render={({ run, loading }) => (
+                        render={({ run, loading }) => ( */}
                             <React.Fragment>
-                                <button
-                                    type="button"
-                                    onClick={run}
-                                    className={classNames('btn btn-primary product-card__addtocart', {
-                                        'btn-loading': loading,
-                                    })}
+                                <Link
+                                    // type="button"
+                                    // onClick={run}
+                                    to={`/store/product/${product.id}`}
+                                    className={classNames('btn btn-primary product-card__addtocart')}
                                 >
-                                    Add To Cart
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={run}
-                                    className={classNames('btn btn-secondary product-card__addtocart product-card__addtocart--list', {
-                                        'btn-loading': loading,
-                                    })}
+                                    View Product
+                                </Link>
+                                <Link
+                                    // type="button"
+                                    // onClick={run}
+                                    to={`/store/product/${product.id}`}
+                                    className={classNames('btn btn-secondary product-card__addtocart product-card__addtocart--list')}
                                 >
-                                    Add To Cart
-                                </button>
+                                    View Product
+                                </Link>
                             </React.Fragment>
-                        )}
-                    />
+                        {/* )} */}
+                    {/* /> */}
 
                     <AsyncAction
                         action={() =>  wishlist.length > 0 && wishlist.some(item => item.productId === product.productId) ? wishlistRemoveItem(product.productId) : wishlistAddItem(product)}

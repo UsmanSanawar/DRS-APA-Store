@@ -25,12 +25,13 @@ class ShopPageCart extends Component {
         this.state = {
             /** example: [{itemId: 8, value: 1}] */
             quantities: [],
+            total: 0
         };
     }
 
-    getSeletedOptionValue = (option) =>{
+    getSeletedOptionValue = (option) => {
         let index = option.optionValues.findIndex(item => item.optionValueId == option.value);
-        if(index > -1){
+        if (index > -1) {
             return option.optionValues[index].name
         }
         return ""
@@ -70,6 +71,47 @@ class ShopPageCart extends Component {
         }).length > 0;
     }
 
+    handleDiscount = (item) => {
+        let product = item.product;
+        let discountedPrice = 0
+
+        product.discountProducts.map(p => {
+            if (p.discount.usePercentage) {
+                if (p.discount.customerGroupId === 2) {
+                    discountedPrice = ((item.total * p.discount.discountPercentage) / 100)
+                }
+            } else {
+                if (p.discount.customerGroupId === 2) {
+                    discountedPrice = p.discount.discountAmount
+                }
+            }
+        })
+
+        return parseFloat(discountedPrice)
+    }
+
+    handleTaxCalc = (item) => {
+        let taxClass = item.product.taxClass;
+        let taxApply = 0;
+        let rates = []
+
+        for (let tax of taxClass.taxRates) {
+            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 14)) {
+                rates.push(tax.rate)
+            }
+        }
+
+        let sum = rates.reduce(function (a, b) { return a + b }, 0)
+        let totalPrice = item.total - this.handleDiscount(item)
+
+        taxApply = (totalPrice * sum) / 100
+        return parseFloat(taxApply)
+    }
+
+    handleTotalPerRow = (item) => {
+        return (item.total - this.handleDiscount(item)) + this.handleTaxCalc(item)
+    }
+
     renderItems() {
         const { cart, cartRemoveItem } = this.props;
 
@@ -85,7 +127,7 @@ class ShopPageCart extends Component {
                 options = (
                     <ul className="cart-table__options">
                         {item.options.map((option, index) => (
-                            <li key={index}>{`${option.optionName}:  ${option.optionTypeId == 1 || option.optionTypeId == 2 ? this.getSeletedOptionValue(option) : option.optionTypeId == 3 ? option.value == undefined || option.value == false ? false : true : option.optionTypeId == 6 ? option.value ? option.value ? option.value: '' : '': ""}`}</li>
+                            <li key={index}>{`${option.optionName}:  ${option.optionTypeId == 1 || option.optionTypeId == 2 ? this.getSeletedOptionValue(option) : option.optionTypeId == 3 ? option.value == undefined || option.value == false ? false : true : option.optionTypeId == 6 ? option.value ? option.value ? option.value : '' : '' : ""}`}</li>
                         ))}
                     </ul>
                 );
@@ -108,6 +150,7 @@ class ShopPageCart extends Component {
                 />
             );
 
+
             return (
                 <tr key={item.id} className="cart-table__row">
                     <td className="cart-table__column cart-table__column--image">
@@ -129,8 +172,14 @@ class ShopPageCart extends Component {
                             min={1}
                         />
                     </td>
+                    <td className="cart-table__column cart-table__column--price" data-title="Discount">
+                        - {<Currency value={this.handleDiscount(item)} />}
+                    </td>
+                    <td className="cart-table__column cart-table__column--price" data-title="Tax">
+                        <Currency value={this.handleTaxCalc(item)} />
+                    </td>
                     <td className="cart-table__column cart-table__column--total" data-title="Total">
-                        <Currency value={item.total} />
+                        <Currency value={this.handleTotalPerRow(item)} />
                     </td>
                     <td className="cart-table__column cart-table__column--remove">
                         {removeButton}
@@ -204,13 +253,15 @@ class ShopPageCart extends Component {
         return (
             <div className="cart block">
                 <div className="container">
-                    <table className="cart__table cart-table">
+                    <table id="totalCart" className="cart__table cart-table">
                         <thead className="cart-table__head">
                             <tr className="cart-table__row">
                                 <th className="cart-table__column cart-table__column--image">Image</th>
                                 <th className="cart-table__column cart-table__column--product">Product</th>
                                 <th className="cart-table__column cart-table__column--price">Price</th>
                                 <th className="cart-table__column cart-table__column--quantity">Quantity</th>
+                                <th className="cart-table__column cart-table__column--quantity">Discount</th>
+                                <th className="cart-table__column cart-table__column--quantity">Tax</th>
                                 <th className="cart-table__column cart-table__column--total">Total</th>
                                 <th className="cart-table__column cart-table__column--remove" aria-label="Remove" />
                             </tr>
@@ -245,7 +296,7 @@ class ShopPageCart extends Component {
                                             </tr>
                                         </tfoot>
                                     </table>
-                                    <Link to="/store/checkout" className="btn btn-primary btn-xl btn-block cart__checkout-button">
+                                    <Link style={{ fontSize: 19 }} to="/store/checkout" className="btn btn-primary btn-xl btn-block cart__checkout-button">
                                         Proceed to checkout
                                     </Link>
                                 </div>
@@ -264,8 +315,8 @@ class ShopPageCart extends Component {
             { title: 'Shopping Cart', url: '' },
         ];
 
-        console.log(cart, 'cart list is not empty');
-        
+        console.log(this.state.total, 'cart list is not empty');
+
 
         let content;
 
@@ -302,6 +353,7 @@ class ShopPageCart extends Component {
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
+    authUser: state.auth.authUser
 });
 
 const mapDispatchToProps = {

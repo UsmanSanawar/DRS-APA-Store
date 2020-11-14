@@ -91,6 +91,7 @@ class ShopPageCheckout extends Component {
 			"orderIdentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
 			"isOnlineOrder": true,
 			"isPaymentOnline": true,
+			'customerId': 24,
 			"onlinePaymentId": orderId ? orderId : null,
 			"orderDate": new Date().toISOString().slice(0, 20),
 			"orderDueDate": null,
@@ -98,51 +99,50 @@ class ShopPageCheckout extends Component {
 			"cancelReason": "",
 			"orderAmountWithTaxAndDiscount": this.props.cart.total,
 			"orderNotes": this.state.orderNote,
-			"orderStatusId": 11,
+			"orderStatusId": 24,
 			"isActive": true,
 			orderAddress: [],
-			orderLines: [],
-
+			orderLines: []
 		}
 
-		saleOrder.orderAddress.push(this.state.formValues.shipping)
-		saleOrder.orderAddress.push(this.state.formValues.billing)
+		// saleOrder.orderAddress.push(this.state.formValues.shipping)
+		// saleOrder.orderAddress.push(this.state.formValues.billing)
 
 		for (let item of this.props.cart.items) {
 			let line = {
 				"productId": item.product.id,
-				"productName": item.product.name,
+				// "productName": item.product.name,
 				"quantity": item.quantity,
 				"unitPrice": item.price,
-				"taxPercentage": 0,
-				"taxClassId": null,
-				"taxClassName": "",
-				"discountId": null,
-				"discountName": "",
-				"discountPercentage": 0,
-				"isProductReturn": false,
-				"returnReason": "",
-				"isActive": true,
-				orderLineProductOptions: []
+				// "taxPercentage": 0,
+				// "taxClassId": null,
+				// "taxClassName": "",
+				// "discountId": null,
+				// "discountName": "",
+				// "discountPercentage": 0,
+				// "isProductReturn": false,
+				// "returnReason": "",
+				// "isActive": true,
+				// orderLineProductOptions: []
 			}
 
-			if(item.product.productOptions){
-			for (let prOp of item.product.productOptions) {
-				let success = false
-				for (let op of item.options) {
-					if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value || comb.optionTypeId == 6)) {
-						success = true
-					} else {
-						success = false
-					}
-				}
+		// 	if(item.product.productOptions){
+		// 	for (let prOp of item.product.productOptions) {
+		// 		let success = false
+		// 		for (let op of item.options) {
+		// 			if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value || comb.optionTypeId == 6)) {
+		// 				success = true
+		// 			} else {
+		// 				success = false
+		// 			}
+		// 		}
 
-				if (success) {
-					prOp.orderLineProductOptionCombinations = prOp.productOptionCombination
-					line.orderLineProductOptions.push(prOp)
-				}
-			}
-		}
+		// 		if (success) {
+		// 			prOp.orderLineProductOptionCombinations = prOp.productOptionCombination
+		// 			line.orderLineProductOptions.push(prOp)
+		// 		}
+		// 	}
+		// }
 
 			saleOrder.orderLines.push(line)
 		}
@@ -303,7 +303,7 @@ class ShopPageCheckout extends Component {
 	render() {
 
 
-	console.log(this.props, 'this.props.authUser', this.props.state);
+	console.log(this.props.cart, 'this.props.authUser', this.props.state);
 	
 
 		console.log(this.state)
@@ -312,7 +312,7 @@ class ShopPageCheckout extends Component {
 		const { showPaypal, payment, termNcondition } = this.state;
 
 
-		if (cart.paid && cart.orderId != null) {
+		if ( cart.orderId != null) {
 			return <Redirect to={{
 				pathname: `/store/payments-cashier/${cart.orderId}`,
 				state: {order: cart.orderId}

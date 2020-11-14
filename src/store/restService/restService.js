@@ -76,11 +76,17 @@ const RestService = {
     getAllCountries: () => axios.get(`${BASE_URL_API}/masterdata/Countries/0/0`, RestService.getHeader()),
 
     postSaleOrder: (FormData) => axios.post(`${BASE_URL_API}/masterdata/Orders`, FormData, RestService.getHeader()),
+    
     getOrderById: (orderId) => axios.get(`${BASE_URL_API}/masterdata/Orders/${orderId}`, RestService.getHeader()),
+    
     getAllHomePageCollection: () => axios.get(`${BASE_URL_API}/masterdata/HomePageCollection/0/0`, RestService.getHeader()),
 
     getWebBanner: () => axios.get(`${BASE_URL_API}/website/WebBanner`),
     
-    getWebCarousal: () => axios.get(`${BASE_URL_API}/website/WebCarousal`)
+    getWebCarousal: () => axios.get(`${BASE_URL_API}/website/WebCarousal`),
+
+    postSaleOrderConvertion: (ID) => axios.post(`${BASE_URL_API}/masterdata/Orders/ConvertOrderToSaleOrder/${ID}`,  RestService.getHeader()),
+
+
 };
 export default RestService;

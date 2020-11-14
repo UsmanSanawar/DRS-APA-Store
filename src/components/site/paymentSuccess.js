@@ -8,7 +8,8 @@ const [sessionId, setsessionId] = useState(null)
  
     if(props.match && props.match.params && props.match.params.sessionId){
       setsessionId(props.match.params.sessionId)
-    }
+      RestService.postSaleOrderConvertion(props.match.params.sessionId);
+    }   
  
   }, [])
 

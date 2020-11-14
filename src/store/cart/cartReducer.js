@@ -35,7 +35,7 @@ function findItemIndex(items, product, options) {
 }
 
 function calcSubtotal(items) {
-    return items.reduce((subtotal, item) => subtotal + item.total, 0);
+    return items.reduce((subtotal, item) => subtotal + item.productTotal, 0);
 }
 
 function calcQuantity(items) {
@@ -46,35 +46,82 @@ function calcTotal(subtotal, extraLines) {
     return subtotal + extraLines.reduce((total, extraLine) => total + extraLine.price, 0);
 }
 
-function addItem(state, product, options, quantity) {
+function addItem(state, product, options, quantity = 0) {
     // const itemIndex = findItemIndex(state.items, product, options);
 
     let newItems;
     let { lastItemId } = state;
 
     // if (itemIndex === -1) {
-        lastItemId += 1;
-        newItems = [...state.items, {
-            id: lastItemId,
-            product: JSON.parse(JSON.stringify(product)),
-            options: JSON.parse(JSON.stringify(options)),
-            price: product.price,
-            total: product.price * quantity,
-            quantity,
-        }];
-    // } else {
-    //     const item = state.items[itemIndex];
 
-    //     newItems = [
-    //         ...state.items.slice(0, itemIndex),
-    //         {
-    //             ...item,
-    //             quantity: item.quantity + quantity,
-    //             total: (item.quantity + quantity) * item.price,
-    //         },
-    //         ...state.items.slice(itemIndex + 1),
-    //     ];
-    // }
+
+    let handleDiscount = (item) => {
+        let product = item;
+        console.log(product, "sdasdsadasdsadasdas", product.discountProducts )
+        let discountedPrice = 0
+
+        product.discountProducts.map(p => {
+            if (p.discount.usePercentage) {
+                if (p.discount.customerGroupId === 2) {
+                    discountedPrice = ((quantity * product.price * p.discount.discountPercentage) / 100)
+                }
+            } else {
+                if (p.discount.customerGroupId === 2) {
+                    discountedPrice = p.discount.discountAmount
+                }
+            }
+        })
+
+
+        return parseFloat(discountedPrice)
+    }
+
+    let handleTaxCalc = (item) => {
+        let taxClass = product.taxClass;
+        let taxApply = 0;
+        let rates = []
+
+        for (let tax of taxClass.taxRates) {
+            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 14)) {
+                rates.push(tax.rate)
+            }
+        }
+
+        let sum = rates.reduce(function (a, b) { return a + b }, 0)
+        let totalPrice = (product.price * quantity) - handleDiscount(item)
+
+        taxApply = (totalPrice * sum) / 100
+        return parseFloat(taxApply)
+    }
+
+    let handleTotalPerRow = (item) => {
+        return ((product.price * quantity) - handleDiscount(item)) + handleTaxCalc(item)
+    }
+
+
+    let discount = 0;
+    discount = discount + handleDiscount(product)
+
+    let tax = 0
+    tax = tax + handleTaxCalc(product)
+
+    let productTotal = 0
+    productTotal = productTotal + handleTotalPerRow(product)
+
+    lastItemId += 1;
+    newItems = [...state.items, {
+        id: lastItemId,
+        product: JSON.parse(JSON.stringify(product)),
+        options: JSON.parse(JSON.stringify(options)),
+        price: product.price,
+        discount: discount,
+        tax: tax,
+        productTotal: productTotal,
+        total: product.price * quantity,
+        quantity,
+    }];
+
+    console.log(newItems, "newItems")
 
     const subtotal = calcSubtotal(newItems);
     const total = calcTotal(subtotal, state.extraLines);
@@ -180,47 +227,52 @@ const initialState = {
     ],
     total: 0,
     orderId: null,
-    
+
 };
 
 export default function cartReducer(state = initialState, action) {
     switch (action.type) {
-    case CART_ADD_ITEM:
-        return addItem(state, action.product, action.options, action.quantity);
+        case CART_ADD_ITEM:
+            return addItem(state, action.product, action.options, action.quantity);
 
-    case CART_REMOVE_ITEM:
-        return removeItem(state, action.itemId);
+        case CART_REMOVE_ITEM:
+            return removeItem(state, action.itemId);
 
-    case CART_UPDATE_QUANTITIES:
-        return updateQuantities(state, action.quantities);
+        case CART_UPDATE_QUANTITIES:
+            return updateQuantities(state, action.quantities);
 
-    case POST_SALE_ORDER:{
-        console.log(state, "Request")
-        let responseData = action.response.data;
-        let orderId = null
-        if (responseData.status === "success") {
-            let order = []
-            order.push(responseData.data)
-            state.orderId=responseData.data.orderId
-            localStorage.setItem('orders', JSON.stringify(order&&order.length > 0 ? order : []))
+        case POST_SALE_ORDER: {
+            console.log(state, "Request")
+            let responseData = action.response.data;
+
+            console.log(action.response, "action.responseSaleOrder")
+
+            let orderId = null
+            if (responseData.status === "success") {
+                let order = []
+                order.push(responseData.data)
+                state.orderId = responseData.data.orderId
+                localStorage.setItem('orders', JSON.stringify(order && order.length > 0 ? order : []))
+            }
+
+
+            return {
+                ...initialState,
+                paid: true,
+                orderId: state.orderId
+                // saleOrder: state.saleOrder
+            };
         }
-        return {
-            ...initialState,
-            paid: true,
-            orderId: state.orderId
-            // saleOrder: state.saleOrder
-        };
-    }
 
-    case RESET_CART_PAID:{
-        return {
-            ...initialState,
-            paid: false,
-            orderId: null
-        };
-    }
+        case RESET_CART_PAID: {
+            return {
+                ...initialState,
+                paid: false,
+                orderId: null
+            };
+        }
 
-    default:
-        return state;
+        default:
+            return state;
     }
 }
