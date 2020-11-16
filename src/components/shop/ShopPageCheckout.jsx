@@ -239,6 +239,14 @@ class ShopPageCheckout extends Component {
 				</tbody>
 				{this.renderTotals()}
 				<tfoot className="checkout__totals-footer">
+					<tr style={{fontSize: 15}}>
+						<th>Total Discount</th>
+						<td>-<Currency value={cart.totalDiscounts} /></td>
+					</tr>
+					<tr style={{fontSize: 15}}>
+						<th>Total Tax</th>
+						<td><Currency value={cart.totalTaxs} /></td>
+					</tr>
 					<tr>
 						<th>Total</th>
 						<td><Currency value={cart.total} /></td>

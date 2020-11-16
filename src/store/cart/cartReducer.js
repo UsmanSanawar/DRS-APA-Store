@@ -34,6 +34,14 @@ function findItemIndex(items, product, options) {
     });
 }
 
+function calcDiscounts(items) {
+    return items.reduce((discount, item) => discount + item.discount, 0);
+}
+
+function calcTaxes(items) {
+    return items.reduce((tax, item) => tax + item.tax, 0);
+}
+
 function calcSubtotal(items) {
     return items.reduce((subtotal, item) => subtotal + item.productTotal, 0);
 }
@@ -57,18 +65,12 @@ function addItem(state, product, options, quantity = 0) {
 
     let handleDiscount = (item) => {
         let product = item;
-        console.log(product, "sdasdsadasdsadasdas", product.discountProducts )
+        console.log(product, "sdasdsadasdsadasdas", product.discountProducts)
         let discountedPrice = 0
 
-        product.discountProducts.map(p => {
-            if (p.discount.usePercentage) {
-                if (p.discount.customerGroupId === 2) {
-                    discountedPrice = ((quantity * product.price * p.discount.discountPercentage) / 100)
-                }
-            } else {
-                if (p.discount.customerGroupId === 2) {
-                    discountedPrice = p.discount.discountAmount
-                }
+        product.discountProducts && product.discountProducts.map(p => {
+            if (p.discount.customerGroupId === 2) {
+                discountedPrice = ((quantity * product.price * p.discount.discountPercentage) / 100)
             }
         })
 
@@ -123,6 +125,8 @@ function addItem(state, product, options, quantity = 0) {
 
     console.log(newItems, "newItems")
 
+    const totalDiscounts = calcDiscounts(newItems);
+    const totalTaxs = calcTaxes(newItems);
     const subtotal = calcSubtotal(newItems);
     const total = calcTotal(subtotal, state.extraLines);
 
@@ -131,6 +135,8 @@ function addItem(state, product, options, quantity = 0) {
         lastItemId,
         subtotal,
         total,
+        totalDiscounts,
+        totalTaxs,
         items: newItems,
         quantity: calcQuantity(newItems),
     };
@@ -140,6 +146,8 @@ function removeItem(state, itemId) {
     const { items } = state;
     const newItems = items.filter(item => item.id !== itemId);
 
+    const totalDiscounts = calcDiscounts(newItems);
+    const totalTaxs = calcTaxes(newItems);
     const subtotal = calcSubtotal(newItems);
     const total = calcTotal(subtotal, state.extraLines);
 
@@ -147,6 +155,8 @@ function removeItem(state, itemId) {
         ...state,
         items: newItems,
         quantity: calcQuantity(newItems),
+        totalDiscounts,
+        totalTaxs,
         subtotal,
         total,
     };
@@ -172,6 +182,8 @@ function updateQuantities(state, quantities) {
     });
 
     if (needUpdate) {
+        const totalDiscounts = calcDiscounts(newItems);
+        const totalTaxs = calcTaxes(newItems);
         const subtotal = calcSubtotal(newItems);
         const total = calcTotal(subtotal, state.extraLines);
 
@@ -181,6 +193,8 @@ function updateQuantities(state, quantities) {
             quantity: calcQuantity(newItems),
             subtotal,
             total,
+            totalDiscounts,
+            totalTaxs
         };
     }
 
@@ -211,6 +225,8 @@ const initialState = {
     quantity: 0,
     items: [],
     subtotal: 0,
+    totalDiscounts: 0,
+    totalTaxs: 0,
     paid: false,
     saleOrder: [],
     extraLines: [ // shipping, taxes, fees, .etc

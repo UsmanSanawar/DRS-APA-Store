@@ -76,14 +76,8 @@ class ShopPageCart extends Component {
         let discountedPrice = 0
 
         product.discountProducts.map(p => {
-            if (p.discount.usePercentage) {
-                if (p.discount.customerGroupId === 2) {
-                    discountedPrice = ((item.total * p.discount.discountPercentage) / 100)
-                }
-            } else {
-                if (p.discount.customerGroupId === 2) {
-                    discountedPrice = p.discount.discountAmount
-                }
+            if (p.discount.customerGroupId === 2) {
+                discountedPrice = ((item.total * p.discount.discountPercentage) / 100);
             }
         })
 
@@ -96,7 +90,7 @@ class ShopPageCart extends Component {
         let rates = []
 
         for (let tax of taxClass.taxRates) {
-            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 14)) {
+            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 2)) {
                 rates.push(tax.rate)
             }
         }
