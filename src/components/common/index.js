@@ -18,7 +18,6 @@ function CommonComp(props) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState([]);
   useEffect(() => {
-    console.log(props, 'props props props, list list list list', props.slug);
     
     setLoading(true)
     RestService.getWebPageComponentByPageSlug(props.location ? props.location.pathname.substring(1) : 'home').then(res => {
@@ -198,7 +197,6 @@ function CommonComp(props) {
     </div>
   }
 
-  console.log(props.slug, 'props.slug');
   
 
 

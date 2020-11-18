@@ -279,11 +279,19 @@ class ShopPageCart extends Component {
                     <div className="row justify-content-end pt-md-5 pt-4">
                         <div className="col-12 col-md-7 col-lg-6 col-xl-5">
                             <div className="card">
-                                <div className="card-body">
+                                <div className="card-body p-0">
                                     <h3 className="card-title">Cart Totals</h3>
                                     <table className="cart__totals">
                                         {this.renderTotals()}
                                         <tfoot className="cart__totals-footer">
+                                            <tr style={{fontSize: "15px"}}>
+                                                <th>Total Discount</th>
+                                                <td>-<Currency value={cart.totalDiscounts} /></td>
+                                            </tr>
+                                            <tr style={{fontSize: "15px"}}>
+                                                <th>Total Tax</th>
+                                                <td><Currency value={cart.totalTaxs} /></td>
+                                            </tr>
                                             <tr>
                                                 <th>Total</th>
                                                 <td><Currency value={cart.total} /></td>
@@ -309,7 +317,6 @@ class ShopPageCart extends Component {
             { title: 'Shopping Cart', url: '' },
         ];
 
-        console.log(this.state.total, 'cart list is not empty');
 
 
         let content;

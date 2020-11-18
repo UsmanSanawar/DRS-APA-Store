@@ -123,8 +123,6 @@ class ProductsView extends Component {
             'view-options--offcanvas--mobile': offcanvas === 'mobile',
         });
 
-        console.log(this.state.products.length , pagination.totalCount, 'this.state.products.length === headers.totalCount');
-        console.log(this.state.products.length , parseInt(this.state.products.length) === parseInt(pagination.totalCount), this.state.products.length, "hasMoreOrNot")
 
         return (
             <div className="products-view">

@@ -1,11 +1,16 @@
 import React,{useEffect, useState} from 'react';
+import { useDispatch } from 'react-redux';
 import {Card, CardTitle, CardText, Button} from "reactstrap"
+import { resetCartPaid } from '../../store/cart';
 import RestService from '../../store/restService/restService';
 function App(props) {
 
 const [sessionId, setsessionId] = useState(null)
+const dispatch = useDispatch();
+
   useEffect(() => {
- 
+    dispatch(resetCartPaid())
+
     if(props.match && props.match.params && props.match.params.sessionId){
       setsessionId(props.match.params.sessionId)
       RestService.postSaleOrderConvertion(props.match.params.sessionId);

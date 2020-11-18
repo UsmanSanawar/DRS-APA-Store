@@ -25,7 +25,6 @@ function FilterCheckbox(props) {
             }
         }
 
-        console.log("manufacturers", manufacturer);
         setmanufaturer(manufacturer)
 
         props.onChange("manufacturers", manufacturer)

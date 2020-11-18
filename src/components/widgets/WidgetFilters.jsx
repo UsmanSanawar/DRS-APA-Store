@@ -17,7 +17,6 @@ import { ArrowRoundedDown12x7Svg } from "../../svg";
 function WidgetFilters(props) {
     const { title, filters, offcanvas } = props;
 
-    console.log(props, 'props is sidget filer');
     
 
 

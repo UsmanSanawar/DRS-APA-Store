@@ -91,13 +91,11 @@ class Product extends Component {
             for (let prOption of this.props.product.productOptions) {
                 let success = 0;
                 for (let combination of prOption.productOptionCombination) {
-                    console.log(combination, 'option ptions combination ', prOption);
                     if (this.state.options.some(option => option.optionId == combination.optionId && (option.value == combination.optionValueId || combination.optionTypeId == 6))) {
                         success++
                     }
                 }
 
-                console.log(success, 'success, sucees', this.state.options.length);
 
                 if (success == this.state.options.length) {
                     successFound = true
@@ -120,7 +118,6 @@ class Product extends Component {
 
 
     handleInputChange = (event, optionId) => {
-        console.log(event, optionId, 'event && optionId', this.state.options);
 
         if (event != undefined && optionId != undefined) {
 
@@ -146,7 +143,6 @@ class Product extends Component {
 
     render() {
 
-        console.log(window.addthis, 'sdfaf', this.state.options);
 
         const {
             product,
@@ -234,7 +230,6 @@ class Product extends Component {
 
         }
 
-        console.log(layout, "|LAayout")
 
         const getNewPrice = () => {
             let price = product.price;
@@ -273,7 +268,7 @@ class Product extends Component {
                 </Helmet>
 
                 <div className="product__content">
-                    <ProductGallery layout={layout} images={product.productPhotos} />
+                    <ProductGallery layout={layout} images={this.state.slectedPr.images ? [{name: this.state.slectedPr.images}] : product.productPhotos} />
 
                     <div className="product__info">
                         <div className="product__wishlist-compare">
@@ -334,7 +329,6 @@ class Product extends Component {
                         <ul className="product__meta">
                             <li className="product__meta-availability">
                                 Availability:
-                                {console.log(product, "availableii")}
                                 <span className="text-success">{product.stockStatusName}</span>
                             </li>
 

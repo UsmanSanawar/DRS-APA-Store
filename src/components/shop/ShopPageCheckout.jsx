@@ -84,8 +84,7 @@ class ShopPageCheckout extends Component {
 		// if(!this.props.authUser || this.props.authUser == null || this.props.authUser == null){
 		// 	userManager.signinRedirect();
 		// }else{
-		
-		console.log(this.props.authUser, 'this.state.formValues', !this.props.authUser , this.props.authUser == null , this.props.authUser == null);
+
 
 		let saleOrder = {
 			"orderIdentifier": `${Date.now() + Math.floor(Math.random() * 100)}`,
@@ -126,36 +125,35 @@ class ShopPageCheckout extends Component {
 				orderLineProductOptions: []
 			}
 
-			if(item.product.productOptions){
-			for (let prOp of item.product.productOptions) {
-				let success = false
-				for (let op of item.options) {
-					if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value || comb.optionTypeId == 6)) {
-						success = true
-					} else {
-						success = false
+			if (item.product.productOptions) {
+				for (let prOp of item.product.productOptions) {
+					let success = false
+					for (let op of item.options) {
+						if (prOp.productOptionCombination.some(comb => comb.optionValueId == op.value || comb.optionTypeId == 6)) {
+							success = true
+						} else {
+							success = false
+						}
+					}
+
+					if (success) {
+						prOp.orderLineProductOptionCombinations = prOp.productOptionCombination
+						line.orderLineProductOptions.push(prOp)
 					}
 				}
-
-				if (success) {
-					prOp.orderLineProductOptionCombinations = prOp.productOptionCombination
-					line.orderLineProductOptions.push(prOp)
-				}
 			}
-		}
 
 			saleOrder.orderLines.push(line)
 		}
 		if (this.props.cart.items.length < 1) {
 			toast.error('Cart is empty')
 		} else {
-			this.props.postSaleOrder(saleOrder)
+			this.props.postSaleOrder(saleOrder);
 		}
 	}
-// }
+	// }
 
 	handleAddressToggle = (event) => {
-		console.log(event.target.checked, 'event.target.checked', event.target);
 		if (event) {
 			if (event.target.checked) {
 				this.state.formValues.shipping = this.state.formValues.billing
@@ -176,7 +174,6 @@ class ShopPageCheckout extends Component {
 			name = name.replace("shipping-", "")
 			// eslint-disable-next-line react/no-direct-mutation-state
 			this.state.formValues[addressType][name] = event.target.value;
-			console.log(addressType, 'log tpe of', name, 'name tis the', this.state.formValues[addressType]);
 
 			this.setState({ formValues: this.state.formValues })
 		}
@@ -239,11 +236,11 @@ class ShopPageCheckout extends Component {
 				</tbody>
 				{this.renderTotals()}
 				<tfoot className="checkout__totals-footer">
-					<tr style={{fontSize: 15}}>
+					<tr style={{ fontSize: 15 }}>
 						<th>Total Discount</th>
 						<td>-<Currency value={cart.totalDiscounts} /></td>
 					</tr>
-					<tr style={{fontSize: 15}}>
+					<tr style={{ fontSize: 15 }}>
 						<th>Total Tax</th>
 						<td><Currency value={cart.totalTaxs} /></td>
 					</tr>
@@ -304,27 +301,21 @@ class ShopPageCheckout extends Component {
 		);
 	}
 
-	componentWillUnmount() {
-		this.props.resetCartPaid()
-	}
-
 	render() {
 
 
-	console.log(this.props.cart, 'this.props.authUser', this.props.state);
-	
 
-		console.log(this.state)
+
 		const { cart, allCountries } = this.props;
 		const { billing, shipping } = this.state.formValues;
 		const { showPaypal, payment, termNcondition } = this.state;
 
 
-		if ( cart.orderId != null) {
+		if (cart.orderId != null) {
 			return <Redirect to={{
 				pathname: `/store/payments-cashier/${cart.orderId}`,
-				state: {order: cart.orderId}
-				}} />;
+				state: { order: cart.orderId }
+			}} />;
 		}
 
 		const breadcrumb = [

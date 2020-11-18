@@ -65,7 +65,6 @@ function addItem(state, product, options, quantity = 0) {
 
     let handleDiscount = (item) => {
         let product = item;
-        console.log(product, "sdasdsadasdsadasdas", product.discountProducts)
         let discountedPrice = 0
 
         product.discountProducts && product.discountProducts.map(p => {
@@ -79,12 +78,12 @@ function addItem(state, product, options, quantity = 0) {
     }
 
     let handleTaxCalc = (item) => {
-        let taxClass = product.taxClass;
+        let taxClass = product.taxClass ? product.taxClass : [];
         let taxApply = 0;
         let rates = []
 
         for (let tax of taxClass.taxRates) {
-            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 14)) {
+            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 2)) {
                 rates.push(tax.rate)
             }
         }
@@ -123,7 +122,6 @@ function addItem(state, product, options, quantity = 0) {
         quantity,
     }];
 
-    console.log(newItems, "newItems")
 
     const totalDiscounts = calcDiscounts(newItems);
     const totalTaxs = calcTaxes(newItems);
@@ -258,10 +256,8 @@ export default function cartReducer(state = initialState, action) {
             return updateQuantities(state, action.quantities);
 
         case POST_SALE_ORDER: {
-            console.log(state, "Request")
             let responseData = action.response.data;
 
-            console.log(action.response, "action.responseSaleOrder")
 
             let orderId = null
             if (responseData.status === "success") {

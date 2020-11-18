@@ -11,24 +11,19 @@ function App(props) {
     // Get Stripe.js instance
     const stripe = await stripePromise;
     const response = await fetch(`${BASE_URL}/api/DRS.APA/masterdata/SaleOrders/create-checkout-session-by-id/${props.order.orderId}`, {method: 'POST'});
-    console.log(response, 'response is the');
     if(response){
       const session = await response.json();
-      console.log(response, 'repose session', session);
       // When the customer clicks on the button, redirect them to Checkout.
-      console.log(session.id, 'session.client_secret');
       const result = await stripe.redirectToCheckout({
         sessionId: session.id,
       });
   
-      console.log(result, 'resout. sd');
       if (result.error) {
 
       }
     }
   };
 
-  console.log(props, 'props props 123');
 
   return (
   <Button onClick={handleClick} outline color="info" size="lg" block><i className="fas fa-credit-card m-r-10"></i>{" "} Debit / Credit Card</Button>

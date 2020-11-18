@@ -20,7 +20,6 @@ export default function BlockBanner() {
         })
     }, [])
 
-    console.log(Banner, "bannerData is as");
 
     return (
         <div className="block block-banner">

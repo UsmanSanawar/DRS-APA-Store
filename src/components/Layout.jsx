@@ -1,48 +1,52 @@
 // react
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 
 // third-party
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-
-// application
 import { useDispatch, useSelector } from 'react-redux';
-import Footer from './footer';
-import Header from './header';
-import MobileHeader from './mobile/MobileHeader';
-import MobileMenu from './mobile/MobileMenu';
-import Quickview from './shared/Quickview';
 
-// pages
-import AccountLayout from './account/AccountLayout';
-import AccountPageLogin from './account/AccountPageLogin';
-import BlogPageCategory from './blog/BlogPageCategory';
-import SitePageAboutUs from './site/SitePageAboutUs';
-import PageCart from './shop/ShopPageCart';
-import PageCheckout from './shop/ShopPageCheckout';
-import PageCompare from './shop/ShopPageCompare';
-import SitePageComponents from './site/SitePageComponents';
-import SitePageContactUs from './site/SitePageContactUs';
-import SitePageContactUsAlt from './site/SitePageContactUsAlt';
-import SitePageFaq from './site/SitePageFaq';
-import SitePageNotFound from './site/SitePageNotFound';
-import BlogPagePost from './blog/BlogPagePost';
-import ShopPageProduct from './shop/ShopPageProduct';
-import SitePageTerms from './site/SitePageTerms';
-import ShopPageTrackOrder from './shop/ShopPageTrackOrder';
-import SitePageTypography from './site/SitePageTypography';
-import PageWishlist from './shop/ShopPageWishlist';
-import ShopPageCategory from './shop/ShopPageCategory';
-import PaymentOptionsPage from "./shop/PaymentOptionsPage";
-import PaymentSuccess from "./site/paymentSuccess"
-import PaymentError from "./site/paymentError"
 
 // data stubs
 import theme from '../data/theme';
 import CommonComp from './common';
 import RestService from '../store/restService/restService';
+import { Spinner } from 'reactstrap';
+
+// application
+import Footer from './footer';
+import Header from './header';
+import MobileHeader from './mobile/MobileHeader'
+import MobileMenu from './mobile/MobileMenu'
+import Quickview from './shared/Quickview'
+
+// pages
+const AccountLayout = lazy(() => import('./account/AccountLayout'));
+const AccountPageLogin = lazy(() => import('./account/AccountPageLogin'));
+const BlogPageCategory = lazy(() => import('./blog/BlogPageCategory'));
+const SitePageAboutUs = lazy(() => import('./site/SitePageAboutUs'));
+const PageCart = lazy(() => import('./shop/ShopPageCart'));
+const PageCheckout = lazy(() => import('./shop/ShopPageCheckout'));
+const PageCompare = lazy(() => import('./shop/ShopPageCompare'));
+const SitePageComponents = lazy(() => import('./site/SitePageComponents'));
+const SitePageContactUs = lazy(() => import('./site/SitePageContactUs'));
+const SitePageContactUsAlt = lazy(() => import('./site/SitePageContactUsAlt'));
+const SitePageFaq = lazy(() => import('./site/SitePageFaq'));
+const SitePageNotFound = lazy(() => import('./site/SitePageNotFound'));
+const BlogPagePost = lazy(() => import('./blog/BlogPagePost'));
+const ShopPageProduct = lazy(() => import('./shop/ShopPageProduct'));
+const SitePageTerms = lazy(() => import('./site/SitePageTerms'));
+const ShopPageTrackOrder = lazy(() => import('./shop/ShopPageTrackOrder'));
+const SitePageTypography = lazy(() => import('./site/SitePageTypography'));
+const PageWishlist = lazy(() => import('./shop/ShopPageWishlist'));
+const ShopPageCategory = lazy(() => import('./shop/ShopPageCategory'));
+const PaymentOptionsPage = lazy(() => import("./shop/PaymentOptionsPage"));
+const PaymentSuccess = lazy(() => import("./site/paymentSuccess"))
+const PaymentError = lazy(() => import("./site/paymentError"))
+
+
 
 function Layout(props) {
     const { match, headerLayout, homeComponent } = props;
@@ -102,207 +106,210 @@ function Layout(props) {
                 </header>
 
                 <div className="site__body">
-                    <Switch>
-                        {/*
+                    <Suspense fallback={<div><Spinner /></div>}>
+
+                        <Switch>
+                            {/*
                         // Home
                         */}
-                        <Route exact path={`${match.path}`} component={homeComponent} />
+                            <Route exact path={`${match.path}`} component={homeComponent} />
 
-                        {/*
+                            {/*
                         // Shop
                         */}
-                        <Redirect exact from="/shop" to="/shop/category-grid-3-columns-sidebar" />
-                        <Route
-                            exact
-                            path="/shop/category-grid-3-columns-sidebar"
-                            render={(props) => (
-                                <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="start" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/shop/category-grid-4-columns-full"
-                            render={(props) => (
-                                <ShopPageCategory {...props} columns={4} viewMode="grid" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/shop/category-grid-5-columns-full"
-                            render={(props) => (
-                                <ShopPageCategory {...props} columns={5} viewMode="grid" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/store/products"
-                            render={(props) => (
-                                <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="start" />
-                            )}
-                        />
+                            <Redirect exact from="/shop" to="/shop/category-grid-3-columns-sidebar" />
+                            <Route
+                                exact
+                                path="/shop/category-grid-3-columns-sidebar"
+                                render={(props) => (
+                                    <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="start" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/shop/category-grid-4-columns-full"
+                                render={(props) => (
+                                    <ShopPageCategory {...props} columns={4} viewMode="grid" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/shop/category-grid-5-columns-full"
+                                render={(props) => (
+                                    <ShopPageCategory {...props} columns={5} viewMode="grid" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/store/products"
+                                render={(props) => (
+                                    <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="start" />
+                                )}
+                            />
 
 
-                        <Route
-                            
-                            path="/payment/success/:sessionId"
-                            render={(props) => (
-                                <PaymentSuccess {...props}  />
-                            )}
-                        />
+                            <Route
 
-<Route
-                            exact
-                            path="/payment/error"
-                            render={(props) => (
-                                <PaymentError {...props}  />
-                            )}
-                        />
+                                path="/payment/success/:sessionId"
+                                render={(props) => (
+                                    <PaymentSuccess {...props} />
+                                )}
+                            />
 
-                        <Route
-                            exact
-                            path="/shop/category-right-sidebar"
-                            render={(props) => (
-                                <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="end" />
-                            )}
-                        />
+                            <Route
+                                exact
+                                path="/payment/error"
+                                render={(props) => (
+                                    <PaymentError {...props} />
+                                )}
+                            />
 
-                        <Route exact path="/store/product/:productId" component={ShopPageProduct} />
-                        <Route
-                            exact
-                            path="/shop/product-standard"
-                            render={(props) => (
-                                <ShopPageProduct {...props} layout="standard" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/shop/product-columnar"
-                            render={(props) => (
-                                <ShopPageProduct {...props} layout="columnar" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/shop/product-sidebar"
-                            render={(props) => (
-                                <ShopPageProduct {...props} layout="sidebar" />
-                            )}
-                        />
+                            <Route
+                                exact
+                                path="/shop/category-right-sidebar"
+                                render={(props) => (
+                                    <ShopPageCategory {...props} columns={3} viewMode="grid" sidebarPosition="end" />
+                                )}
+                            />
 
-                        <Route exact path="/store/cart" component={PageCart} />
-                        <Route exact path="/store/checkout" component={PageCheckout} />
-                        <Route exact path="/store/wishlist" component={PageWishlist} />
-                        <Route exact path="/shop/compare" component={PageCompare} />
-                        <Route exact path="/shop/track-order" component={ShopPageTrackOrder} />
-                        <Route path="/store/payments-cashier/:orderId" component={PaymentOptionsPage} />
+                            <Route exact path="/store/product/:productId" component={ShopPageProduct} />
+                            <Route
+                                exact
+                                path="/shop/product-standard"
+                                render={(props) => (
+                                    <ShopPageProduct {...props} layout="standard" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/shop/product-columnar"
+                                render={(props) => (
+                                    <ShopPageProduct {...props} layout="columnar" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/shop/product-sidebar"
+                                render={(props) => (
+                                    <ShopPageProduct {...props} layout="sidebar" />
+                                )}
+                            />
 
-                        {/*
+                            <Route exact path="/store/cart" component={PageCart} />
+                            <Route exact path="/store/checkout" component={PageCheckout} />
+                            <Route exact path="/store/wishlist" component={PageWishlist} />
+                            <Route exact path="/shop/compare" component={PageCompare} />
+                            <Route exact path="/shop/track-order" component={ShopPageTrackOrder} />
+                            <Route path="/store/payments-cashier/:orderId" component={PaymentOptionsPage} />
+
+                            {/*
                         // Blog
                         */}
-                        <Redirect exact from="/blog" to="/blog/category-classic" />
-                        <Route
-                            exact
-                            path="/blog/category-classic"
-                            render={(props) => (
-                                <BlogPageCategory {...props} layout="classic" sidebarPosition="end" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/blog/category-grid"
-                            render={(props) => (
-                                <BlogPageCategory {...props} layout="grid" sidebarPosition="end" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/blog/category-list"
-                            render={(props) => (
-                                <BlogPageCategory {...props} layout="list" sidebarPosition="end" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/blog/category-left-sidebar"
-                            render={(props) => (
-                                <BlogPageCategory {...props} layout="classic" sidebarPosition="start" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/blog/post-classic"
-                            render={(props) => (
-                                <BlogPagePost {...props} layout="classic" sidebarPosition="end" />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/blog/post-full"
-                            render={(props) => (
-                                <BlogPagePost {...props} layout="full" />
-                            )}
-                        />
+                            <Redirect exact from="/blog" to="/blog/category-classic" />
+                            <Route
+                                exact
+                                path="/blog/category-classic"
+                                render={(props) => (
+                                    <BlogPageCategory {...props} layout="classic" sidebarPosition="end" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/blog/category-grid"
+                                render={(props) => (
+                                    <BlogPageCategory {...props} layout="grid" sidebarPosition="end" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/blog/category-list"
+                                render={(props) => (
+                                    <BlogPageCategory {...props} layout="list" sidebarPosition="end" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/blog/category-left-sidebar"
+                                render={(props) => (
+                                    <BlogPageCategory {...props} layout="classic" sidebarPosition="start" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/blog/post-classic"
+                                render={(props) => (
+                                    <BlogPagePost {...props} layout="classic" sidebarPosition="end" />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/blog/post-full"
+                                render={(props) => (
+                                    <BlogPagePost {...props} layout="full" />
+                                )}
+                            />
 
-                        {/*
+                            {/*
                         // Account
                         */}
-                        <Route exact path="/account/login" component={AccountPageLogin} />
-                        <Route path="/account" component={AccountLayout} />
+                            <Route exact path="/account/login" component={AccountPageLogin} />
+                            <Route path="/account" component={AccountLayout} />
 
-                        {/*
+                            {/*
                         // Site
                         */}
-                        <Redirect exact from="/site" to="/site/about-us" />
+                            <Redirect exact from="/site" to="/site/about-us" />
 
-                        {
-                            menu && menu.map((item) => (
-                                <Route
-                                    path="/:slug"
-                                    render={(props) => (
-                                        <CommonComp slug={item.slug} {...props} />
-                                    )}
-                                />
-                            ))
-                        }
+                            {
+                                menu && menu.map((item) => (
+                                    <Route
+                                        path="/:slug"
+                                        render={(props) => (
+                                            <CommonComp slug={item.slug} {...props} />
+                                        )}
+                                    />
+                                ))
+                            }
 
-                        <Route
-                            exact
-                            path="/site/about-us"
-                            component={SitePageAboutUs}
-                        />
+                            <Route
+                                exact
+                                path="/site/about-us"
+                                component={SitePageAboutUs}
+                            />
 
-                        <Route
-                            exact
-                            path="/site/contact-us-alt"
-                            component={SitePageContactUsAlt}
-                        />
-                        <Route
-                            exact
-                            path="/site/not-found"
-                            rcomponent={SitePageNotFound}
-                        />
-                        <Route
-                            exact
-                            path="/site/faq"
-                            component={SitePageFaq}
-                        />
-                        <Route
-                            exact
-                            path="/site/terms"
-                            component={SitePageTerms}
-                        />
-                        <Route
-                            exact
-                            path="/site/typography"
-                            component={SitePageTypography}
-                        />
+                            <Route
+                                exact
+                                path="/site/contact-us-alt"
+                                component={SitePageContactUsAlt}
+                            />
+                            <Route
+                                exact
+                                path="/site/not-found"
+                                rcomponent={SitePageNotFound}
+                            />
+                            <Route
+                                exact
+                                path="/site/faq"
+                                component={SitePageFaq}
+                            />
+                            <Route
+                                exact
+                                path="/site/terms"
+                                component={SitePageTerms}
+                            />
+                            <Route
+                                exact
+                                path="/site/typography"
+                                component={SitePageTypography}
+                            />
 
-                        {/*
+                            {/*
                         // Page Not Found
                         */}
-                        <Route exact path="/site/components" component={SitePageComponents} />
-                        <Route component={SitePageNotFound} />
-                    </Switch>
+                            <Route exact path="/site/components" component={SitePageComponents} />
+                            <Route component={SitePageNotFound} />
+                        </Switch>
+                    </Suspense>
                 </div>
 
                 <footer className="site__footer">

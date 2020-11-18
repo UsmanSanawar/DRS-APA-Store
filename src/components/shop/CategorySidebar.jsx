@@ -111,7 +111,6 @@ function CategorySidebar(props) {
         });
     }, []);
 
-    console.log([manufacturer, PriceFilter, category], "dsadasdasd");
 
     const { sidebarClose, sidebarState, offcanvas } = props;
 

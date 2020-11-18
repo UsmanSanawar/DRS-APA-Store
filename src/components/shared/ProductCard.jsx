@@ -30,7 +30,6 @@ function ProductCard(props) {
     } = props;
 
 
-  console.log(product, "card Props Product")
 
     const { wishlist } = useSelector(state => state)
 

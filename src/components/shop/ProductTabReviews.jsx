@@ -36,7 +36,6 @@ function ProductTabReviews(props) {
                 if (res.data.status === 'success') {
                     setreviews(res.data.data)
                     setreviewPagination(JSON.parse(res.headers["x-pagination"]))
-                    console.log(res.data, JSON.parse(res.headers["x-pagination"]), ' 9000000099900');
 
                 }
                 setloading(false)
@@ -50,7 +49,6 @@ function ProductTabReviews(props) {
 
 
     function handlePageClick(e) {
-        console.log(e, 'paginatoins e');
         getReviews(e.selected + 1)
     }
 
@@ -98,7 +96,6 @@ function ProductTabReviews(props) {
     }
 
 
-    console.log(reviews, 'reviews reviews reviews');
 
     return (
         <div className="reviews-view">

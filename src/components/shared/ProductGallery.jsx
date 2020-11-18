@@ -111,14 +111,17 @@ class ProductGallery extends Component {
     }
 
     getImages = () =>{
+
+
         const {images} = this.props;
+        console.log(images, "in gallery in images")
+
         let imagesArr = []
         if (images && images.length > 0) {
           for (const [i, item] of images.entries()) {
             imagesArr.push({ image: `${IMAGE_URL}/images/${item.name}`, text: `${i+1}/${images.length}` })
           }
         }
-        console.log(imagesArr, 'imagesArr imagesArr');
         
         return imagesArr
     }
@@ -216,7 +219,6 @@ class ProductGallery extends Component {
         const { layout, images } = this.props;
         const { currentIndex } = this.state;
 
-        console.log(images, "sdasdsadsadsad");
 
 
         const featured = images.map((image, index) => (

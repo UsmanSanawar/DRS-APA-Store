@@ -26,7 +26,6 @@ export default class FilterPrice extends Component {
     };
 
     componentDidMount() {
-        console.log(this.props, 'this.props for price');
         
         this.props.onChange("priceRange", [this.props.from, this.props.to])
     }

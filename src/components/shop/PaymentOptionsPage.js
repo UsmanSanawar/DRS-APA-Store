@@ -137,7 +137,6 @@ class paymentOptionsPage extends Component {
       { title: 'Payment Cashier', url: '' },
     ];
 
-    console.log(this.props, 'rops');
 
     return (
       <div>

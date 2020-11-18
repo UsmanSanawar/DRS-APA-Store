@@ -111,8 +111,6 @@ class Departments extends Component {
     };
 
     handleButtonClick = () => {
-        console.log(this.props.history, 'history history');
-
         this.setState((state) => ({
             open: !state.open,
         }), () =>{

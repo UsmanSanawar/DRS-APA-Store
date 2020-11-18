@@ -48,7 +48,6 @@ function HomePageOne() {
     let productLists = [];
     if(productCategoriesJunctionForHome != null && productCategoriesJunctionForHome.length > 0) {
       productCategoriesJunctionForHome.map(product => {
-        console.log(product, "allProduct")
         let item = {}
         let images = [];
         if (product.product && product.product.productPhotos && product.product.productPhotos.length > 0) {
@@ -68,7 +67,6 @@ function HomePageOne() {
       })
     }
 
-    console.log(productLists, "allProductLists")
 
     return productLists
   }

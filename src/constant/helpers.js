@@ -2,7 +2,6 @@ import {IMAGE_URL} from "./constants";
 
 export function productObjectConverter(item) {
 
-    console.log(item, "Object Passed")
 
     let images = [];
     if (item.productPhotos && item.productPhotos.length > 0) {
@@ -29,7 +28,6 @@ export function productObjectConverter(item) {
     ];
     item.options = item.productOptions;
 
-    console.log(item, "product Object Converter")
 
     return item
 }

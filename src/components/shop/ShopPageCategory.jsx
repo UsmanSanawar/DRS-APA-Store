@@ -32,14 +32,12 @@ function ShopPageCategory(props) {
 
  
     useEffect(() => {
-        console.log(props.location.state, 'props.location.state', props.location.state);
         
         if(props.location.state && props.location.state.categoryId){
             setFilters({...Filters, category: props.location.state.categoryId});
         }
     }, [props]) 
 
-    console.log(Filters, "Filters Parent out Func", props.history)
 
     const {
         columns,

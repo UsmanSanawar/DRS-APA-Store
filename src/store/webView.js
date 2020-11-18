@@ -43,7 +43,6 @@ export default function quickviewReducer(state = initialState, action) {
         }
 
         case 'SAVE_CATEGORIES': {
-            console.log(action.data, 'SAVE_CATEGORIES');
             let dataList = action.data;
 
             function getChild(obj) {

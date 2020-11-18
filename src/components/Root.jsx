@@ -58,7 +58,7 @@ class Root extends Component {
           render={routeProps => (
             <Callback
               onSuccess={user => {
-                console.log(user, 'user on success')
+                // console.log(user, 'user on success')
                 // alert(2)
                 if (user && user != null) {
                   store.dispatch({ type: 'SIGNIN_USER_SUCCESS', payload: user })
@@ -68,7 +68,7 @@ class Root extends Component {
                 }
               }}
               onError={(err) => {
-                console.log(err, 'error si the')
+                // console.log(err, 'error si the')
                 // alert(3)
                 userManager.signinRedirect()
               }}

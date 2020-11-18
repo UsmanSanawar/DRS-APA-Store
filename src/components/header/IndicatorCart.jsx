@@ -19,7 +19,6 @@ function IndicatorCart(props) {
     let dropdown;
     let totals;
 
-    console.log(cart, "Cart items... 34")
 
     if (cart && cart.extraLines.length > 0) {
         const extraLines = cart.extraLines.map((extraLine, index) => (
@@ -43,7 +42,6 @@ function IndicatorCart(props) {
 
    const getSeletedOptionValue = (option) =>{
         let index = option.optionValues.findIndex(item => item.optionValueId == option.value);
-        console.log( index, 'index for option', option);
         
         if(index > -1){
             return option.optionValues[index].name
@@ -65,7 +63,6 @@ function IndicatorCart(props) {
             );
         }
 
-        console.log(item.product, "dasdasdsadsadasdasdsada")
         if (item.product && item.product.images && item.product.images.length > 0) {
             image = (
                 <div className="dropcart__product-image">

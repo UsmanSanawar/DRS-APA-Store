@@ -4,10 +4,8 @@ import RestService from '../restService/restService';
 
 
 export function postSaleOrder(formData) {
-    console.log(formData, 'formData 1');
     
     return (dispatch) => {
-    console.log(formData, 'formData 2');
 
       RestService.postSaleOrder(formData).then(response => {
         if (response.data) {

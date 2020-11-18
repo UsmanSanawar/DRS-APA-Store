@@ -29,7 +29,6 @@ class ProductTabs extends Component {
         const { currentTab } = this.state;
         const { withSidebar, product } = this.props;
 
-        console.log(product, 'prodcut description');
         
         const classes = classNames('product-tabs', {
             'product-tabs--layout--sidebar': withSidebar,
