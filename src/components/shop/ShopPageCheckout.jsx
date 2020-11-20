@@ -104,8 +104,21 @@ class ShopPageCheckout extends Component {
 			orderLines: []
 		}
 
-		saleOrder.orderAddress.push(this.state.formValues.shipping)
-		saleOrder.orderAddress.push(this.state.formValues.billing)
+		let shipping = {...this.state.formValues.shipping};
+		shipping.addressType = 'shipping';
+
+		console.log(shipping, "shipping")
+
+
+
+		let billing = {...this.state.formValues.billing};
+		billing.addressType = 'billing';
+
+		console.log(billing, "billing")
+
+		
+		saleOrder.orderAddress.push(shipping);
+		saleOrder.orderAddress.push(billing);
 
 		for (let item of this.props.cart.items) {
 			let line = {
