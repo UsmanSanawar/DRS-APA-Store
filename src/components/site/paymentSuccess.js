@@ -10,12 +10,6 @@ const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(resetCartPaid())
-
-    if(props.match && props.match.params && props.match.params.sessionId){
-      setsessionId(props.match.params.sessionId)
-      RestService.postSaleOrderConvertion(props.match.params.sessionId);
-    }   
- 
   }, [])
 
   return (

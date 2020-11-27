@@ -21,7 +21,7 @@ import { wishlistAddItem } from '../../store/wishlist';
 import "../../assets/CSS/customStylesForInputs.css";
 import RestService from '../../store/restService/restService';
 
-import { BASE_URL, IMAGE_URL } from "../../constant/constants"
+import { BASE_URL, IMAGE_URL } from "../../constant/constants";
 
 class Product extends Component {
     constructor(props) {
@@ -256,6 +256,7 @@ class Product extends Component {
         }
 
 
+
         return (
             <div className={`product product--layout--${layout}`}>
 
@@ -378,7 +379,7 @@ class Product extends Component {
 
                         <form className="product__options" onSubmit={e => {
                             e.preventDefault();
-                            cartAddItem(product, this.state.options, quantity, getNewPrice())
+                            cartAddItem({...product, selectedProductOption: this.state.slectedPr}, this.state.options, quantity, getNewPrice())
                             // alert(2)
                         }}>
                             <div className="form-group product__option">
@@ -388,13 +389,16 @@ class Product extends Component {
                                 </div>
                             </div>
                             <div className="form-group product__option">
-                                <label htmlFor="product-quantity" className="product__option-label">Quantity</label>
+                                <label htmlFor="product-quantity" className="product__option-label">Quantity <small style={{color: "green"}}>(Avaiable Quantity: {product.quantity})</small></label>
                                 <div className="product__actions">
                                     <div className="product__actions-item">
                                         <InputNumber
                                             id="product-quantity"
                                             aria-label="Quantity"
                                             className="product__quantity"
+                                            optionQuantity={this.state.slectedPr.optionQuantity}
+                                            productQuantity={product.quantity}
+                                            stateQuantity={this.state.quantity}
                                             size="lg"
                                             min={parseInt(product.minimumQuantity)}
                                             value={quantity}
@@ -410,12 +414,19 @@ class Product extends Component {
                                             render={({ run, loading }) => ( */}
                                                 <button
                                                     type="submit"
-                                                    // onClick={run}
+                                                    disabled={
+                                                        this.state.slectedPr.optionQuantity ? 
+                                                        !(this.state.slectedPr.optionQuantity >= this.state.quantity) 
+                                                        : !(product.quantity >= this.state.quantity)
+                                                        
+                                                    }
                                                     className={classNames('btn btn-primary btn-lg', {
                                                         'btn-loading': '',
                                                     })}
                                                 >
-                                                    Add to cart
+                                                   { this.state.slectedPr.optionQuantity? 
+                                                        (this.state.slectedPr.optionQuantity >= this.state.quantity) ? "Add to cart" : (product.minimumQuantity < product.quantity || product.minimumQuantity < this.state.slectedPr.optionQuantity) ? "Less Quantity Avaialable" : 'Out of Stock'
+                                                        : (product.quantity >= this.state.quantity) ? "Add to cart" : (product.minimumQuantity < product.quantity || product.minimumQuantity < this.state.slectedPr.optionQuantity) ? "Less Quantity Avaialable" : 'Out of Stock'}
                                                 </button>
                                             {/* )}
                                         /> */}

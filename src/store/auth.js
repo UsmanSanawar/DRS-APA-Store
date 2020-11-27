@@ -1,5 +1,6 @@
 
 import RestService from "./restService/restService"
+import {ConstCustomerGroupId} from "../constant/constants";
 
 const initialState = {
     authUser: {
@@ -8,7 +9,7 @@ const initialState = {
         id_token: "eyJhbGciOiJSUzI1Ni",
         profile: {
             uId: '',
-            customerGroupId: 2,
+            customerGroupId: ConstCustomerGroupId,
         }
     }
 };

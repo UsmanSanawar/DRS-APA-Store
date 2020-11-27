@@ -114,7 +114,6 @@ class ProductGallery extends Component {
 
 
         const {images} = this.props;
-        console.log(images, "in gallery in images")
 
         let imagesArr = []
         if (images && images.length > 0) {

@@ -5,6 +5,8 @@ import {
     POST_SALE_ORDER,
     RESET_CART_PAID
 } from './cartActionTypes';
+import {ConstCustomerGroupId} from "../../constant/constants";
+import _ from "lodash";
 
 
 /**
@@ -59,36 +61,47 @@ function addItem(state, product, options, quantity = 0) {
 
     let newItems;
     let { lastItemId } = state;
+    let rates = [];
+
+
+    let taxClass = product.taxClass ? product.taxClass : [];
+    let taxApply = 0;
+
+    for (let tax of taxClass.taxRates) {
+        if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === ConstCustomerGroupId)) {
+            rates.push(tax)
+        }
+    }
 
     // if (itemIndex === -1) {
 
 
-    let handleDiscount = (item) => {
-        let product = item;
-        let discountedPrice = 0
+        let handleDiscount = (item) => {
+            let product = item;
+            let discountedPrice = 0;
+            let discountThatMayApply = [];
+        
+            product.discountProducts.map((p) => {
+              p.discount.discountCustomerGroups !== null &&
+                p.discount.discountCustomerGroups.map((discountGroup) => {
+                  if (discountGroup.customerGroupId === ConstCustomerGroupId) {
+                    discountThatMayApply.push(p.discount.discountPercentage);
+                  }
+                });
+            });
 
-        product.discountProducts && product.discountProducts.map(p => {
-            if (p.discount.customerGroupId === 2) {
-                discountedPrice = ((quantity * product.price * p.discount.discountPercentage) / 100)
-            }
-        })
 
-
-        return parseFloat(discountedPrice)
-    }
+            let discountPercentageToBeApplied = !isNaN(Math.max(...discountThatMayApply))
+              ? Math.max(...discountThatMayApply)
+              : 0;
+        
+            discountedPrice = ((product.price * quantity) * discountPercentageToBeApplied) / 100;
+            return parseFloat(discountedPrice);
+          };
 
     let handleTaxCalc = (item) => {
-        let taxClass = product.taxClass ? product.taxClass : [];
-        let taxApply = 0;
-        let rates = []
 
-        for (let tax of taxClass.taxRates) {
-            if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === 2)) {
-                rates.push(tax.rate)
-            }
-        }
-
-        let sum = rates.reduce(function (a, b) { return a + b }, 0)
+        let sum = _.sumBy(rates, 'rate');
         let totalPrice = (product.price * quantity) - handleDiscount(item)
 
         taxApply = (totalPrice * sum) / 100
@@ -120,6 +133,7 @@ function addItem(state, product, options, quantity = 0) {
         productTotal: productTotal,
         total: product.price * quantity,
         quantity,
+        rates: rates
     }];
 
 
@@ -137,6 +151,7 @@ function addItem(state, product, options, quantity = 0) {
         totalTaxs,
         items: newItems,
         quantity: calcQuantity(newItems),
+        rates: rates
     };
 }
 
@@ -166,25 +181,31 @@ function updateQuantities(state, quantities) {
     const newItems = state.items.map((item) => {
         const quantity = quantities.find(x => x.itemId === item.id && x.value !== item.quantity);
 
+
         if (!quantity) {
+            // alert('!needUpdate ran')
             return item;
         }
 
         needUpdate = true;
 
+        // alert('return ran')
+
         return {
             ...item,
             quantity: quantity.value,
-            total: quantity.value * item.price,
+            total: quantity.value * item.pric
         };
     });
 
     if (needUpdate) {
+        // alert('!needUpdate ran')
+
         const totalDiscounts = calcDiscounts(newItems);
         const totalTaxs = calcTaxes(newItems);
         const subtotal = calcSubtotal(newItems);
         const total = calcTotal(subtotal, state.extraLines);
-
+        
         return {
             ...state,
             items: newItems,

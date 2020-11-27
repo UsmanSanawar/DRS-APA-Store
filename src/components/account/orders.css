@@ -1,0 +1,12 @@
+.selected {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.pointer {
+    cursor: pointer;
+}
+.pointer:hover {
+    cursor: pointer;
+    font-weight: bold;
+}

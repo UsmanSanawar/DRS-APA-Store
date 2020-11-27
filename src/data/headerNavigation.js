@@ -156,12 +156,12 @@ export default [
     //     submenu: {
     //         type: 'menu',
     //         menu: [
-    //             { title: 'Login', url: '/account/login' },
-    //             { title: 'Dashboard', url: '/account/dashboard' },
-    //             { title: 'Edit Profile', url: '/account/profile' },
-    //             { title: 'Order History', url: '/account/orders' },
-    //             { title: 'Address Book', url: '/account/addresses' },
-    //             { title: 'Change Password', url: '/account/password' },
+    //             { title: 'Login', url: '/store/login' },
+    //             { title: 'Dashboard', url: '/store/dashboard' },
+    //             { title: 'Edit Profile', url: '/store/profile' },
+    //             { title: 'Your Orders', url: '/store/orders' },
+    //             { title: 'Address Book', url: '/store/addresses' },
+    //             { title: 'Change Password', url: '/store/password' },
     //         ],
     //     },
     // },

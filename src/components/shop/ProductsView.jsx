@@ -111,7 +111,7 @@ class ProductsView extends Component {
                     title={viewMode.title}
                     type="button"
                     className={className}
-                    onClick={() => this.setLayout(viewMode.key)}
+                    onClick={() => this.setLayout(viewMode.key)} 
                 >
                     {viewMode.icon}
                 </button>

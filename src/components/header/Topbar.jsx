@@ -30,12 +30,12 @@ useEffect(() => {
     ];
 
     const accountLinks = [
-        // { title: 'Dashboard', url: '/account/dashboard' },
-        // { title: 'Edit Profile', url: '/account/profile' },
-        // { title: 'Order History', url: '/account/orders' },
-        // { title: 'Addresses', url: '/account/addresses' },
-        { title: 'Password', url: '/account/password' },
-        { title: 'Logout', url: '/account/login' },
+        { title: 'Dashboard', url: '/store/dashboard' },
+        { title: 'Edit Profile', url: '/store/profile' },
+        { title: 'your Orders', url: '/store/orders' },
+        { title: 'Addresses', url: '/store/addresses' },
+        { title: 'Password', url: '/store/password' },
+        { title: 'Logout', url: '/store/login' },
     ];
 
 

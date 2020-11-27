@@ -7,7 +7,7 @@ export default [
     // },
     {
         key: 'stripe',
-        title: 'Debit or Credit Card',
+        title: 'Stripe',
         description: 'Pay via Debit or Credit Card',
     },
     // {
@@ -18,6 +18,6 @@ export default [
     {
         key: 'paypal',
         title: 'PayPal',
-        description: 'Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.',
+        description: 'Pay via PayPal, you can pay with your credit card if you don’t have a PayPal account.',
     },
 ];

@@ -252,8 +252,8 @@ function Layout(props) {
                             {/*
                         // Account
                         */}
-                            <Route exact path="/account/login" component={AccountPageLogin} />
-                            <Route path="/account" component={AccountLayout} />
+                            <Route exact path="/store/login" component={AccountPageLogin} />
+                            <Route path="/store" component={AccountLayout} />
 
                             {/*
                         // Site

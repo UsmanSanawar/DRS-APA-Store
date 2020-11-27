@@ -57,7 +57,7 @@ export function cartAddItem(product, options = [], quantity = 1, price=0) {
             setTimeout(() => {
                 dispatch(cartAddItemSuccess(product, options, quantity, price));
                 resolve();
-            }, 500);
+            }, 400);
         })
     );
 }
@@ -69,7 +69,7 @@ export function cartRemoveItem(itemId) {
             setTimeout(() => {
                 dispatch(cartRemoveItemSuccess(itemId));
                 resolve();
-            }, 500);
+            }, 400);
         })
     );
 }
@@ -81,7 +81,7 @@ export function cartUpdateQuantities(quantities) {
             setTimeout(() => {
                 dispatch(cartUpdateQuantitiesSuccess(quantities));
                 resolve();
-            }, 500);
+            }, 400);
         })
     );
 }

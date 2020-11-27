@@ -23,7 +23,7 @@ export default function Footer(props) {
 
     const accountLinks = [
         { title: 'Store Location', url: '' },
-        { title: 'Order History', url: '' },
+        { title: 'Your Orders', url: '' },
         { title: 'Wish List', url: '/store/wishlist' },
         { title: 'Newsletter', url: '' },
         { title: 'Specials', url: '' },
@@ -61,7 +61,7 @@ export default function Footer(props) {
                         {' '}
                         <a href={theme.author.profile_url} target="_blank" rel="noopener noreferrer">
                             {theme.author.name}
-                        </a> {'    ' + "Build: 141120"}
+                        </a> {'    ' + "Build: 281120"}
                     </div>
                     {/* <div className="site-footer__payments">
                         <img src="images/payments.png" alt="" />

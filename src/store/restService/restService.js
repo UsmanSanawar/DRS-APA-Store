@@ -78,15 +78,18 @@ const RestService = {
     postSaleOrder: (FormData) => axios.post(`${BASE_URL_API}/masterdata/Orders`, FormData, RestService.getHeader()),
     
     getOrderById: (orderId) => axios.get(`${BASE_URL_API}/masterdata/Orders/${orderId}`, RestService.getHeader()),
-    
+
+    getOrderByCustomerId: (page=1, pageSize=10, customerId) => axios.get(`${BASE_URL_API}/masterdata/Orders/${page}/${pageSize}?CustomerId=${customerId}`, RestService.getHeader()),
+
+    getSaleOrderByCustomerId: (page=1, pageSize=10, customerId) => axios.get(`${BASE_URL_API}/masterdata/SaleOrders/${page}/${pageSize}?CustomerId=${customerId}`, RestService.getHeader()),
+
     getAllHomePageCollection: () => axios.get(`${BASE_URL_API}/masterdata/HomePageCollection/0/0`, RestService.getHeader()),
 
     getWebBanner: () => axios.get(`${BASE_URL_API}/website/WebBanner`),
     
     getWebCarousal: () => axios.get(`${BASE_URL_API}/website/WebCarousal`),
 
-    postSaleOrderConvertion: (ID) => axios.post(`${BASE_URL_API}/masterdata/Orders/ConvertOrderToSaleOrder/${ID}`,  RestService.getHeader()),
-
+    postSaleOrderConvertion: (ID, session) => axios.post(`${BASE_URL_API}/masterdata/Orders/ConvertOrderToSaleOrder/${ID}?sessionId=${session}`,  RestService.getHeader()),
 
 };
 export default RestService;

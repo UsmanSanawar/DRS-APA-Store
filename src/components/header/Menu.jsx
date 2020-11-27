@@ -22,6 +22,8 @@ function Menu(props) {
 
     const dispatch = useDispatch();
 
+
+
     const renderLink = (item, content) => {
         let link;
 
@@ -35,6 +37,16 @@ function Menu(props) {
                          categoryId: item.productCategoryId
                         }
                     }}
+                    onClick={() => onClick(item)}
+                >
+                    {content}
+                </AppLink>
+            );
+        } else if (item.url) {
+            link = (
+                <AppLink
+                    {...item.props}
+                    to={item.url}
                     onClick={() => onClick(item)}
                 >
                     {content}
@@ -82,7 +94,8 @@ function Menu(props) {
 
         return (
             <li key={index}>
-                {renderLink(item, (
+                {renderLink(item, item.webSubMenuTitle ? (
+
                     <React.Fragment >
                         <div onClick={()=> toggleView(item)}>
                         {icon}
@@ -91,7 +104,15 @@ function Menu(props) {
                         </div>
                        
                     </React.Fragment>
-                ))}
+                    
+                ): (
+                    <React.Fragment>
+                        {icon}
+                        {item.title}
+                        {arrow}
+                    </React.Fragment>
+                ) 
+                )}
                 {webSubMenu}
             </li>
         );

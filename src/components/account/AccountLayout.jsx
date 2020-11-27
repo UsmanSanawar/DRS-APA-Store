@@ -33,7 +33,7 @@ export default function AccountLayout(props) {
     const links = [
         { title: 'Dashboard', url: 'dashboard' },
         { title: 'Edit Profile', url: 'profile' },
-        { title: 'Order History', url: 'orders' },
+        { title: 'Your Orders', url: 'orders' },
         { title: 'Addresses', url: 'addresses' },
         { title: 'Password', url: 'password' },
         { title: 'Logout', url: 'login' },
