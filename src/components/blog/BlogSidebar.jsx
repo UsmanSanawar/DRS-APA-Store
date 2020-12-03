@@ -31,7 +31,7 @@ export default function BlogSidebar(props) {
                 <WidgetAboutus />
             </div>
             <div className="block-sidebar__item">
-                <WidgetCategories categories={categories} />
+                <WidgetCategories setSelectedCat={props.setSelectedCat} selectedCat={props.selectedCat} categories={props.categories} />
             </div>
             <div className="block-sidebar__item">
                 <WidgetPosts posts={posts.slice(0, 3)} />

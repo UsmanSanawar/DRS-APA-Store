@@ -31,9 +31,9 @@ function BlogCommentsList(props) {
                             <div className="comment__author">
                                 <Link to="/">{comment.author}</Link>
                             </div>
-                            <div className="comment__reply">
+                            {/* <div className="comment__reply">
                                 <button type="button" className="btn btn-xs btn-light">Reply</button>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="comment__text">{comment.text}</div>
                         <div className="comment__date">{comment.date}</div>

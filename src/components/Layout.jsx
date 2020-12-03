@@ -205,22 +205,23 @@ function Layout(props) {
                             {/*
                         // Blog
                         */}
-                            <Redirect exact from="/blog" to="/blog/category-classic" />
-                            <Route
+                            {/* <Redirect exact from="/store/blog" to="/store/blog/posts" /> */}
+                            {/* <Route
                                 exact
-                                path="/blog/category-classic"
+                                path="/aa/aa/a/a"
                                 render={(props) => (
                                     <BlogPageCategory {...props} layout="classic" sidebarPosition="end" />
                                 )}
-                            />
+                            /> */}
                             <Route
                                 exact
-                                path="/blog/category-grid"
+                                path="/store/blog/posts"
+                                key="postsListings"
                                 render={(props) => (
                                     <BlogPageCategory {...props} layout="grid" sidebarPosition="end" />
                                 )}
                             />
-                            <Route
+                            {/* <Route
                                 exact
                                 path="/blog/category-list"
                                 render={(props) => (
@@ -240,12 +241,13 @@ function Layout(props) {
                                 render={(props) => (
                                     <BlogPagePost {...props} layout="classic" sidebarPosition="end" />
                                 )}
-                            />
+                            /> */}
                             <Route
                                 exact
-                                path="/blog/post-full"
+                                path="/store/blog/single-post/:id"
+                                key="singlePost"
                                 render={(props) => (
-                                    <BlogPagePost {...props} layout="full" />
+                                    <BlogPagePost {...props} layout="full"/>
                                 )}
                             />
 

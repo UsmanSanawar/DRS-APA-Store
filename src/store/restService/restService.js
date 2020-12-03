@@ -91,5 +91,17 @@ const RestService = {
 
     postSaleOrderConvertion: (ID, session) => axios.post(`${BASE_URL_API}/masterdata/Orders/ConvertOrderToSaleOrder/${ID}?sessionId=${session}`,  RestService.getHeader()),
 
+
+
+    getBlogCategories: () => axios.get(`${BASE_URL}/api/DRS.APA/website/BlogCategory/0/0`),
+
+    getBlogPosts: (pg=1, filter="") => axios.get(`${BASE_URL}/api/DRS.APA/website/Blog/${pg}/${10}?${filter}`),
+    
+    getBlogPostById: (id) => axios.get(`${BASE_URL}/api/DRS.APA/website/Blog/${id}`),
+
+    getBlogPostCommentsByBlogId: (blogId) => axios.get(`${BASE_URL}/api/DRS.APA/website/BlogComment/0/0?BlogId=${blogId}`),
+
+    postBlogComment: (FormData) => axios.post(`${BASE_URL_API}/website/BlogComment`, FormData, RestService.getHeader()),
+
 };
 export default RestService;
