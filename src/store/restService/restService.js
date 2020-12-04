@@ -103,5 +103,8 @@ const RestService = {
 
     postBlogComment: (FormData) => axios.post(`${BASE_URL_API}/website/BlogComment`, FormData, RestService.getHeader()),
 
+    getUkBarrierDeliveryPrices: () => axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_BarrierDeliveryPrices/0/0`)
+
+
 };
 export default RestService;

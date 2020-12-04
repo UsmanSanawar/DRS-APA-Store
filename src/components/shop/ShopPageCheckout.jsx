@@ -28,6 +28,7 @@ import {
   ConstCustomerGroupId,
   ConstCustomerId,
 } from "../../constant/constants";
+import { CardColumns } from "reactstrap";
 
 const initAddr = {
   firstName: "",
@@ -73,6 +74,7 @@ class ShopPageCheckout extends Component {
 
   componentDidMount() {
     this.props.getAllCountries();
+    this.getUkBarrierDeliveryPrices();
     let total = JSON.parse(localStorage.getItem("state")).cart.total
       ? JSON.parse(localStorage.getItem("state")).cart.total
       : 0;
@@ -82,6 +84,14 @@ class ShopPageCheckout extends Component {
       total: total,
       currency: currency,
     });
+  }
+
+  getUkBarrierDeliveryPrices = () =>{
+    RestService.getUkBarrierDeliveryPrices().then(
+      (res) =>{
+        console.log('====uk delivery===', res);
+      }
+    );
   }
 
   // componentDidUpdate(prevProps, prevState) {
@@ -133,7 +143,8 @@ class ShopPageCheckout extends Component {
       let discountThatMayApply = [];
       let product = item.product;
       product.discountProducts.map((p) => {
-        p.discount.discountCustomerGroups !== undefined && p.discount.discountCustomerGroups !== null &&
+        p.discount.discountCustomerGroups !== undefined &&
+          p.discount.discountCustomerGroups !== null &&
           p.discount.discountCustomerGroups.map((discountGroup) => {
             if (discountGroup.customerGroupId === ConstCustomerGroupId) {
               discountThatMayApply.push({
@@ -186,7 +197,6 @@ class ShopPageCheckout extends Component {
 
       if (item.rates && item.rates.length > 0) {
         let taxratesArray = [];
-
 
         console.log(item.rates, "sdasdsadsadsadasd");
         for (const rate of item.rates) {
