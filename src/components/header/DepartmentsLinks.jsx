@@ -5,14 +5,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // application
-import Megamenu from './Megamenu';
 import Menu from './Menu';
 import { ArrowRoundedRight6x9Svg } from '../../svg';
 
-import { useDispatch, useSelector } from 'react-redux';
-
-// data stubs
-import departments from '../../data/headerDepartments';
+import { useSelector } from 'react-redux';
 
 
 function DepartmentsLinks() {

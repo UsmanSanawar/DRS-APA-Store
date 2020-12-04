@@ -28,7 +28,6 @@ import {
   ConstCustomerGroupId,
   ConstCustomerId,
 } from "../../constant/constants";
-import { CardColumns } from "reactstrap";
 
 const initAddr = {
   firstName: "",
