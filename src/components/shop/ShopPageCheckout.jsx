@@ -93,6 +93,14 @@ class ShopPageCheckout extends Component {
     );
   }
 
+  getUkBarrierDeliveryPrices = () =>{
+    RestService.getCourierChargesPrices().then(
+      (res) =>{
+        console.log('====uk delivery===', res);
+      }
+    );
+  }
+
   // componentDidUpdate(prevProps, prevState) {
 
   // 	if (prevProps.cart.orderId !== this.props.cart.orderId) {

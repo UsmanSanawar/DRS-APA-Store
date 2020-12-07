@@ -10,6 +10,7 @@ export function productObjectConverter(item) {
             images.push(`${IMAGE_URL}/images/${image.name}`)
         })
     }
+    console.log('=====item===', item);
     item.id = item.productId;
     item.name = item.productName;
     item.price = item.price;
