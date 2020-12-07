@@ -20,6 +20,7 @@ import Header from "./header";
 import MobileHeader from "./mobile/MobileHeader";
 import MobileMenu from "./mobile/MobileMenu";
 import Quickview from "./shared/Quickview";
+import { ProtectedRoutes } from "../protectedRoutes";
 
 // pages
 const AccountLayout = lazy(() => import("./account/AccountLayout"));
@@ -224,7 +225,7 @@ function Layout(props) {
               />
 
               <Route exact path="/store/cart" component={PageCart} />
-              <Route exact path="/store/checkout" component={PageCheckout} />
+              <ProtectedRoutes exact path="/store/checkout" component={PageCheckout} />
               <Route exact path="/store/wishlist" component={PageWishlist} />
               <Route exact path="/shop/compare" component={PageCompare} />
               <Route

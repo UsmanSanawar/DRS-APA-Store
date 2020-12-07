@@ -1,22 +1,19 @@
 // react
-import React, { Component } from "react";
-
 // third-party
 import PropTypes from "prop-types";
-import { HashRouter, Route, Redirect, Switch } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { Component } from "react";
 import { IntlProvider } from "react-intl";
-import { makeAuthenticator, makeUserManager, Callback } from 'react-oidc'
-import userManager from "../userManager"
-import store from "../store/store";
+import { connect } from "react-redux";
+import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
 // application
 import messages from "../i18n";
-
-// pages
-import Layout from './Layout';
 import HomePageOne from './home/HomePageOne';
 import HomePageTwo from './home/HomePageTwo';
-import ScrollToTop from "./scrollToTop"
+// pages
+import Layout from './Layout';
+import ScrollToTop from "./scrollToTop";
+
+
 
 // export const store = configureStore();
 class Root extends Component {
@@ -45,37 +42,15 @@ class Root extends Component {
                 <HashRouter basename={process.env.PUBLIC_URL} >
                 <ScrollToTop>
                     <Switch>
+
+
+                        
                         <Route
                             path="/store"
                             render={(props) => (
                                 <Layout {...props} headerLayout="compact" homeComponent={HomePageOne} />
                             )}
                         />
-
-
-<Route
-          path="/callback"
-          render={routeProps => (
-            <Callback
-              onSuccess={user => {
-                // console.log(user, 'user on success')
-                // alert(2)
-                if (user && user != null) {
-                  store.dispatch({ type: 'SIGNIN_USER_SUCCESS', payload: user })
-                //   store.dispatch(getUserRoleByName(user.profile.role))
-                  // `user.state` will reflect the state that was passed in via signinArgs.
-                  routeProps.history.push('/dashboard')
-                }
-              }}
-              onError={(err) => {
-                // console.log(err, 'error si the')
-                // alert(3)
-                userManager.signinRedirect()
-              }}
-              userManager={userManager}
-            />
-          )}
-        />
 
                         <Route
                             path="/"

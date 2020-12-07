@@ -32,3 +32,10 @@ export function productObjectConverter(item) {
 
     return item
 }
+
+
+
+export function isTokenValid (token) {
+
+    return true;
+}

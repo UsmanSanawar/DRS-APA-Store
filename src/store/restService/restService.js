@@ -105,7 +105,12 @@ const RestService = {
 
     getUkBarrierDeliveryPrices: () => axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_BarrierDeliveryPrices/0/0`),
 
-    getCourierChargesPrices: () => axios.get(`${BASE_URL}/api/DRS.APA/Shipment/EU_CourierCharges/0/0`)
+    getCourierChargesPrices: () => axios.get(`${BASE_URL}/api/DRS.APA/Shipment/EU_CourierCharges/0/0`),
 
+    userAuthenticate: (FormData) => axios.post(`${BASE_URL}/Users/authenticate`, FormData, RestService.getHeader()),
+
+    userregistration: (FormData) => axios.post(`${BASE_URL_API}/JWT/User`, FormData, RestService.getHeader()),
+
+    subscribeNewsletter: (FormData) => axios.post(`${BASE_URL_API}/masterdata/Subscribers`, FormData, RestService.getHeader()),
 };
 export default RestService;

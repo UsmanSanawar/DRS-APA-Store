@@ -3,9 +3,14 @@ import React, { useEffect, useState } from "react";
 
 // third-party
 import { FormattedMessage } from "react-intl";
+import { Link } from "react-router-dom";
+import { isTokenValid } from "../../constant/helpers";
+import RestService from "../../store/restService/restService";
 
 // application
 import Dropdown from "./Dropdown";
+import DropdownCurrency from "./DropdownCurrency";
+import DropdownLanguage from "./DropdownLanguage";
 
 function Topbar(props) {
   const [Organization, setOrganization] = useState({ defaultAddress: {} });
@@ -74,17 +79,32 @@ function Topbar(props) {
         <div className="topbar__row">
           {linksList}
           <div className="topbar__spring" />
-          <div className="topbar__item">
-            <Dropdown
-              title={
-                <FormattedMessage
-                  id="topbar.myAccount"
-                  defaultMessage="My Account"
-                />
-              }
-              items={accountLinks}
-            />
-          </div>
+          {JSON.parse(localStorage.getItem("token")) &&
+          isTokenValid(localStorage.getItem("token")) ? (
+            <div className="topbar__item">
+              <Dropdown
+                {...props}
+                title={
+                  <FormattedMessage
+                    id="topbar.myAccount"
+                    defaultMessage="My Account"
+                  />
+                }
+                items={accountLinks}
+              />
+            </div>
+          ) : (
+            <>
+              <div className="topbar__item px-2 topnav_link">
+                <Link
+                  to="/store/login"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Sign up/ Sign in
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
