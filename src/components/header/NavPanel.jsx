@@ -1,70 +1,72 @@
 // react
-import React from 'react';
+import React from "react";
 
 // third-party
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 // application
-import CartIndicator from './IndicatorCart';
-import Departments from './Departments';
-import Indicator from './Indicator';
-import NavLinks from './NavLinks';
-import { Heart20Svg, LogoSmallSvg } from '../../svg';
-
+import CartIndicator from "./IndicatorCart";
+import Departments from "./Departments";
+import Indicator from "./Indicator";
+import NavLinks from "./NavLinks";
+import { Heart20Svg, LogoSmallSvg } from "../../svg";
 
 function NavPanel(props) {
-    const { layout, wishlist } = props;
+  const { layout, wishlist } = props;
 
-    let logo = null;
-    let departments = null;
-    let searchIndicator;
+  let logo = null;
+  let departments = null;
+  let searchIndicator;
 
-        departments = (
-            <div className="nav-panel__departments">
-                <Departments {...props} />
-            </div>
-        );
+  departments = (
+    <div className="nav-panel__departments">
+      <Departments {...props} />
+    </div>
+  );
 
-    return (
-        <div className="nav-panel" style={props.layout == "compact" ? {backgroundColor: "#f1630cab"} : {}}>
-            <div className="nav-panel__container container">
-                <div className="nav-panel__row">
-                    {logo}
-                    {departments}
+  return (
+    <div
+      className="nav-panel"
+      style={props.layout === "compact" ? { backgroundColor: "#f1630cab" } : {}}
+    >
+      <div className="nav-panel__container container">
+        <div className="nav-panel__row">
+          {logo}
+          {departments}
 
-                    <div className="nav-panel__nav-links nav-links">
-                        <NavLinks layout={props.layout} history={props.history} />
-                    </div>
+          <div className="nav-panel__nav-links nav-links">
+            <NavLinks layout={props.layout} history={props.history} />
+          </div>
 
-                     <div className="nav-panel__indicators">
-                         <Indicator url="/store/wishlist" value={wishlist.length} icon={<Heart20Svg />} />
+          <div className="nav-panel__indicators">
+            <Indicator
+              url="/store/wishlist"
+              value={wishlist.length}
+              icon={<Heart20Svg />}
+            />
 
-                         <CartIndicator />
-                     </div>
-                </div>
-            </div>
+            <CartIndicator />
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 NavPanel.propTypes = {
-    /** one of ['default', 'compact'] (default: 'default') */
-    layout: PropTypes.oneOf(['default', 'compact']),
+  /** one of ['default', 'compact'] (default: 'default') */
+  layout: PropTypes.oneOf(["default", "compact"]),
 };
 
 NavPanel.defaultProps = {
-    layout: 'default',
+  layout: "default",
 };
 
 const mapStateToProps = (state) => ({
-    wishlist: state.wishlist,
+  wishlist: state.wishlist,
 });
 
 const mapDispatchToProps = {};
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(NavPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(NavPanel);

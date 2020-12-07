@@ -5,8 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Form, FormGroup, Input, Label } from "reactstrap";
+import { FormGroup, Input, Label } from "reactstrap";
 // application
 import { Helmet } from "react-helmet";
 import AsyncAction from "./AsyncAction";
@@ -71,7 +70,7 @@ class Product extends Component {
       RestService.getProductOptionCombination(
         this.props.product.productId
       ).then((res) => {
-        if (res.data.status == "success") {
+        if (res.data.status === "success") {
           this.setState({
             options: res.data.data !== null ? res.data.data : [],
           });
@@ -89,16 +88,16 @@ class Product extends Component {
           if (
             this.state.options.some(
               (option) =>
-                option.optionId == combination.optionId &&
-                (option.value == combination.optionValueId ||
-                  combination.optionTypeId == 6)
+                option.optionId === combination.optionId &&
+                (option.value === combination.optionValueId ||
+                  combination.optionTypeId === 6)
             )
           ) {
             success++;
           }
         }
 
-        if (success == this.state.options.length) {
+        if (success === this.state.options.length) {
           successFound = true;
           this.setState({
             slectedPr: prOption,
@@ -119,12 +118,12 @@ class Product extends Component {
     if (event !== undefined && optionId !== undefined) {
       let index = this.state.options.findIndex((item) => {
         // return item.optionValues.some(comb => comb.optionId === optionId)
-        return item.optionId == optionId;
+        return item.optionId === optionId;
       });
       //    alert(index)
       if (index > -1) {
         this.state.options[index].value =
-          event.target.type == "checkbox"
+          event.target.type === "checkbox"
             ? event.target.checked
             : event.target.value;
         this.setState(

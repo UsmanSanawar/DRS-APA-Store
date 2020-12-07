@@ -17,7 +17,7 @@ import { Cross12Svg } from "../../svg";
 
 // data stubs
 import theme from "../../data/theme";
-import {ConstCustomerGroupId} from "../../constant/constants";
+import { ConstCustomerGroupId } from "../../constant/constants";
 
 class ShopPageCart extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class ShopPageCart extends Component {
 
   getSeletedOptionValue = (option) => {
     let index = option.optionValues.findIndex(
-      (item) => item.optionValueId == option.value
+      (item) => item.optionValueId === option.value
     );
     if (index > -1) {
       return option.optionValues[index].name;
@@ -92,10 +92,11 @@ class ShopPageCart extends Component {
         });
     });
 
-    let discountPercentageToBeApplied = !isNaN(Math.max(...discountThatMayApply))
+    let discountPercentageToBeApplied = !isNaN(
+      Math.max(...discountThatMayApply)
+    )
       ? Math.max(...discountThatMayApply)
       : 0;
-
 
     discountedPrice = (item.total * discountPercentageToBeApplied) / 100;
     return parseFloat(discountedPrice);
@@ -107,7 +108,11 @@ class ShopPageCart extends Component {
     let rates = [];
 
     for (let tax of taxClass.taxRates) {
-      if (tax.taxRatesCustomerGroups.some((row) => row.customerGroupId === ConstCustomerGroupId)) {
+      if (
+        tax.taxRatesCustomerGroups.some(
+          (row) => row.customerGroupId === ConstCustomerGroupId
+        )
+      ) {
         rates.push(tax.rate);
       }
     }
@@ -116,7 +121,6 @@ class ShopPageCart extends Component {
       return a + b;
     }, 0);
     let totalPrice = item.total - this.handleDiscount(item);
-
 
     taxApply = (totalPrice * sum) / 100;
     return parseFloat(taxApply);
@@ -159,13 +163,13 @@ class ShopPageCart extends Component {
           <ul className="cart-table__options">
             {item.options.map((option, index) => (
               <li key={index}>{`${option.optionName}:  ${
-                option.optionTypeId == 1 || option.optionTypeId == 2
+                option.optionTypeId === 1 || option.optionTypeId === 2
                   ? this.getSeletedOptionValue(option)
-                  : option.optionTypeId == 3
-                  ? option.value == undefined || option.value == false
+                  : option.optionTypeId === 3
+                  ? option.value === undefined || option.value === false
                     ? false
                     : true
-                  : option.optionTypeId == 6
+                  : option.optionTypeId === 6
                   ? option.value
                     ? option.value
                       ? option.value
@@ -194,7 +198,6 @@ class ShopPageCart extends Component {
           }}
         />
       );
-
 
       return (
         <tr key={item.id} className="cart-table__row">
@@ -426,7 +429,6 @@ class ShopPageCart extends Component {
       { title: "Home", url: "" },
       { title: "Shopping Cart", url: "" },
     ];
-
 
     let content;
 

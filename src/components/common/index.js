@@ -25,7 +25,7 @@ function CommonComp(props) {
       props.location ? props.location.pathname.substring(1) : "home"
     )
       .then((res) => {
-        if (res.data.status == "success") {
+        if (res.data.status === "success") {
           setData(res.data.data);
           setLoading(false);
         } else {
@@ -153,7 +153,8 @@ function CommonComp(props) {
                   height: 200,
                 }}
               >
-                {item.overlayMainText !== "" && item.overlayMainText !== null ? (
+                {item.overlayMainText !== "" &&
+                item.overlayMainText !== null ? (
                   <h4 style={{ color: item.overlayMainTextColor }}>
                     {item.overlayMainText}
                   </h4>

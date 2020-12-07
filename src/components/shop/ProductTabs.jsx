@@ -6,7 +6,6 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // application
-import ProductTabDescription from "./ProductTabDescription";
 import ProductTabSpecification from "./ProductTabSpecification";
 import ProductTabReviews from "./ProductTabReviews";
 import ProductTabAttachments from "./ProductTabAttachments";
