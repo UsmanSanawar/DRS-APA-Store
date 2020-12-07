@@ -1,0 +1,8 @@
+.topnav_link {
+    cursor: pointer;
+}
+
+.topnav_link:hover {
+    background-color: #d7d6d6;
+    color: black;
+}

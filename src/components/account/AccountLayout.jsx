@@ -36,7 +36,6 @@ export default function AccountLayout(props) {
         { title: 'Your Orders', url: 'orders' },
         { title: 'Addresses', url: 'addresses' },
         { title: 'Password', url: 'password' },
-        { title: 'Logout', url: 'login' },
     ].map((link) => {
         const url = `${match.url}/${link.url}`;
         const isActive = matchPath(location.pathname, { path: url });
