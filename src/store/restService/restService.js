@@ -103,8 +103,12 @@ const RestService = {
 
     postBlogComment: (FormData) => axios.post(`${BASE_URL_API}/website/BlogComment`, FormData, RestService.getHeader()),
 
-    getUkBarrierDeliveryPrices: () => axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_BarrierDeliveryPrices/0/0`)
+    getUkBarrierDeliveryPrices: () => axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_BarrierDeliveryPrices/0/0`),
 
+    userAuthenticate: (FormData) => axios.post(`${BASE_URL}/Users/authenticate`, FormData, RestService.getHeader()),
 
+    userregistration: (FormData) => axios.post(`${BASE_URL_API}/JWT/User`, FormData, RestService.getHeader()),
+
+    subscribeNewsletter: (FormData) => axios.post(`${BASE_URL_API}/masterdata/Subscribers`, FormData, RestService.getHeader()),
 };
 export default RestService;
