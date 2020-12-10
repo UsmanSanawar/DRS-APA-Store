@@ -85,21 +85,17 @@ class ShopPageCheckout extends Component {
     });
   }
 
-  getUkBarrierDeliveryPrices = () =>{
-    RestService.getUkBarrierDeliveryPrices().then(
-      (res) =>{
-        console.log('====uk delivery===', res);
-      }
-    );
-  }
+  getUkBarrierDeliveryPrices = () => {
+    RestService.getUkBarrierDeliveryPrices().then((res) => {
+      console.log("====uk delivery===", res);
+    });
+  };
 
-  getUkBarrierDeliveryPrices = () =>{
-    RestService.getCourierChargesPrices().then(
-      (res) =>{
-        console.log('====uk delivery===', res);
-      }
-    );
-  }
+  getUkBarrierDeliveryPrices = () => {
+    RestService.getCourierChargesPrices().then((res) => {
+      console.log("====uk delivery===", res);
+    });
+  };
 
   // componentDidUpdate(prevProps, prevState) {
 
@@ -845,7 +841,7 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
 
-                      {this.state.payment === "paypal" ? (
+                      {this.state.payment === "paypal" && (
                         <PayPalButtons
                           handleSubmitCheckout={this.handleSubmitCheckout}
                           total={this.props.cart.total}
@@ -854,7 +850,7 @@ class ShopPageCheckout extends Component {
                           }
                           handlePaid={this.handlePaid}
                         />
-                      ) : null}
+                      )}
 
                       {this.state.payment === "stripe" && (
                         <StripPayment order={this.state.orderState} />
