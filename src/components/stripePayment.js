@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { BASE_URL } from "../constant/constants";
 import { Button } from "reactstrap";
@@ -9,6 +9,7 @@ const stripePromise = loadStripe(
 );
 
 function App(props) {
+  const [submitted, setSubmitted] = useState(false)
   const handleClick = async (orderId) => {
     // Get Stripe.js instance
     const stripe = await stripePromise;
@@ -25,6 +26,7 @@ function App(props) {
       });
 
       if (result.error) {
+        setSubmitted(false)
       }
     }
   };
@@ -36,7 +38,7 @@ function App(props) {
   }, [props.order]);
 
   return (
-    <Button type="submit" outline color="info" size="lg" block>
+    <Button disabled={submitted} onClick={() => setSubmitted(true)} type="submit" outline color="info" size="lg" block>
       <i className="fas fa-credit-card m-r-10"></i> Debit / Credit Card
     </Button>
   );
