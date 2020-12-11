@@ -190,7 +190,7 @@ const RestService = {
     ),
 
   getUkBarrierDeliveryPrices: () =>
-    axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_BarrierDeliveryPrices/0/0`),
+    axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_AllShipment`),
 
   getCourierChargesPrices: () =>
     axios.get(`${BASE_URL}/api/DRS.APA/Shipment/EU_CourierCharges/0/0`),
