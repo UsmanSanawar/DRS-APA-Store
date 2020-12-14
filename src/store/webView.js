@@ -7,7 +7,6 @@ const initialState = {
     categories: [],
     relatedProducts: [],
     allCountries: [],
-
 };
 
 export default function quickviewReducer(state = initialState, action) {
@@ -48,7 +47,7 @@ export default function quickviewReducer(state = initialState, action) {
             function getChild(obj) {
                 let subArr = []
                 for (let item of dataList) {
-                    if (obj.productCategoryId == item.parentCategoryId) {
+                    if (obj.productCategoryId === item.parentCategoryId) {
                         subArr.push(createObj(item))
                     }
                 }

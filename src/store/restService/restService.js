@@ -190,7 +190,7 @@ const RestService = {
       RestService.getHeader()
     ),
 
-  getUkBarrierDeliveryPrices: () =>
+  getUkShipmentCharges: () =>
     axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_AllShipment`),
 
   getCourierChargesPrices: () =>

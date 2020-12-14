@@ -7,9 +7,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {IMAGE_URL } from "../../constant/constants"
 import SliderImage from 'react-zoom-slider';
-// application
-import SlickWithPreventSwipeClick from './SlickWithPreventSwipeClick';
-
 
 const slickSettingsFeatured = {
     dots: false,
@@ -255,20 +252,6 @@ class ProductGallery extends Component {
               direction="right"
             />
              : null}
-                        {/* <SlickWithPreventSwipeClick
-                            ref={this.setSlickFeaturedRef}
-                            {...slickSettingsFeatured}
-                            beforeChange={this.handleFeaturedBeforeChange}
-                            afterChange={this.handleFeaturedAfterChange}
-                        >
-                            {featured}
-                        </SlickWithPreventSwipeClick> */}
-                    {/* </div> */}
-                    {/* <div className="product-gallery__carousel">
-                        <SlickWithPreventSwipeClick {...slickSettingsThumbnails[layout]}>
-                            {thumbnails}
-                        </SlickWithPreventSwipeClick>
-                    </div> */}
                 </div>
             </div>
         );

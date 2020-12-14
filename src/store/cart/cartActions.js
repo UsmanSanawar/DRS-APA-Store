@@ -27,7 +27,7 @@ export function postSaleOrder(formData) {
 
 export function cartAddItemSuccess(product, options = [], quantity = 1,price) {
     toast.success(`Product "${product.productName ? product.productName : product.name}" added to cart!`);
-    product.price = price != 0 && price != null ? price : product.price
+    product.price = (price !== 0 && price !== null) ? price : product.price
     return {
         type: CART_ADD_ITEM,
         product,

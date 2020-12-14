@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import AppLink from "../shared/AppLink";
 import { ArrowRoundedRight6x9Svg } from "../../svg";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function Menu(props) {
   const { layout, withIcons, items, onClick } = props;
