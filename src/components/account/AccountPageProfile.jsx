@@ -59,6 +59,15 @@ export default function AccountPageProfile() {
                             />
                         </div>
 
+                        <div className="d-inline-flex">
+                            <label htmlFor="profile-newsletter">Newsletter Subscription</label>
+                            <input
+                                id="profile-newsletter"
+                                type="checkbox"
+                                className="form-control"
+                            />
+                        </div>
+
                         <div className="form-group mt-5 mb-0">
                             <button type="button" className="btn btn-primary">Save</button>
                         </div>

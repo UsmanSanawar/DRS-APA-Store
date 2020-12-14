@@ -1,16 +1,13 @@
 // react
 import React, { useEffect, useState } from "react";
-
 // third-party
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import { isTokenValid } from "../../constant/helpers";
-import RestService from "../../store/restService/restService";
-
 // application
 import Dropdown from "./Dropdown";
-import DropdownCurrency from "./DropdownCurrency";
-import DropdownLanguage from "./DropdownLanguage";
+
+
 
 function Topbar(props) {
   const [Organization, setOrganization] = useState({ defaultAddress: {} });

@@ -25,7 +25,7 @@ export default function BlogSidebar(props) {
     return (
         <div className={`block block-sidebar block-sidebar--position--${position}`}>
             <div className="block-sidebar__item">
-                <WidgetSearch />
+                <WidgetSearch searchString={props.searchString} setSearch={props.setSearch} />
             </div>
             <div className="block-sidebar__item">
                 <WidgetAboutus />

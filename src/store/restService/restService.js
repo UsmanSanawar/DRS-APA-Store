@@ -2,12 +2,14 @@
 /* eslint-disable no-restricted-syntax */
 import axios from "axios";
 import { BASE_URL } from "../../constant/constants";
-const BASE_URL_API = `${BASE_URL}/api/DRS.APA`;
+const BASE_URL_API = `${BASE_URL}/api/Store`;
+const BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
 
 const RestService = {
   getHeader: () => ({
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${JSON.parse(localStorage.getItem('token'))}`   
     },
   }),
 
@@ -47,22 +49,25 @@ const RestService = {
 
   getWebPageComponentByPageId: (id) =>
     axios.get(
-      `${BASE_URL_API}/website/WebPageComponent/GetWebPageComponentsOnPageId/${id}`,
+      `${BASE_URL_API}/website/WebPageComponentForStore/GetWebPageComponentsOnStorePageId/${id}`,
       RestService.getHeader()
     ),
 
   getWebPageComponentByPageSlug: (slug) =>
     axios.get(
-      `${BASE_URL_API}/website/WebPageComponent/GetWebPageComponentsOnSlug/${slug}`,
+      `${BASE_URL_API}/website/WebPageComponentForStore/GetWebPageComponentsStoreOnSlug/${slug}`,
       RestService.getHeader()
     ),
 
   getWebMenu: () =>
-    axios.get(`${BASE_URL_API}/website/WebMenu/0/0`, RestService.getHeader()),
+    axios.get(
+      `${BASE_URL_API}/website/WebMenuStore/0/0`,
+      RestService.getHeader()
+    ),
 
   getProducts: () =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Products/0/0`,
+      `${BASE_URL_API}/masterdata/ProductStore/0/0`,
       RestService.getHeader()
     ),
 
@@ -78,7 +83,7 @@ const RestService = {
       }
     }
     return axios.get(
-      `${BASE_URL_API}/masterdata/Products/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
+      `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
         filters.category
       }&${manufacturers.join("&")}&seachString=${filters.searchString}`,
       RestService.getHeader()
@@ -87,19 +92,19 @@ const RestService = {
 
   getProductById: (prId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Products/${prId}`,
+      `${BASE_URL_API}/masterdata/ProductStore/${prId}`,
       RestService.getHeader()
     ),
 
   getRelatedProductById: (prId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Products/GetRelatedProductsByProductId/${prId}`,
+      `${BASE_URL_API}/masterdata/Products/GetRelatedStoreProductsByProductId/${prId}`,
       RestService.getHeader()
     ),
 
   getAllCategories: () =>
     axios.get(
-      `${BASE_URL_API}/masterdata/ProductCategories/0/0`,
+      `${BASE_URL_API}/masterdata/ProductCategoriesStore/0/0`,
       RestService.getHeader()
     ),
 
@@ -111,13 +116,13 @@ const RestService = {
 
   getAllManufacturer: () =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Manufacturers/0/0`,
+      `${BASE_URL_API}/masterdata/ManufacturerStore/0/0`,
       RestService.getHeader()
     ),
 
   getOrganizationsByCode: (code) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Organization/${code}`,
+      `${BASE_URL_API}/masterdata/OrganizationStore/${code}`,
       RestService.getHeader()
     ),
 
@@ -129,38 +134,38 @@ const RestService = {
 
   postSaleOrder: (FormData) =>
     axios.post(
-      `${BASE_URL_API}/masterdata/Orders`,
+      `${BASE_URL_API}/masterdata/OrderStore`,
       FormData,
       RestService.getHeader()
     ),
 
   getOrderById: (orderId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Orders/${orderId}`,
+      `${BASE_URL_API}/masterdata/OrderStore/${orderId}`,
       RestService.getHeader()
     ),
 
   getOrderByCustomerId: (page = 1, pageSize = 10, customerId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Orders/${page}/${pageSize}?CustomerId=${customerId}`,
+      `${BASE_URL_API}/masterdata/OrderStore/${page}/${pageSize}?CustomerId=${customerId}`,
       RestService.getHeader()
     ),
 
   getSaleOrderByCustomerId: (page = 1, pageSize = 10, customerId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/SaleOrders/${page}/${pageSize}?CustomerId=${customerId}`,
+      `${BASE_URL_API}/masterdata/SaleOrderStore/${page}/${pageSize}?CustomerId=${customerId}`,
       RestService.getHeader()
     ),
 
   getAllHomePageCollection: () =>
     axios.get(
-      `${BASE_URL_API}/masterdata/HomePageCollection/0/0`,
+      `${BASE_URL_API}/masterdata/HomePageCollectionStore/0/0`,
       RestService.getHeader()
     ),
 
-  getWebBanner: () => axios.get(`${BASE_URL_API}/website/WebBanner`),
+  getWebBanner: () => axios.get(`${BASE_URL_API}/website/WebBannerStore`),
 
-  getWebCarousal: () => axios.get(`${BASE_URL_API}/website/WebCarousal`),
+  getWebCarousal: () => axios.get(`${BASE_URL_API}/website/WebCarousalStore`),
 
   postSaleOrderConvertion: (ID, session) =>
     axios.post(
@@ -194,16 +199,26 @@ const RestService = {
 
   getCourierChargesPrices: () =>
     axios.get(`${BASE_URL}/api/DRS.APA/Shipment/EU_CourierCharges/0/0`),
-
+    
   userAuthenticate: (FormData) =>
     axios.post(
-      `${BASE_URL}/Users/authenticate`,
+      `${BASE_URL}/Users/LoginCustomerUser`,
       FormData,
       RestService.getHeader()
     ),
 
+  userForgotPassword: (FormData) =>
+    axios.post(
+      `${BASE_URL_API_Admin}/JWT/User/ForgetPassword/${FormData}`,
+      RestService.getHeader()
+    ),
+
   userregistration: (FormData) =>
-    axios.post(`${BASE_URL_API}/JWT/User`, FormData, RestService.getHeader()),
+    axios.post(
+      `${BASE_URL_API_Admin}/masterdata/Customers/FromSite`,
+      FormData,
+      RestService.getHeader()
+    ),
 
   subscribeNewsletter: (FormData) =>
     axios.post(
@@ -211,5 +226,27 @@ const RestService = {
       FormData,
       RestService.getHeader()
     ),
+
+  verifyOldPassword: (OldPassword) => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/Customers/VerifyCustomerPassword/${OldPassword}`,
+      RestService.getHeader()
+    );
+  },
+
+  changePassword: (formData) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPassword`,
+      { password: formData },
+      RestService.getHeader()
+    );
+  },
+
+  getAllStoreCustomerGroups: () => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/StoreCustomerGroups/0/0`,
+      RestService.getHeader()
+    );
+  },
 };
 export default RestService;

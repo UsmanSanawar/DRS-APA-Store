@@ -28,6 +28,7 @@ export default class BlogPageCategory extends Component {
       headers: {},
       allCategories: [],
       selectedCat: null,
+      searchString: ""
     };
   }
 
@@ -55,6 +56,13 @@ export default class BlogPageCategory extends Component {
       page: 1,
     });
   };
+
+  setSearch = (e) => {
+    console.log(e, 'searchString')
+    this.setState({
+      searchString: e
+    })
+  }
 
   getBlogsApi = (pg, filter = "") => {
     filter =
@@ -113,6 +121,8 @@ export default class BlogPageCategory extends Component {
         setSelectedCat={this.setSelectedCat}
         selectedCat={this.state.selectedCat}
         categories={this.state.allCategories}
+        searchString={this.state.searchString}
+        setSearch={this.setSearch}
         position={sidebarPosition}
       />
     );
