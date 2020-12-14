@@ -9,6 +9,7 @@ const RestService = {
   getHeader: () => ({
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${JSON.parse(localStorage.getItem('token'))}`   
     },
   }),
 
@@ -59,7 +60,10 @@ const RestService = {
     ),
 
   getWebMenu: () =>
-    axios.get(`${BASE_URL_API}/website/WebMenuStore/0/0`, RestService.getHeader()),
+    axios.get(
+      `${BASE_URL_API}/website/WebMenuStore/0/0`,
+      RestService.getHeader()
+    ),
 
   getProducts: () =>
     axios.get(
@@ -195,16 +199,26 @@ const RestService = {
 
   getCourierChargesPrices: () =>
     axios.get(`${BASE_URL}/api/DRS.APA/Shipment/EU_CourierCharges/0/0`),
-
+    
   userAuthenticate: (FormData) =>
     axios.post(
-      `${BASE_URL}/Users/authenticate`,
+      `${BASE_URL}/Users/LoginCustomerUser`,
       FormData,
       RestService.getHeader()
     ),
 
+  userForgotPassword: (FormData) =>
+    axios.post(
+      `${BASE_URL_API_Admin}/JWT/User/ForgetPassword/${FormData}`,
+      RestService.getHeader()
+    ),
+
   userregistration: (FormData) =>
-    axios.post(`${BASE_URL_API_Admin}/masterdata/Customers/FromSite`, FormData, RestService.getHeader()),
+    axios.post(
+      `${BASE_URL_API_Admin}/masterdata/Customers/FromSite`,
+      FormData,
+      RestService.getHeader()
+    ),
 
   subscribeNewsletter: (FormData) =>
     axios.post(
@@ -212,5 +226,27 @@ const RestService = {
       FormData,
       RestService.getHeader()
     ),
+
+  verifyOldPassword: (OldPassword) => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/Customers/VerifyCustomerPassword/${OldPassword}`,
+      RestService.getHeader()
+    );
+  },
+
+  changePassword: (formData) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPassword`,
+      { password: formData },
+      RestService.getHeader()
+    );
+  },
+
+  getAllStoreCustomerGroups: () => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/StoreCustomerGroups/0/0`,
+      RestService.getHeader()
+    );
+  },
 };
 export default RestService;
