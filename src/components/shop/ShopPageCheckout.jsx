@@ -46,6 +46,13 @@ const initAddr = {
 
 class ShopPageCheckout extends Component {
   payments = payments;
+  deliveryTimeOptions = [
+    { label: "Next Day", value: "nextDay" },
+    { label: "Next Day by 12", value: "nextDayBy12" },
+    { label: "Next Day by 9.30", value: "nextDayBy930" },
+    { label: "Saturday by 12 non", value: "saturdayBy12Noon" },
+  ];
+  deliveryCharges;
 
   constructor(props) {
     super(props);
@@ -73,7 +80,7 @@ class ShopPageCheckout extends Component {
 
   componentDidMount() {
     this.props.getAllCountries();
-    this.getUkBarrierDeliveryPrices();
+    this.getUkShipmentCharges();
     let total = JSON.parse(localStorage.getItem("state")).cart.total
       ? JSON.parse(localStorage.getItem("state")).cart.total
       : 0;
@@ -85,9 +92,9 @@ class ShopPageCheckout extends Component {
     });
   }
 
-  getUkBarrierDeliveryPrices = () => {
-    RestService.getUkBarrierDeliveryPrices().then((res) => {
-      console.log("====uk delivery===", res);
+  getUkShipmentCharges = () => {
+    RestService.getUkShipmentCharges().then((res) => {
+      console.log("====uk delivery===", _.get(res, 'data.data'));
     });
   };
 
@@ -806,11 +813,28 @@ class ShopPageCheckout extends Component {
                   <div className="card mb-0">
                     <div className="card-body">
                       <h3 className="card-title">Your Orders</h3>
-
                       {this.renderCart()}
-
+                      <div className="form-group">
+                        <label htmlFor="checkout-country">
+                          Delivery Time Options <i style={{ color: 'red' }}>*</i>
+                        </label>
+                        <select
+                          id="delivery-time"
+                          className="form-control"
+                          value={billing.deliveryTime}
+                          name={"country"}
+                          onChange={this.handleShipment}
+                          required
+                        >
+                          <option>Select Delivery Time...</option>
+                          {this.deliveryTimeOptions.map((item) => {
+                            return (
+                              <option value={item.value}>{item.label}</option>
+                            );
+                          })}
+                        </select>
+                      </div>
                       {this.renderPaymentsList()}
-
                       <div className="checkout__agree form-group">
                         <div className="form-check">
                           <span className="form-check-input input-check">
