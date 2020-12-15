@@ -85,7 +85,7 @@ const RestService = {
     return axios.get(
       `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
         filters.category
-      }&${manufacturers.join("&")}&seachString=${filters.searchString}`,
+      }&${manufacturers.join("&")}&searchString=${filters.searchString}`,
       RestService.getHeader()
     );
   },
@@ -128,7 +128,7 @@ const RestService = {
 
   getAllCountries: () =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Countries/0/0`,
+      `${BASE_URL_API_Admin}/masterdata/StoreCountries/0/0`,
       RestService.getHeader()
     ),
 
@@ -198,7 +198,7 @@ const RestService = {
     axios.get(`${BASE_URL}/api/DRS.APA/Shipment/UK_BarrierDeliveryPrices/0/0`),
 
   getCourierChargesPrices: () =>
-    axios.get(`${BASE_URL}/api/DRS.APA/Shipment/EU_CourierCharges/0/0`),
+    axios.get(`${BASE_URL}/api/DRS.APA/Shipment/StoreEU_CourierCharges/0/0`),
     
   userAuthenticate: (FormData) =>
     axios.post(
