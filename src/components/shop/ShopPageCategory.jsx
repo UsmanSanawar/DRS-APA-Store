@@ -32,11 +32,11 @@ function ShopPageCategory(props) {
 
  
     useEffect(() => {
-        
-        if(props.location.state && props.location.state.categoryId){
-            setFilters({...Filters, category: props.location.state.categoryId});
+        console.log(props.match.params.id, "asdasdasdasd")
+        if(props.match.params && props.match.params.id){
+            setFilters({...Filters, category: props.match.params.id});
         }
-    }, [props]) 
+    }, [props.match.params.id]) 
 
 
     const {
@@ -63,12 +63,12 @@ function ShopPageCategory(props) {
                         offcanvas={offcanvas}
                     />
                 </div>
-                {<CategorySidebar onChange={onChange} sideFilters={Filters} offcanvas={offcanvas} />}
+                {<CategorySidebar {...props} onChange={onChange} sideFilters={Filters} offcanvas={offcanvas} />}
             </div>
         );
     } else {
         const sidebar = (
-            <div className="shop-layout__sidebar">{<CategorySidebar onChange={onChange} sideFilters={Filters} offcanvas={offcanvas} />}</div>
+            <div className="shop-layout__sidebar">{<CategorySidebar {...props} onChange={onChange} sideFilters={Filters} offcanvas={offcanvas} />}</div>
         );
 
         content = (
@@ -79,6 +79,7 @@ function ShopPageCategory(props) {
                         <div className="block">
                             <ProductsView
                                 sideFilters={Filters}
+                                {...props}
                                 // products={products}
                                 layout={viewMode}
                                 grid="grid-3-sidebar"

@@ -24,7 +24,7 @@ function WidgetFilters(props) {
         let filterView;
 
         if (filter.type === "categories") {
-            filterView = <FilterCategories onChange={props.onChange} sideFilters={props.sideFilters} categories={filter.options.items} />;
+            filterView = <FilterCategories {...props} onChange={props.onChange} sideFilters={props.sideFilters} categories={filter.options.items} />;
         } else if (filter.type === "checkbox") {
             filterView = <FilterCheckbox onChange={props.onChange} sideFilters={props.sideFilters} items={filter.options.items} />;
         } else if (["checkbox", "radio"].includes(filter.type)) {

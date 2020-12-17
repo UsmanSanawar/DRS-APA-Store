@@ -15,7 +15,7 @@ const slickSettings = {
     'grid-4': {
         dots: false,
         arrows: false,
-        infinite: true,
+        infinite: false,
         speed: 400,
         slidesToShow: 4,
         slidesToScroll: 4,
@@ -53,7 +53,7 @@ const slickSettings = {
     'grid-4-sm': {
         dots: false,
         arrows: false,
-        infinite: true,
+        infinite: false,
         speed: 400,
         slidesToShow: 4,
         slidesToScroll: 4,
@@ -84,7 +84,7 @@ const slickSettings = {
     'grid-5': {
         dots: false,
         arrows: false,
-        infinite: true,
+        infinite: false,
         speed: 400,
         slidesToShow: 5,
         slidesToScroll: 5,
@@ -122,7 +122,7 @@ const slickSettings = {
     horizontal: {
         dots: false,
         arrows: false,
-        infinite: true,
+        infinite: false,
         speed: 400,
         slidesToShow: 3,
         slidesToScroll: 3,

@@ -1,27 +1,24 @@
 // react
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 // third-party
-import {Helmet} from 'react-helmet';
-// blocks
-import BlockBanner from '../blocks/BlockBanner';
-import BlockBrands from '../blocks/BlockBrands';
-import BlockFeatures from '../blocks/BlockFeatures';
-import BlockSlideShow from '../blocks/BlockSlideShow';
-import BlockTabbedProductsCarousel from '../blocks/BlockTabbedProductsCarousel';
+import { Helmet } from "react-helmet";
+import { IMAGE_URL } from "../../constant/constants";
 // data stubs
-import products from '../../data/shopProducts';
-import theme from '../../data/theme';
-import RestService from '../../store/restService/restService';
-import {productObjectConverter} from "../../constant/helpers";
-import {array} from "prop-types";
-import {IMAGE_URL} from "../../constant/constants";
+import products from "../../data/shopProducts";
+import theme from "../../data/theme";
+import RestService from "../../store/restService/restService";
+// blocks
+import BlockBanner from "../blocks/BlockBanner";
+import BlockFeatures from "../blocks/BlockFeatures";
+import BlockSlideShow from "../blocks/BlockSlideShow";
+import BlockTabbedProductsCarousel from "../blocks/BlockTabbedProductsCarousel";
 
 function HomePageOne() {
   const [productList, setProductList] = useState([]);
   useEffect(() => {
     RestService.getAllHomePageCollection().then((res) => {
-      if (res.data.status === 'success') {
-        const {data} = res.data;
+      if (res.data.status === "success") {
+        const { data } = res.data;
 
         setProductList(data);
       }
@@ -30,30 +27,37 @@ function HomePageOne() {
 
   const columns = [
     {
-      title: 'Top Rated Products',
+      title: "Top Rated Products",
       products: products.slice(0, 3),
     },
     {
-      title: 'Special Offers',
+      title: "Special Offers",
       products: products.slice(3, 6),
     },
     {
-      title: 'Bestsellers',
+      title: "Bestsellers",
       products: products.slice(6, 9),
     },
   ];
 
   const handleListProduct = (item) => {
-    const {productCategoriesJunctionForHome} = item;
+    const { productCategoriesJunctionForHome } = item;
     let productLists = [];
-    if(productCategoriesJunctionForHome != null && productCategoriesJunctionForHome.length > 0) {
-      productCategoriesJunctionForHome.map(product => {
-        let item = {}
+    if (
+      productCategoriesJunctionForHome != null &&
+      productCategoriesJunctionForHome.length > 0
+    ) {
+      productCategoriesJunctionForHome.map((product) => {
+        let item = {};
         let images = [];
-        if (product.product && product.product.productPhotos && product.product.productPhotos.length > 0) {
-          product.product.productPhotos.map(image => {
-            images.push(`${IMAGE_URL}/images/${image.name}`)
-          })
+        if (
+          product.product &&
+          product.product.productPhotos &&
+          product.product.productPhotos.length > 0
+        ) {
+          product.product.productPhotos.map((image) => {
+            images.push(`${IMAGE_URL}/images/${image.name}`);
+          });
         }
         item.id = product.product.productId;
         item.name = product.product.productName;
@@ -62,14 +66,12 @@ function HomePageOne() {
         item.rating = product.totalRating;
         item.reviews = product.totalReviews;
 
-        productLists.push(item)
-
-      })
+        productLists.push(item);
+      });
     }
 
-
-    return productLists
-  }
+    return productLists;
+  };
 
   return (
     <React.Fragment>
@@ -82,15 +84,19 @@ function HomePageOne() {
         // above being used as side space for dropdown
       />
 
-      <BlockFeatures/>
-      {productList && productList.length > 0 ?
-        productList.map(item => {
-          return <BlockTabbedProductsCarousel products={handleListProduct(item)} title={item.productCategoryName} layout="grid-4"/>
-        })
-        : null
-      }
-      <BlockBanner/>
-
+      <BlockFeatures />
+      {productList && productList.length > 0
+        ? productList.map((item) => {
+            return (
+              <BlockTabbedProductsCarousel
+                products={handleListProduct(item)}
+                title={item.productCategoryName}
+                layout="grid-4"
+              />
+            );
+          })
+        : null}
+      <BlockBanner />
 
       {/* <BlockCategories title="Popular Categories" layout="classic" categories={categories}/> */}
 

@@ -194,7 +194,7 @@ function CategorySidebar(props) {
                     </button>
                 </div>
                 <div className="block-sidebar__item">
-                    <WidgetFilters title="Filters" onChange={props.onChange} sideFilters={props.sideFilters} filters={[category, manufacturer, PriceFilter]} offcanvas={offcanvas} />
+                    <WidgetFilters title="Filters" {...props} onChange={props.onChange} sideFilters={props.sideFilters} filters={[category, manufacturer, PriceFilter]} offcanvas={offcanvas} />
                 </div>
                 {/* {offcanvas !== 'always' && (
                         <div className="block-sidebar__item d-none d-lg-block">

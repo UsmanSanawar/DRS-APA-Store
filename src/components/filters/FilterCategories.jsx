@@ -17,12 +17,13 @@ function FilterCategories(props) {
     if (category.type === "parent") {
       arrow = <ArrowRoundedLeft6x9Svg className="filter-categories__arrow" />;
     }
-
+    console.log(sideFilters.category, "sideFilters.category", category.id, props.match.params.id)
+    
     return (
       <li
         key={category.id}
         className={`filter-categories__item filter-categories__item--${
-          sideFilters.category != null && sideFilters.category === category.id
+          parseInt(props.match.params.id) === category.id
             ? "current"
             : category.type
         }`}
@@ -30,7 +31,7 @@ function FilterCategories(props) {
         {arrow}
         <p
           style={{ cursor: "pointer" }}
-          onClick={() => props.onChange("category", category.id)}
+          onClick={() => props.history.replace(`/store/products/${category.id}` )}
         >
           {category.name}
         </p>

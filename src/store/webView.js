@@ -60,7 +60,7 @@ export default function quickviewReducer(state = initialState, action) {
                     ...obj,
                     hasSubMenu: getChild(obj).length > 0 ? true : false,
                     // order: 2,
-                    slug: "/store/products",
+                    slug: `/store/products/${obj.productCategoryId}`,
                     webMenuId: obj.productCategoryId,
                     webMenuTitle: obj.name,
                     webSubMenuTitle: obj.name,
