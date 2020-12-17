@@ -7,24 +7,23 @@ import { useDispatch, useSelector } from "react-redux";
 import CircularLoader from "../../assets/loaders";
 import { productObjectConverter } from "../../constant/helpers";
 import products from "../../data/shopProducts";
+
 // data stubs
 import categories from "../../data/shopWidgetCategories";
 import theme from "../../data/theme";
 import RestService from "../../store/restService/restService";
+
 // blocks
 import BlockProductsCarousel from "../blocks/BlockProductsCarousel";
+
 // application
 import PageHeader from "../shared/PageHeader";
 import Product from "../shared/Product";
+
 // widgets
 import WidgetCategories from "../widgets/WidgetCategories";
 import WidgetProducts from "../widgets/WidgetProducts";
 import ProductTabs from "./ProductTabs";
-
-
-
-
-
 
 function ShopPageProduct(props) {
   const { layout, sidebarPosition, match } = props;
@@ -57,6 +56,7 @@ function ShopPageProduct(props) {
         }
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params.productId]);
   const { relatedProducts } = useSelector(({ webView }) => webView);
 

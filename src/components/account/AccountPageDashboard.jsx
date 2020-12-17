@@ -9,9 +9,13 @@ import { Link } from 'react-router-dom';
 import addresses from '../../data/accountAddresses';
 import allOrders from '../../data/accountOrders';
 import theme from '../../data/theme';
+import RestService from '../../store/restService/restService';
 
 
 export default function AccountPageDashboard() {
+
+    let customerId = localStorage.getItem('identity');
+
     const address = addresses[0];
     const orders = allOrders.slice(0, 3).map((order) => (
         <tr key={order.id}>

@@ -26,7 +26,6 @@ export default function AccountPagePassword(props) {
           ) {
             RestService.changePassword(confirmPassword).then((res) => {
               toast[res.data.status](res.data.message)
-              if(res.data.status === 'success') props.history.push("/")
             });
           } else {
             toast.info("Please enter both new and confirm password.");

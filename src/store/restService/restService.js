@@ -242,6 +242,14 @@ const RestService = {
     );
   },
 
+  changePasswordAfterEmail: (formData) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPasswordAfterEmail`,
+      { password: formData },
+      RestService.getHeader()
+    );
+  },
+
   getAllStoreCustomerGroups: () => {
     return axios.get(
       `${BASE_URL_API_Admin}/masterdata/StoreCustomerGroups/0/0`,

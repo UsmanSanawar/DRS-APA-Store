@@ -50,6 +50,7 @@ export default function AccountPageLogin(props) {
     RestService.userAuthenticate(loginFormData).then((r) => {
       if (r.data.token) {
         localStorage.setItem("token", JSON.stringify(r.data.token));
+        localStorage.setItem("identity", JSON.stringify(r.data.id))
         toast.success("User authenticated");
 
         setLoginFormData({});
