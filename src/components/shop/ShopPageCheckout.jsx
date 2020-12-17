@@ -115,7 +115,6 @@ class ShopPageCheckout extends Component {
   // }
 
   handleSubmitCheckout = (event) => {
-    event.preventDefault();
     // if(!this.props.authUser || this.props.authUser == null || this.props.authUser == null){
     // 	userManager.signinRedirect();
     // }else{
@@ -877,7 +876,7 @@ class ShopPageCheckout extends Component {
                       )}
 
                       {this.state.payment === "stripe" && (
-                        <StripPayment order={this.state.orderState} />
+                        <StripPayment handleSubmitCheckout={this.handleSubmitCheckout} order={this.state.orderState} />
                       )}
 
                       {/*<button*/}

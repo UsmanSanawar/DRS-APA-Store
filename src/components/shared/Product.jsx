@@ -42,7 +42,7 @@ class Product extends Component {
     }
     if (this.props.product.minimumQuantity) {
       this.setState({
-        quantity: parseInt(this.props.product.minimumQuantity),
+        quantity: parseInt(this.props.product.minimumQuantity) > 0 ? parseInt(this.props.product.minimumQuantity) : 1,
       });
     }
 
@@ -414,6 +414,8 @@ class Product extends Component {
                 </label>
                 <div className="product__actions">
                   <div className="product__actions-item">
+                    {console.log(this.state.slectedPr.optionQuantity, product.quantity,
+                     this.state.quantity, product.minimumQuantity, quantity, "======infinty")}
                     <InputNumber
                       id="product-quantity"
                       aria-label="Quantity"
@@ -422,7 +424,7 @@ class Product extends Component {
                       productQuantity={product.quantity}
                       stateQuantity={this.state.quantity}
                       size="lg"
-                      min={parseInt(product.minimumQuantity)}
+                      min={parseInt(product.minimumQuantity) > 0 ? parseInt(product.minimumQuantity) : 1}
                       value={quantity}
                       onChange={this.handleChangeQuantity}
                     />

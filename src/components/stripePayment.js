@@ -13,8 +13,9 @@ function App(props) {
   const handleClick = async (orderId) => {
     // Get Stripe.js instance
     const stripe = await stripePromise;
+    setSubmitted(true)
     const response = await fetch(
-      `${BASE_URL}/api/DRS.APA/masterdata/SaleOrders/create-checkout-session-by-id/${orderId}`,
+      `${BASE_URL}/api/Store/masterdata/StoreSaleOrders/create-checkout-session-by-id/${orderId}`,
       { method: "POST" }
     );
     if (response) {
@@ -32,13 +33,15 @@ function App(props) {
   };
 
   useEffect(() => {
+    console.log(props.order.orderId, "props.order.orderId")
+
     if (props.order.orderId) {
       handleClick(props.order.orderId);
     }
   }, [props.order]);
 
   return (
-    <Button disabled={submitted} onClick={() => setSubmitted(true)} type="submit" outline color="info" size="lg" block>
+    <Button disabled={submitted} onClick={() => {props.handleSubmitCheckout()}} type="submit" outline color="info" size="lg" block>
       <i className="fas fa-credit-card m-r-10"></i> Debit / Credit Card
     </Button>
   );
