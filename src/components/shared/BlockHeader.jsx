@@ -34,7 +34,6 @@ function BlockHeader(props) {
     }
 
     let groupsList;
-
     if (groups.length > 0) {
         groupsList = groups.map((group, index) => {
             const classes = classNames('block-header__group', {
@@ -43,7 +42,7 @@ function BlockHeader(props) {
 
             return (
                 <li key={index}>
-
+                
                     <Link to={"/store/products"} ><button type="button" className={classes} style={{color: "#f1630c"}}>{group.name}</button></Link>
                     {/*<button type="button" className={classes} onClick={() => onGroupClick(group)}>*/}
                     {/*    {group.name}*/}

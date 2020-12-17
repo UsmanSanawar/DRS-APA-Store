@@ -28,21 +28,21 @@ const RestService = {
 
   getReviews: (prId = 0, currentPage = 1, pageSize = 10) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Reviews/${currentPage}/${pageSize}?productId=${prId}`,
+      `${BASE_URL_API_Admin}/masterdata/StoreReviews/${currentPage}/${pageSize}?productId=${prId}`,
       FormData,
       RestService.getHeader()
     ),
 
   getAttachmentsByPrId: (id) => {
     return axios.get(
-      `${BASE_URL_API}/masterdata/Attachments/1/50?productId=${id}`,
+      `${BASE_URL_API_Admin}/masterdata/Attachments/1/50?productId=${id}`,
       RestService.getHeader()
     );
   },
 
   postReview: (FormData) =>
     axios.post(
-      `${BASE_URL_API}/masterdata/Reviews`,
+      `${BASE_URL_API_Admin}/masterdata/StoreReviews`,
       FormData,
       RestService.getHeader()
     ),
@@ -98,7 +98,7 @@ const RestService = {
 
   getRelatedProductById: (prId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/Products/GetRelatedStoreProductsByProductId/${prId}`,
+      `${BASE_URL_API}/masterdata/ProductStore/GetRelatedStoreProductsByProductId/${prId}`,
       RestService.getHeader()
     ),
 
@@ -110,7 +110,7 @@ const RestService = {
 
   getProductOptionCombination: (prId) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/ProductOptionCombination/onProductId/${prId}`,
+      `${BASE_URL_API_Admin}/masterdata/ProductOptionCombination/onProductId/${prId}`,
       RestService.getHeader()
     ),
 

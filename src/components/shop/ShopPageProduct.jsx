@@ -1,146 +1,153 @@
 // react
-import React, {useEffect, useState} from 'react';
-
 // third-party
-import PropTypes from 'prop-types';
-import {Helmet} from 'react-helmet';
-
-// application
-import PageHeader from '../shared/PageHeader';
-import Product from '../shared/Product';
-import ProductTabs from './ProductTabs';
-
-// blocks
-import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
-
-// widgets
-import WidgetCategories from '../widgets/WidgetCategories';
-import WidgetProducts from '../widgets/WidgetProducts';
-
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { useDispatch, useSelector } from "react-redux";
+import CircularLoader from "../../assets/loaders";
+import { productObjectConverter } from "../../constant/helpers";
+import products from "../../data/shopProducts";
 // data stubs
-import categories from '../../data/shopWidgetCategories';
-import products from '../../data/shopProducts';
-import theme from '../../data/theme';
-import RestService from '../../store/restService/restService';
-import {useDispatch, useSelector} from "react-redux";
-import {productObjectConverter} from "../../constant/helpers";
+import categories from "../../data/shopWidgetCategories";
+import theme from "../../data/theme";
+import RestService from "../../store/restService/restService";
+// blocks
+import BlockProductsCarousel from "../blocks/BlockProductsCarousel";
+// application
+import PageHeader from "../shared/PageHeader";
+import Product from "../shared/Product";
+// widgets
+import WidgetCategories from "../widgets/WidgetCategories";
+import WidgetProducts from "../widgets/WidgetProducts";
+import ProductTabs from "./ProductTabs";
+
+
+
+
 
 
 function ShopPageProduct(props) {
-    const {layout, sidebarPosition, match} = props;
-    // let product = {};
+  const { layout, sidebarPosition, match } = props;
+  const [product, setProduct] = useState({});
+  const [loading, setLoading] = useState(true)
 
-    const [product, setProduct] = useState({})
+  const breadcrumb = [
+    // {title: 'Home', url: ''},
+    // {title: 'Screwdrivers', url: ''},
+    // {title: product.productName, url: ''},
+  ];
 
-    // if (match.params.productId) {
-    //     product = products.find((x) => x.id === parseFloat(match.params.productId));
-    // } else {
-    // product = products[products.length - 1];
-    // }
+  const dispatch = useDispatch();
 
-    const breadcrumb = [
-        // {title: 'Home', url: ''},
-        // {title: 'Screwdrivers', url: ''},
-        // {title: product.productName, url: ''},
-    ];
+  useEffect(() => {
+    let productId = match.params.productId;
 
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        let productId = match.params.productId;
-
-        if (productId) {
-            RestService.getProductById(productId).then(res => {
-                if (res.data.status === "success") {
-                    let data = productObjectConverter(res.data.data);
-                    setProduct(data)
-                }
-            })
-
-            RestService.getRelatedProductById(productId).then(res => {
-                if (res.data.status === "success") {
-                    dispatch({type: "RELATED_PRODUCTS", data: res.data.data})
-                }
-            })
+    if (productId) {
+      RestService.getProductById(productId).then((res) => {
+        if (res.data.status === "success") {
+          let data = productObjectConverter(res.data.data);
+          setProduct(data);
+          setLoading(false);
         }
-    }, [match.params.productId])
-    const { relatedProducts } = useSelector(({ webView }) => webView);
+      });
 
-    let content;
-
-    if (layout === 'sidebar') {
-        const sidebar = (
-            <div className="shop-layout__sidebar">
-                <div className="block block-sidebar">
-                    <div className="block-sidebar__item">
-                        <WidgetCategories categories={categories} location="shop"/>
-                    </div>
-                    <div className="block-sidebar__item d-none d-lg-block">
-                        <WidgetProducts title="Latest Products" products={products.slice(0, 5)}/>
-                    </div>
-                </div>
-            </div>
-        );
-
-        content = (
-            <div className="container">
-                <div className={`shop-layout shop-layout--sidebar--${sidebarPosition}`}>
-                    {sidebarPosition === 'start' && sidebar}
-                    <div className=" shop-layout__content">
-                        <div className=" block">
-                            <Product product={product} layout={layout}/>
-                            <ProductTabs product={product} withSidebar/>
-                        </div>
-
-                        <BlockProductsCarousel title="Related Products" layout="grid-4-sm" products={products}
-                                               withSidebar/>
-                    </div>
-                    {sidebarPosition === 'end' && sidebar}
-                </div>
-            </div>
-        );
-    } else {
-        content = (
-            <React.Fragment>
-                <div className="block">
-                    <div className="container">
-                        <Product product={product} layout={layout}/>
-                        <ProductTabs product={product}/>
-                    </div>
-                </div>
-
-                <BlockProductsCarousel title="Related Products" layout="grid-5" products={relatedProducts}/>
-            </React.Fragment>
-        );
+      RestService.getRelatedProductById(productId).then((res) => {
+        if (res.data.status === "success") {
+          dispatch({ type: "RELATED_PRODUCTS", data: res.data.data });
+        }
+      });
     }
+  }, [match.params.productId]);
+  const { relatedProducts } = useSelector(({ webView }) => webView);
 
-    return (
-        <React.Fragment>
-            <Helmet>
-                <title>{`${product.productName} — ${theme.name}`}</title>
-            </Helmet>
+  let content;
 
-            <PageHeader breadcrumb={breadcrumb}/>
-
-            {content}
-        </React.Fragment>
+  if (layout === "sidebar") {
+    const sidebar = (
+      <div className="shop-layout__sidebar">
+        <div className="block block-sidebar">
+          <div className="block-sidebar__item">
+            <WidgetCategories categories={categories} location="shop" />
+          </div>
+          <div className="block-sidebar__item d-none d-lg-block">
+            <WidgetProducts
+              title="Latest Products"
+              products={products.slice(0, 5)}
+            />
+          </div>
+        </div>
+      </div>
     );
+
+    content = (
+      <div className="container">
+        <div className={`shop-layout shop-layout--sidebar--${sidebarPosition}`}>
+          {sidebarPosition === "start" && sidebar}
+          <div className=" shop-layout__content">
+            <div className=" block">
+              <Product product={product} layout={layout} />
+              <ProductTabs product={product} withSidebar />
+            </div>
+
+            <BlockProductsCarousel
+              title="Related Products"
+              layout="grid-4-sm"
+              products={products}
+              withSidebar
+            />
+          </div>
+          {sidebarPosition === "end" && sidebar}
+        </div>
+      </div>
+    );
+  } else {
+    content = (
+      <React.Fragment>
+        <div className="block">
+          <div className="container">
+            <Product product={product} layout={layout} />
+            <ProductTabs product={product} />
+          </div>
+        </div>
+
+        {relatedProducts.length > 0 && (
+          <BlockProductsCarousel
+            title="Related Products"
+            layout="grid-5"
+            products={relatedProducts}
+          />
+        )}
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <Helmet>
+        <title>{`${product.productName} — ${theme.name}`}</title>
+      </Helmet>
+
+      <PageHeader breadcrumb={breadcrumb} />
+
+      {loading ? <div style={{height: "80vh", width: "80vw"}}><div style={{display: "block", margin: "50% 50% 50% 50%" }}><CircularLoader/></div></div> : content}
+    </React.Fragment>
+  );
 }
 
 ShopPageProduct.propTypes = {
-    /** one of ['standard', 'sidebar', 'columnar', 'quickview'] (default: 'standard') */
-    layout: PropTypes.oneOf(['standard', 'sidebar', 'columnar', 'quickview']),
-    /**
-     * sidebar position (default: 'start')
-     * one of ['start', 'end']
-     * for LTR scripts "start" is "left" and "end" is "right"
-     */
-    sidebarPosition: PropTypes.oneOf(['start', 'end']),
+  /** one of ['standard', 'sidebar', 'columnar', 'quickview'] (default: 'standard') */
+  layout: PropTypes.oneOf(["standard", "sidebar", "columnar", "quickview"]),
+  /**
+   * sidebar position (default: 'start')
+   * one of ['start', 'end']
+   * for LTR scripts "start" is "left" and "end" is "right"
+   */
+  sidebarPosition: PropTypes.oneOf(["start", "end"]),
 };
 
 ShopPageProduct.defaultProps = {
-    layout: 'standard',
-    sidebarPosition: 'start',
+  layout: "standard",
+  sidebarPosition: "start",
 };
 
 export default ShopPageProduct;

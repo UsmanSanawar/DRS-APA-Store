@@ -13,7 +13,7 @@ function App(props) {
   const handleClick = async (orderId) => {
     // Get Stripe.js instance
     const stripe = await stripePromise;
-    setSubmitted(true)
+    
     const response = await fetch(
       `${BASE_URL}/api/Store/masterdata/StoreSaleOrders/create-checkout-session-by-id/${orderId}`,
       { method: "POST" }
@@ -41,7 +41,7 @@ function App(props) {
   }, [props.order]);
 
   return (
-    <Button disabled={submitted} onClick={() => {props.handleSubmitCheckout()}} type="submit" outline color="info" size="lg" block>
+    <Button disabled={submitted} onClick={() => {props.handleSubmitCheckout(); setSubmitted(true);}} type="submit" outline color="info" size="lg" block>
       <i className="fas fa-credit-card m-r-10"></i> Debit / Credit Card
     </Button>
   );

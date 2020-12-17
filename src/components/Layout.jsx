@@ -162,7 +162,7 @@ function Layout(props) {
               />
               <Route
                 exact
-                path="/store/products"
+                path="/store/products/:id"
                 render={(props) => (
                   <ShopPageCategory
                     {...props}

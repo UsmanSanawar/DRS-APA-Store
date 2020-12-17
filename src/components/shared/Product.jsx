@@ -1,26 +1,23 @@
 // react
-import React, { Component } from "react";
-
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { FormGroup, Input, Label } from "reactstrap";
+import React, { Component } from "react";
 // application
 import { Helmet } from "react-helmet";
+import { connect } from "react-redux";
+import { FormGroup, Input, Label } from "reactstrap";
+import "../../assets/CSS/customStylesForInputs.css";
+import { cartAddItem } from "../../store/cart";
+import { compareAddItem } from "../../store/compare";
+import RestService from "../../store/restService/restService";
+import { wishlistAddItem } from "../../store/wishlist";
+import { Compare16Svg, Wishlist16Svg } from "../../svg";
 import AsyncAction from "./AsyncAction";
 import Currency from "./Currency";
 import InputNumber from "./InputNumber";
 import ProductGallery from "./ProductGallery";
 import Rating from "./Rating";
-import { cartAddItem } from "../../store/cart";
-import { compareAddItem } from "../../store/compare";
-import { Compare16Svg, Wishlist16Svg } from "../../svg";
-import { wishlistAddItem } from "../../store/wishlist";
-import "../../assets/CSS/customStylesForInputs.css";
-import RestService from "../../store/restService/restService";
-
-import { BASE_URL, IMAGE_URL } from "../../constant/constants";
 
 class Product extends Component {
   constructor(props) {
@@ -42,7 +39,10 @@ class Product extends Component {
     }
     if (this.props.product.minimumQuantity) {
       this.setState({
-        quantity: parseInt(this.props.product.minimumQuantity) > 0 ? parseInt(this.props.product.minimumQuantity) : 1,
+        quantity:
+          parseInt(this.props.product.minimumQuantity) > 0
+            ? parseInt(this.props.product.minimumQuantity)
+            : 1,
       });
     }
 
@@ -414,8 +414,14 @@ class Product extends Component {
                 </label>
                 <div className="product__actions">
                   <div className="product__actions-item">
-                    {console.log(this.state.slectedPr.optionQuantity, product.quantity,
-                     this.state.quantity, product.minimumQuantity, quantity, "======infinty")}
+                    {console.log(
+                      this.state.slectedPr.optionQuantity,
+                      product.quantity,
+                      this.state.quantity,
+                      product.minimumQuantity,
+                      quantity,
+                      "======infinty"
+                    )}
                     <InputNumber
                       id="product-quantity"
                       aria-label="Quantity"
@@ -424,7 +430,11 @@ class Product extends Component {
                       productQuantity={product.quantity}
                       stateQuantity={this.state.quantity}
                       size="lg"
-                      min={parseInt(product.minimumQuantity) > 0 ? parseInt(product.minimumQuantity) : 1}
+                      min={
+                        parseInt(product.minimumQuantity) > 0
+                          ? parseInt(product.minimumQuantity)
+                          : 1
+                      }
                       value={quantity}
                       onChange={this.handleChangeQuantity}
                     />
