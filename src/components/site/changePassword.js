@@ -7,7 +7,7 @@ function UnsubscribePage(props) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [activationCode, setActivationCode] = useState("");
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     let uri = window.location.href;
@@ -26,7 +26,7 @@ function UnsubscribePage(props) {
       RestService.changePasswordAfterEmail(data).then((res) => {
         toast[res.data.status](res.data.message);
         if (res.data.status === "success") {
-          return props.history.push("/store/login")
+          return props.history.push("/store/login");
         }
       });
     } else {
@@ -44,7 +44,7 @@ function UnsubscribePage(props) {
 
         <CardText className="p-c-description">
           <div className="form-row justify-content-center col-12">
-            <div style={{width: "85%"}}>
+            <div style={{ width: "85%" }}>
               <div className="mb-3 w-100">
                 <input
                   type="password"
@@ -70,7 +70,10 @@ function UnsubscribePage(props) {
             </div>
             <div>
               <input
-                onClick={() => {handlePasswordChange(); setSubmitted(true)}}
+                onClick={() => {
+                  handlePasswordChange();
+                  setSubmitted(true);
+                }}
                 disabled={submitted}
                 type="button"
                 value="Change"

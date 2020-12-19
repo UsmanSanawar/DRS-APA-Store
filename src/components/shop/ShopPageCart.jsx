@@ -379,7 +379,74 @@ class ShopPageCart extends Component {
             </div>
           </div>
 
-          <div className="row justify-content-end pt-md-5 pt-4">
+          <div className="row justify-content-between pt-md-5 pt-4">
+            <div className="col-12 col-md-7 col-lg-6 col-xl-5">
+              <div className="card">
+                <div className="card-body p-0">
+                  <h3 className="card-title">Shipping Charges</h3>
+                  <table className="cart__totals">
+                    {this.renderTotals()}
+                    <tfoot className="cart__totals-footer">
+                      <tr style={{ fontSize: "15px" }}>
+                        <th>Total Parcel Weight</th>
+                        <td>
+                          -<Currency value={cart.totalDiscounts} />
+                        </td>
+                      </tr>
+                      <tr style={{ fontSize: "15px" }}>
+                        <th>Total Parcel Price</th>
+                        <td>
+                          <Currency value={cart.totalTaxs} />
+                        </td>
+                      </tr>
+
+                      <tr style={{ fontSize: "15px" }}>
+                        <th>Number Of Racks Used</th>
+                        <td>
+                          <Currency value={cart.totalTaxs} />
+                        </td>
+                      </tr>
+
+                      <tr style={{ fontSize: "15px" }}>
+                        <th>Total Rack Price</th>
+                        <td>
+                          <Currency value={cart.totalTaxs} />
+                        </td>
+                      </tr>
+
+                      <tr style={{ fontSize: "15px" }}>
+                        <th>Total Barrier Price</th>
+                        <td>
+                          <Currency value={cart.totalTaxs} />
+                        </td>
+                      </tr>
+
+                      <tr style={{ fontSize: "15px" }}>
+                        <th>Total Retrofit Prices</th>
+                        <td>
+                          <Currency value={cart.totalTaxs} />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <th>Total</th>
+                        <td>
+                          <Currency value={cart.total} />
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  {/* <Link
+                    style={{ fontSize: 19 }}
+                    to="/store/checkout"
+                    className="btn btn-primary btn-xl btn-block cart__checkout-button"
+                  >
+                    Proceed to checkout
+                  </Link> */}
+                </div>
+              </div>
+            </div>
+
             <div className="col-12 col-md-7 col-lg-6 col-xl-5">
               <div className="card">
                 <div className="card-body p-0">
