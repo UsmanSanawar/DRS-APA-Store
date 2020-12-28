@@ -76,3 +76,54 @@ select {
     border: 1px solid;
 }
 
+.select_option_modal {
+    position: relative;
+    display: flex;
+    width: 15em;
+    height: 2.5em;
+    line-height: 3;
+    background: #e8e8e8;
+    overflow: hidden;
+    border-radius: .25em;
+}
+
+/* Arrow */
+.select_option_modal::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    background: #f1630c;
+    cursor: pointer;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+}
+/* Transition */
+.select_option_modal:hover::after {
+    color: #ffffff;
+}
+
+.select_option_modal > select {
+    flex: 1;
+    padding: 0 .5em;
+    color: #000000;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.select_option_modal::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    background: #f1630c;
+    cursor: pointer;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+}

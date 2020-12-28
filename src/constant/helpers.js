@@ -1,4 +1,5 @@
 import { IMAGE_URL } from "./constants";
+import RestService from '../store/restService/restService';
 
 export function productObjectConverter(item) {
   let images = [];

@@ -59,7 +59,6 @@ export default function BlogPost(props) {
     });
   };
 
-  console.log(formData);
   return (
     <div className={`block post post--layout--${layout}`}>
       <div

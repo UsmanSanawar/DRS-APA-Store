@@ -32,7 +32,6 @@ function ShopPageCategory(props) {
 
  
     useEffect(() => {
-        console.log(props.match.params.id, "asdasdasdasd")
         if(props.match.params && props.match.params.id){
             setFilters({...Filters, category: props.match.params.id});
         }
@@ -45,8 +44,8 @@ function ShopPageCategory(props) {
         sidebarPosition,
     } = props;
     const breadcrumb = [
-        { title: 'Home', url: '' },
-        { title: 'Screwdrivers', url: '' },
+        // { title: 'Home', url: '' },
+        // { title: 'Screwdrivers', url: '' },
     ];
     let content;
 

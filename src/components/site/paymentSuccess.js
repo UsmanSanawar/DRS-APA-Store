@@ -10,6 +10,10 @@ const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(resetCartPaid())
+    let uri = window.location.href.split("?")[1];
+
+    setsessionId(uri)
+
   }, [])
 
   return (

@@ -30,7 +30,7 @@ class AsyncAction extends Component {
 
         this.setState({ loading: true });
 
-        action().then(() => {
+        action() && action().then(() => {
             if (this.canceled) {
                 return;
             }

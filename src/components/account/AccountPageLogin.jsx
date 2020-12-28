@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { isTokenValid } from "../../constant/helpers";
 import { Modal, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import _ from "lodash";
+import { useDispatch } from "react-redux";
 
 export default function AccountPageLogin(props) {
   const breadcrumb = [
@@ -46,12 +47,20 @@ export default function AccountPageLogin(props) {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
+
+  const dispatch = useDispatch();
   const handleSubmitLogin = () => {
-    RestService.userAuthenticate(loginFormData).then((r) => {
+    RestService.userAuthenticate(loginFormData).then(async (r) => {
       if (r.data.token) {
         localStorage.setItem("token", JSON.stringify(r.data.token));
-        localStorage.setItem("identity", JSON.stringify(r.data.id))
+        localStorage.setItem("identity", JSON.stringify(r.data.id));
         toast.success("User authenticated");
+        
+        await RestService.getCustomerByToken().then(res => {
+          if(res.data.status === "success") {
+            dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
+          }
+        })
 
         setLoginFormData({});
         return props.history.push("/store");
@@ -64,44 +73,40 @@ export default function AccountPageLogin(props) {
   const [registerFormData, setRegisterFormData] = useState({
     shipping: {},
     billing: {},
-    gender: "male"
+    gender: "male",
   });
 
   const handleRegistration = () => {
-    console.log(registerFormData, "formDataaaaa");
-
     registerFormData.isActive = true;
-    console.log(registerFormData, "registerFormDataaaaa");
     let array = [];
     registerFormData.shipping.addressType = "shipping";
-    if(registerFormData.shipping.firstName && registerFormData.shipping.city) {
-    array.push({ ...registerFormData.shipping });}
+    if (registerFormData.shipping.firstName && registerFormData.shipping.city) {
+      array.push({ ...registerFormData.shipping });
+    }
     registerFormData.billing.addressType = "billing";
-    if(registerFormData.billing.firstName && registerFormData.billing.city) {
-    array.push({ ...registerFormData.billing });}
+    if (registerFormData.billing.firstName && registerFormData.billing.city) {
+      array.push({ ...registerFormData.billing });
+    }
 
-    console.log(array, "dasdasdsa");
     registerFormData.customerAddress = array;
 
     delete registerFormData.billing;
     delete registerFormData.shipping;
 
-    console.log(registerFormData, "registerFormData");
-
     RestService.userregistration(registerFormData).then((res) => {
       toast[res.data.status](res.data.message);
 
-      setRegisterFormData({gender: "", shipping: {}, billing: {} });
+      setRegisterFormData({ gender: "", shipping: {}, billing: {} });
     });
   };
 
-  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotEmail, setForgotEmail] = useState("");
   const handleForgotPass = () => {
-    RestService.userForgotPassword(forgotEmail).then(res => {
-        toast[res.data.status](res.data.message)   
-        setOpen(false) 
-    })
-  }
+    RestService.userForgotPassword(forgotEmail).then((res) => {
+      toast[res.data.status](res.data.message);
+      setOpen(false);
+    });
+  };
 
   return (
     <React.Fragment>
@@ -113,22 +118,25 @@ export default function AccountPageLogin(props) {
           <h4>Forgot Password</h4>
         </div>
         <div className="quickview pt-4">
-          
-            <div className="form-row">
-              <div className="col-12">
-                <div className="form-group">
-                  <label htmlFor="email">Enter email</label>
-                  <input onChange={(e) => setForgotEmail(e.target.value)} name="email" type="email" className="form-control" />
-                </div>
+          <div className="form-row">
+            <div className="col-12">
+              <div className="form-group">
+                <label htmlFor="email">Enter email</label>
+                <input
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  name="email"
+                  type="email"
+                  className="form-control"
+                />
               </div>
             </div>
-            <input
-              value="Send"
-              onClick={handleForgotPass}
-              type="button"
-              className="btn btn-sm btn-primary float-right"
-            />
-        
+          </div>
+          <input
+            value="Send"
+            onClick={handleForgotPass}
+            type="button"
+            className="btn btn-sm btn-primary float-right"
+          />
 
           <small>*An email will be sent to email address if it exists</small>
         </div>
@@ -308,14 +316,14 @@ export default function AccountPageLogin(props) {
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Phone No."
-                                name="phoneNumber"
+                                name="telephone"
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
-                                    phoneNumber: event.target.value,
+                                    telephone: event.target.value,
                                   })
                                 }
-                                value={registerFormData.phoneNumber || ""}
+                                value={registerFormData.telephone || ""}
                               />
                             </div>
 
@@ -384,7 +392,10 @@ export default function AccountPageLogin(props) {
                                 </option>
 
                                 {customerGroups &&
-                                  _.filter(customerGroups, (item) => item.displayOnSite === true).map((item) => (
+                                  _.filter(
+                                    customerGroups,
+                                    (item) => item.displayOnSite === true
+                                  ).map((item) => (
                                     <option value={item.customerGroupId}>
                                       {item.customerGroupName}
                                     </option>

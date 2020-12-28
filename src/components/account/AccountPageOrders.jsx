@@ -10,12 +10,13 @@ import Pagination from "../shared/Pagination";
 // data stubs
 import theme from "../../data/theme";
 import RestService from "../../store/restService/restService";
-import { ConstCustomerId } from "../../constant/constants";
 import Currency from "../shared/Currency";
 import "./orders.css";
 import { Link } from "react-router-dom";
+import moment from "moment";
+import { connect } from "react-redux";
 
-export default class AccountPageOrders extends Component {
+class AccountPageOrders extends Component {
   constructor(props) {
     super(props);
 
@@ -28,24 +29,23 @@ export default class AccountPageOrders extends Component {
   }
 
   componentDidMount() {
-    this.handleGetOrders(1, 15, ConstCustomerId);
+    this.handleGetOrders(1, 15, this.props.customer.customerId);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.selected !== this.state.selected) {
-      this.handleGetOrders(1, 15, ConstCustomerId);
+      this.handleGetOrders(1, 15, this.props.customer.customerId);
     }
   }
 
-  handleGetOrders = (page, pageSize = 15, ConstCustomerId) => {
+  handleGetOrders = (page, pageSize = 15) => {
     if (this.state.selected === "order") {
-      RestService.getOrderByCustomerId(page, pageSize, ConstCustomerId).then(
+      RestService.getOrderByCustomerId(page, pageSize, this.props.customer.customerId).then(
         (r) => {
           if (r.data.status === "success") {
             let data = [];
             let response = r.data.data;
 
-            console.log(JSON.parse(r.headers["x-pagination"]));
 
             this.setState({ headers: JSON.parse(r.headers["x-pagination"]) });
             response.sort(function (a, b) {
@@ -82,7 +82,7 @@ export default class AccountPageOrders extends Component {
       RestService.getSaleOrderByCustomerId(
         page,
         pageSize,
-        ConstCustomerId
+        this.props.customer.customerId
       ).then((r) => {
         if (r.data.status === "success") {
           let data = [];
@@ -126,7 +126,7 @@ export default class AccountPageOrders extends Component {
   handlePageChange = (page) => {
     this.setState(() => ({ page }));
 
-    this.handleGetOrders(page, 15, ConstCustomerId);
+    this.handleGetOrders(page, 15, this.props.customer.customerId);
   };
 
   handleSwitch = (val) => {
@@ -143,11 +143,19 @@ export default class AccountPageOrders extends Component {
         <td>{order.status}</td>
         <td>{order.total}</td>
         {this.state.selected === "order" ? (
-          <td>
-            <Link to={""} className="btn btn-outline-success" type="button">
-              <i>Pay Now</i>
-            </Link>
-          </td>
+          moment().diff(moment(new Date(order.date)), "hours") < 24 ? (
+            <td>
+              <Link to={""} className="btn btn-outline-success" type="button">
+                <i>Pay Now</i>
+              </Link>
+            </td>
+          ) : (
+            <td>
+              <Link to={""} className="btn btn-outline-danger disabled" disabled type="button">
+                <i>Expired</i>
+              </Link>
+            </td>
+          )
         ) : null}
       </tr>
     ));
@@ -227,3 +235,9 @@ export default class AccountPageOrders extends Component {
     );
   }
 }
+
+const mapStateToProps = ({auth}) => ({
+  customer: auth.profile
+})
+
+export default connect(mapStateToProps)(AccountPageOrders)

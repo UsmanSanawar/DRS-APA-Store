@@ -17,7 +17,6 @@ import { Cross12Svg } from "../../svg";
 
 // data stubs
 import theme from "../../data/theme";
-import { ConstCustomerGroupId } from "../../constant/constants";
 
 class ShopPageCart extends Component {
   constructor(props) {
@@ -86,7 +85,7 @@ class ShopPageCart extends Component {
     product.discountProducts.map((p) => {
       p.discount.discountCustomerGroups !== null &&
         p.discount.discountCustomerGroups.map((discountGroup) => {
-          if (discountGroup.customerGroupId === ConstCustomerGroupId) {
+          if (discountGroup.customerGroupId === this.props.customer.customerGroupId) {
             discountThatMayApply.push(p.discount.discountPercentage);
           }
         });
@@ -99,6 +98,7 @@ class ShopPageCart extends Component {
       : 0;
 
     discountedPrice = (item.total * discountPercentageToBeApplied) / 100;
+    discountedPrice  = isFinite(discountedPrice) ? discountedPrice : 0;
     return parseFloat(discountedPrice);
   };
 
@@ -110,7 +110,7 @@ class ShopPageCart extends Component {
     for (let tax of taxClass.taxRates) {
       if (
         tax.taxRatesCustomerGroups.some(
-          (row) => row.customerGroupId === ConstCustomerGroupId
+          (row) => row.customerGroupId === this.props.customer.customerGroupId
         )
       ) {
         rates.push(tax.rate);
@@ -123,6 +123,7 @@ class ShopPageCart extends Component {
     let totalPrice = item.total - this.handleDiscount(item);
 
     taxApply = (totalPrice * sum) / 100;
+    taxApply = isFinite(taxApply) ? taxApply : 0;
     return parseFloat(taxApply);
   };
 
@@ -381,9 +382,10 @@ class ShopPageCart extends Component {
 
           <div className="row justify-content-between pt-md-5 pt-4">
             <div className="col-12 col-md-7 col-lg-6 col-xl-5">
-              <div className="card">
+              {this.props.customer.customerId && this.props.customer.customerGroupId ? <div className="card">
                 <div className="card-body p-0">
                   <h3 className="card-title">Shipping Charges</h3>
+                  {"( ---under development section--- )"}
                   <table className="cart__totals">
                     {this.renderTotals()}
                     <tfoot className="cart__totals-footer">
@@ -428,23 +430,17 @@ class ShopPageCart extends Component {
                         </td>
                       </tr>
 
-                      <tr>
+                      {/* <tr>
                         <th>Total</th>
                         <td>
                           <Currency value={cart.total} />
                         </td>
-                      </tr>
+                      </tr> */}
                     </tfoot>
                   </table>
-                  {/* <Link
-                    style={{ fontSize: 19 }}
-                    to="/store/checkout"
-                    className="btn btn-primary btn-xl btn-block cart__checkout-button"
-                  >
-                    Proceed to checkout
-                  </Link> */}
+               
                 </div>
-              </div>
+              </div> : null}
             </div>
 
             <div className="col-12 col-md-7 col-lg-6 col-xl-5">
@@ -454,6 +450,7 @@ class ShopPageCart extends Component {
                   <table className="cart__totals">
                     {this.renderTotals()}
                     <tfoot className="cart__totals-footer">
+                      {this.props.customer.customerId && this.props.customer.customerGroupId ? <> 
                       <tr style={{ fontSize: "15px" }}>
                         <th>Total Discount</th>
                         <td>
@@ -465,7 +462,7 @@ class ShopPageCart extends Component {
                         <td>
                           <Currency value={cart.totalTaxs} />
                         </td>
-                      </tr>
+                      </tr></> : <p style={{fontSize: 14, width: "100%"}}><span className="text-danger">*</span> Login to see discount and taxes.</p>}
                       <tr>
                         <th>Total</th>
                         <td>
@@ -536,7 +533,7 @@ class ShopPageCart extends Component {
 
 const mapStateToProps = (state) => ({
   cart: state.cart,
-  authUser: state.auth.authUser,
+  customer: state.auth.profile,
 });
 
 const mapDispatchToProps = {

@@ -1,13 +1,11 @@
 import {
-    CART_ADD_ITEM,
-    CART_REMOVE_ITEM,
-    CART_UPDATE_QUANTITIES,
-    POST_SALE_ORDER,
-    RESET_CART_PAID
-} from './cartActionTypes';
-import {ConstCustomerGroupId} from "../../constant/constants";
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  CART_UPDATE_QUANTITIES,
+  POST_SALE_ORDER,
+  RESET_CART_PAID,
+} from "./cartActionTypes";
 import _ from "lodash";
-
 
 /**
  * @param {array} items
@@ -16,296 +14,334 @@ import _ from "lodash";
  * @return {number}
  */
 function findItemIndex(items, product, options) {
-    return items.findIndex((item) => {
-        if (item.product.id !== product.id || item.options.length !== options.length) {
-            return false;
-        }
+  return items.findIndex((item) => {
+    if (
+      item.product.id !== product.id ||
+      item.options.length !== options.length
+    ) {
+      return false;
+    }
 
-        for (let i = 0; i < options.length; i += 1) {
-            const option = options[i];
-            const itemOption = item.options.find(itemOption => (
-                itemOption.optionId === option.optionId && itemOption.valueId === option.valueId
-            ));
+    for (let i = 0; i < options.length; i += 1) {
+      const option = options[i];
+      const itemOption = item.options.find(
+        (itemOption) =>
+          itemOption.optionId === option.optionId &&
+          itemOption.valueId === option.valueId
+      );
 
-            if (!itemOption) {
-                return false;
-            }
-        }
+      if (!itemOption) {
+        return false;
+      }
+    }
 
-        return true;
-    });
+    return true;
+  });
+}
+
+function calcUkFreeDeliverPrices(items) {
+  return items.reduce(
+    (ukFreeDeliverPrices, item) =>
+      ukFreeDeliverPrices + item.ukFreeDeliverPrices,
+    0
+  );
 }
 
 function calcDiscounts(items) {
-    return items.reduce((discount, item) => discount + item.discount, 0);
+  return items.reduce((discount, item) => discount + item.discount, 0);
 }
 
 function calcTaxes(items) {
-    return items.reduce((tax, item) => tax + item.tax, 0);
+  return items.reduce((tax, item) => tax + item.tax, 0);
 }
 
 function calcSubtotal(items) {
-    return items.reduce((subtotal, item) => subtotal + item.productTotal, 0);
+  return items.reduce((subtotal, item) => subtotal + item.productTotal, 0);
 }
 
 function calcQuantity(items) {
-    return items.reduce((quantity, item) => quantity + item.quantity, 0);
+  return items.reduce((quantity, item) => quantity + item.quantity, 0);
 }
 
 function calcTotal(subtotal, extraLines) {
-    return subtotal + extraLines.reduce((total, extraLine) => total + extraLine.price, 0);
+  return (
+    subtotal +
+    extraLines.reduce((total, extraLine) => total + extraLine.price, 0)
+  );
 }
 
-function addItem(state, product, options, quantity = 0) {
-    // const itemIndex = findItemIndex(state.items, product, options);
 
-    let newItems;
-    let { lastItemId } = state;
-    let rates = [];
+function addItem(state, product, options, quantity = 0, customer) {
+  // const itemIndex = findItemIndex(state.items, product, options);
+  // const STORE_STATE = store.getState();
+  let newItems;
+  let { lastItemId } = state;
+  let rates = [];
 
+  let taxClass = product.taxClass ? product.taxClass : [];
+  let taxApply = 0;
 
-    let taxClass = product.taxClass ? product.taxClass : [];
-    let taxApply = 0;
-
-    for (let tax of taxClass.taxRates) {
-        if (tax.taxRatesCustomerGroups.some(row => row.customerGroupId === ConstCustomerGroupId)) {
-            rates.push(tax)
-        }
+  for (let tax of taxClass.taxRates) {
+    if (
+      tax.taxRatesCustomerGroups.some(
+        (row) => row.customerGroupId === customer.customerGroupId
+      )
+    ) {
+      rates.push(tax);
     }
+  }
 
-    // if (itemIndex === -1) {
+  // if (itemIndex === -1) {
 
+  let handleDiscount = (item) => {
+    let product = item;
+    let discountedPrice = 0;
+    let discountThatMayApply = [];
 
-        let handleDiscount = (item) => {
-            let product = item;
-            let discountedPrice = 0;
-            let discountThatMayApply = [];
-        
-            product.discountProducts.map((p) => {
-              p.discount.discountCustomerGroups !== null &&
-                p.discount.discountCustomerGroups.map((discountGroup) => {
-                  if (discountGroup.customerGroupId === ConstCustomerGroupId) {
-                    discountThatMayApply.push(p.discount.discountPercentage);
-                  }
-                });
-            });
+    product.discountProducts.map((p) => {
+      p.discount.discountCustomerGroups !== null &&
+        p.discount.discountCustomerGroups.map((discountGroup) => {
+          if (discountGroup.customerGroupId === customer.customerGroupId) {
+            discountThatMayApply.push(p.discount.discountPercentage);
+          }
+        });
+    });
 
+    let discountPercentageToBeApplied = !isNaN(
+      Math.max(...discountThatMayApply)
+    )
+      ? Math.max(...discountThatMayApply)
+      : 0;
 
-            let discountPercentageToBeApplied = !isNaN(Math.max(...discountThatMayApply))
-              ? Math.max(...discountThatMayApply)
-              : 0;
-        
-            discountedPrice = ((product.price * quantity) * discountPercentageToBeApplied) / 100;
-            return parseFloat(discountedPrice);
-          };
+      discountPercentageToBeApplied = isFinite(discountPercentageToBeApplied) ? discountPercentageToBeApplied : 0;
 
-    let handleTaxCalc = (item) => {
+    discountedPrice =
+      (product.price * quantity * discountPercentageToBeApplied) / 100;
+    return parseFloat(discountedPrice) || 0;
+  };
 
-        let sum = _.sumBy(rates, 'rate');
-        let totalPrice = (product.price * quantity) - handleDiscount(item)
+  let handleTaxCalc = (item) => {
+    let sum = _.sumBy(rates, "rate");
+    let totalPrice = product.price * quantity - handleDiscount(item);
 
-        taxApply = (totalPrice * sum) / 100
-        return parseFloat(taxApply)
+    taxApply = (totalPrice * sum) / 100;
+    return parseFloat(taxApply) || 0;
+  };
+
+  let handleTotalPerRow = (item) => {
+    return (
+      product.price * quantity - handleDiscount(item) + handleTaxCalc(item)
+    );
+  };
+
+  let handleUkFreeDeliverPrices = (item) => {
+    if (item.ukFreeDeliverPrices) {
+      return handleTotalPerRow(item);
     }
+  };
 
-    let handleTotalPerRow = (item) => {
-        return ((product.price * quantity) - handleDiscount(item)) + handleTaxCalc(item)
-    }
+  let ukFreeDeliverPrices = 0;
+  ukFreeDeliverPrices =
+    ukFreeDeliverPrices + handleUkFreeDeliverPrices(product);
 
+  let discount = 0;
+  discount = discount + handleDiscount(product);
+  discount = isFinite(discount) ? discount : 0; 
 
-    let discount = 0;
-    discount = discount + handleDiscount(product)
+  let tax = 0;
+  tax = tax + handleTaxCalc(product);
 
-    let tax = 0
-    tax = tax + handleTaxCalc(product)
+  let productTotal = 0;
+  productTotal = productTotal + handleTotalPerRow(product);
 
-    let productTotal = 0
-    productTotal = productTotal + handleTotalPerRow(product)
+  lastItemId += 1;
+  newItems = [
+    ...state.items,
+    {
+      id: lastItemId,
+      product: JSON.parse(JSON.stringify(product)),
+      options: JSON.parse(JSON.stringify(options)),
+      price: product.price,
+      discount: discount,
+      tax: tax,
+      ukFreeDeliverPrices: ukFreeDeliverPrices,
+      productTotal: productTotal,
+      total: product.price * quantity,
+      quantity,
+      rates: rates,
+    },
+  ];
 
-    lastItemId += 1;
-    newItems = [...state.items, {
-        id: lastItemId,
-        product: JSON.parse(JSON.stringify(product)),
-        options: JSON.parse(JSON.stringify(options)),
-        price: product.price,
-        discount: discount,
-        tax: tax,
-        productTotal: productTotal,
-        total: product.price * quantity,
-        quantity,
-        rates: rates
-    }];
+  const totalDiscounts = calcDiscounts(newItems);
+  const totalTaxs = calcTaxes(newItems);
+  const totalUkFreeDeliverPrices = calcUkFreeDeliverPrices(newItems);
+  const subtotal = calcSubtotal(newItems);
+  const total = calcTotal(subtotal, state.extraLines);
 
-
-    const totalDiscounts = calcDiscounts(newItems);
-    const totalTaxs = calcTaxes(newItems);
-    const subtotal = calcSubtotal(newItems);
-    const total = calcTotal(subtotal, state.extraLines);
-
-    return {
-        ...state,
-        lastItemId,
-        subtotal,
-        total,
-        totalDiscounts,
-        totalTaxs,
-        items: newItems,
-        quantity: calcQuantity(newItems),
-        rates: rates
-    };
+  return {
+    ...state,
+    lastItemId,
+    subtotal,
+    total,
+    totalDiscounts,
+    totalTaxs,
+    items: newItems,
+    totalUkFreeDeliverPrices: totalUkFreeDeliverPrices,
+    quantity: calcQuantity(newItems),
+    rates: rates,
+  };
 }
 
 function removeItem(state, itemId) {
-    const { items } = state;
-    const newItems = items.filter(item => item.id !== itemId);
+  const { items } = state;
+  const newItems = items.filter((item) => item.id !== itemId);
+
+  const totalUkFreeDeliverPrices = calcUkFreeDeliverPrices(newItems);
+  const totalDiscounts = calcDiscounts(newItems);
+  const totalTaxs = calcTaxes(newItems);
+  const subtotal = calcSubtotal(newItems);
+  const total = calcTotal(subtotal, state.extraLines);
+
+  return {
+    ...state,
+    items: newItems,
+    quantity: calcQuantity(newItems),
+    totalUkFreeDeliverPrices: totalUkFreeDeliverPrices,
+    totalDiscounts,
+    totalTaxs,
+    subtotal,
+    total,
+  };
+}
+
+function updateQuantities(state, quantities) {
+  let needUpdate = false;
+
+  const newItems = state.items.map((item) => {
+    const quantity = quantities.find(
+      (x) => x.itemId === item.id && x.value !== item.quantity
+    );
+
+    if (!quantity) {
+      return item;
+    }
+
+    needUpdate = true;
+
+
+    return {
+      ...item,
+      quantity: quantity.value,
+      total: quantity.value * item.pric,
+    };
+  });
+
+  if (needUpdate) {
 
     const totalDiscounts = calcDiscounts(newItems);
     const totalTaxs = calcTaxes(newItems);
+    const totalUkFreeDeliverPrices = calcUkFreeDeliverPrices(newItems);
     const subtotal = calcSubtotal(newItems);
     const total = calcTotal(subtotal, state.extraLines);
 
     return {
-        ...state,
-        items: newItems,
-        quantity: calcQuantity(newItems),
-        totalDiscounts,
-        totalTaxs,
-        subtotal,
-        total,
+      ...state,
+      items: newItems,
+      quantity: calcQuantity(newItems),
+      totalUkFreeDeliverPrices: totalUkFreeDeliverPrices,
+      subtotal,
+      total,
+      totalDiscounts,
+      totalTaxs,
     };
-}
+  }
 
-function updateQuantities(state, quantities) {
-    let needUpdate = false;
-
-    const newItems = state.items.map((item) => {
-        const quantity = quantities.find(x => x.itemId === item.id && x.value !== item.quantity);
-
-
-        if (!quantity) {
-            // alert('!needUpdate ran')
-            return item;
-        }
-
-        needUpdate = true;
-
-        // alert('return ran')
-
-        return {
-            ...item,
-            quantity: quantity.value,
-            total: quantity.value * item.pric
-        };
-    });
-
-    if (needUpdate) {
-        // alert('!needUpdate ran')
-
-        const totalDiscounts = calcDiscounts(newItems);
-        const totalTaxs = calcTaxes(newItems);
-        const subtotal = calcSubtotal(newItems);
-        const total = calcTotal(subtotal, state.extraLines);
-        
-        return {
-            ...state,
-            items: newItems,
-            quantity: calcQuantity(newItems),
-            subtotal,
-            total,
-            totalDiscounts,
-            totalTaxs
-        };
-    }
-
-    return state;
+  return state;
 }
 
 /*
-* item example:
-* {
-*   id: 1,
-*   product: {...}
-*   options: [
-*     {optionId: 1, optionTitle: 'Color', valueId: 1, valueTitle: 'Red'}
-*   ],
-*   price: 250,
-*   quantity: 2,
-*   total: 500
-* }
-* extraLine example:
-* {
-*   type: 'shipping',
-*   title: 'Shipping',
-*   price: 25
-* }
-*/
+ * item example:
+ * {
+ *   id: 1,
+ *   product: {...}
+ *   options: [
+ *     {optionId: 1, optionTitle: 'Color', valueId: 1, valueTitle: 'Red'}
+ *   ],
+ *   price: 250,
+ *   quantity: 2,
+ *   total: 500
+ * }
+ * extraLine example:
+ * {
+ *   type: 'shipping',
+ *   title: 'Shipping',
+ *   price: 25
+ * }
+ */
 const initialState = {
-    lastItemId: 0,
-    quantity: 0,
-    items: [],
-    subtotal: 0,
-    totalDiscounts: 0,
-    totalTaxs: 0,
-    paid: false,
-    saleOrder: [],
-    extraLines: [ // shipping, taxes, fees, .etc
-        // {
-        //     type: 'shipping',
-        //     title: 'Shipping',
-        //     price: 25,
-        // },
-        // {
-        //     type: 'tax',
-        //     title: 'Tax',
-        //     price: 0,
-        // },
-    ],
-    total: 0,
-    orderId: null,
-
+  lastItemId: 0,
+  quantity: 0,
+  items: [],
+  subtotal: 0,
+  totalDiscounts: 0,
+  totalTaxs: 0,
+  paid: false,
+  saleOrder: [],
+  extraLines: [
+    // shipping, taxes, fees, .etc
+    // {
+    //     type: 'shipping',
+    //     title: 'Shipping',
+    //     price: 25,
+    // },
+  ],
+  total: 0,
+  orderId: null,
 };
-
 export default function cartReducer(state = initialState, action) {
-    switch (action.type) {
-        case CART_ADD_ITEM:
-            return addItem(state, action.product, action.options, action.quantity);
-
-        case CART_REMOVE_ITEM:
-            return removeItem(state, action.itemId);
-
-        case CART_UPDATE_QUANTITIES:
-            return updateQuantities(state, action.quantities);
-
-        case POST_SALE_ORDER: {
-            let responseData = action.response.data;
-
-
-            let orderId = null
-            if (responseData.status === "success") {
-                let order = []
-                order.push(responseData.data)
-                state.orderId = responseData.data.orderId
-                localStorage.setItem('orders', JSON.stringify(order && order.length > 0 ? order : []))
-            }
-
-
-            return {
-                ...initialState,
-                paid: true,
-                orderId: state.orderId
-                // saleOrder: state.saleOrder
-            };
-        }
-
-        case RESET_CART_PAID: {
-            return {
-                ...initialState,
-                paid: false,
-                orderId: null
-            };
-        }
-
-        default:
-            return state;
+  switch (action.type) {
+    case CART_ADD_ITEM: {
+      return addItem(state, action.product, action.options, action.quantity, action.customer);
     }
+
+    case CART_REMOVE_ITEM:
+      return removeItem(state, action.itemId);
+
+    case CART_UPDATE_QUANTITIES:
+      return updateQuantities(state, action.quantities);
+
+    case POST_SALE_ORDER: {
+      let responseData = action.response.data;
+
+      let orderId = null;
+      if (responseData.status === "success") {
+        let order = [];
+        order.push(responseData.data);
+        state.orderId = responseData.data.orderId;
+        localStorage.setItem(
+          "orders",
+          JSON.stringify(order && order.length > 0 ? order : [])
+        );
+      }
+
+      return {
+        ...initialState,
+        paid: true,
+        orderId: state.orderId,
+        // saleOrder: state.saleOrder
+      };
+    }
+
+    case RESET_CART_PAID: {
+      return {
+        ...initialState,
+        paid: false,
+        orderId: null,
+      };
+    }
+
+    default:
+      return state;
+  }
 }
+

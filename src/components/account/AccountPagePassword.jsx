@@ -38,7 +38,6 @@ export default function AccountPagePassword(props) {
     
     } else {toast.error("Old password cannot be empty.")}
     } catch (error) {
-      console.log(error, "error message");
       toast.error(error.message);
     }
   };

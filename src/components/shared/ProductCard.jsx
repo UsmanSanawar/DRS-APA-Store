@@ -2,12 +2,15 @@
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Button, FormGroup, Input, Label, Modal } from "reactstrap";
 import { cartAddItem } from "../../store/cart";
 import { compareAddItem } from "../../store/compare";
 import { quickviewOpen } from "../../store/quickview";
+import RestService from "../../store/restService/restService";
 import { wishlistAddItem, wishlistRemoveItem } from "../../store/wishlist";
 import { Wishlist16Svg, Wishlist16SvgRed } from "../../svg";
 // application
@@ -17,14 +20,37 @@ import Rating from "./Rating";
 
 function ProductCard(props) {
   const {
-    product,
     layout,
     quickviewOpen,
     cartAddItem,
     wishlistAddItem,
     compareAddItem,
     wishlistRemoveItem,
+    customer,
   } = props;
+
+  const [productOptions, setProductOptions] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [slectedPr, setSlectedPr] = useState({});
+
+  let product = props.product;
+
+  const getProductById = async () => {
+    await RestService.getProductById(product.productId).then((res) => {
+      if (res.data.status === "success") {
+        product.productOptions = res.data.data.productOptions;
+      } else {
+        toast[res.data.status](res.data.message);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (open === true) {
+      getProductById();
+    }
+  }, [open]);
 
   const { wishlist } = useSelector((state) => state);
 
@@ -84,8 +110,270 @@ function ProductCard(props) {
     );
   }
 
+  const handleProductWithOptions = async (id, run) => {
+    await RestService.getProductOptionCombination(id).then((res) => {
+      if (res.data.status === "success") {
+        if (res.data.data.length > 0) {
+          setOptions(res.data.data || []);
+          setOpen(true);
+        } else {
+          return run();
+        }
+      } else {
+        toast.error(res.data.message);
+      }
+    });
+  };
+
+  const getPrice = () => {
+    if (product.productId) {
+      let successFound = false;
+      for (let prOption of product.productOptions) {
+        let success = 0;
+
+        for (let combination of prOption.productOptionCombination) {
+          if (
+            options.some(
+              (option) =>
+                parseInt(option.optionId) === parseInt(combination.optionId) &&
+                (parseInt(option.value) ===
+                  parseInt(combination.optionValueId) ||
+                  combination.optionTypeId === 6)
+            )
+          ) {
+            success++;
+          }
+
+          if (success === options.length) {
+            successFound = true;
+
+            getNewPrice();
+            setSlectedPr(prOption);
+          }
+        }
+
+        if (!successFound) {
+          setSlectedPr({});
+        }
+      }
+    }
+  };
+
+
+  const handleInputChange = (event, optionId) => {
+    if (event !== undefined && optionId !== undefined) {
+      let index = options.findIndex((item) => {
+        // return item.optionValues.some(comb => comb.optionId === optionId)
+        return item.optionId === optionId;
+      });
+      if (index > -1) {
+        options[index].value =
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value;
+        getPrice();
+        setOptions(options);
+      }
+    }
+  };
+
+  const handleOptionValues = (options) => {
+    let SelectOptions;
+    if (options && options.length) {
+      SelectOptions = options.map((item) => (
+        <option value={item.optionValueId}>{item.name}</option>
+      ));
+    }
+    return SelectOptions;
+  };
+
+  const handleSelect = (item) => {
+    if (item.optionTypeName === "Select") {
+      return (
+        <div>
+          <Label for="exampleSelect">{item.optionName}</Label>
+          <div className="select_option_modal">
+            <select
+              required
+              name={item.optionName}
+              onChange={(e) => handleInputChange(e, item.optionId)}
+            >
+              <option value={""}>{"N/A"}</option>
+              {handleOptionValues(item.optionValues)}
+            </select>
+          </div>
+        </div>
+      );
+    } else if (item.optionTypeName === "Text") {
+      return (
+        <div>
+          <Label for="exampleSelect">{item.optionName}</Label>
+          <Input
+            onChange={(e) => handleInputChange(e, item.optionId)}
+            style={{ width: "55%" }}
+            name={item.optionName}
+            id="exampleText"
+          />
+        </div>
+      );
+    } else if (item.optionTypeName === "Checkbox") {
+      return (
+        <div>
+          <Label for="exampleSelect">{item.optionName}</Label>
+          <Input
+            onChange={(e) => handleInputChange(e, item.optionId)}
+            className="checkbox"
+            style={{ display: "block", marginLeft: "10px" }}
+            type="checkbox"
+            name={item.optionName}
+          />
+        </div>
+      );
+    } else if (item.optionTypeName === "Radio") {
+      return (
+        <div>
+          <FormGroup check required>
+            <Label for="exampleSelect">{item.optionName}</Label>
+            {item.optionValues &&
+              item.optionValues.map((optValue) => (
+                <FormGroup check required>
+                  <Label check>
+                    <Input
+                      required
+                      type="radio"
+                      name={item.optionName}
+                      onChange={(e) => handleInputChange(e, item.optionId)}
+                      value={optValue.optionValueId}
+                    />{" "}
+                    {optValue.name}
+                  </Label>
+                </FormGroup>
+              ))}
+          </FormGroup>
+          {/* <Input onChange={e => handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" /> */}
+        </div>
+      );
+    }
+  };
+
+  const renderOptions = () => {
+    if (options !== null) {
+      return options.map((item) => {
+        return (
+          <div className="col-12 col-sm-12 col-md-6">
+            <FormGroup className="w-100">{handleSelect(item)}</FormGroup>
+          </div>
+        );
+      });
+    }
+  };
+
+  const getNewPrice = () => {
+    let price = product.price;
+    if (slectedPr.optionPrice) {
+      switch (slectedPr.priceParam) {
+        case "equal":
+          price = slectedPr.optionPrice;
+          break;
+
+        case "plus":
+          price = slectedPr.optionPrice + product.price;
+          break;
+
+        case "minus":
+          price = slectedPr.optionPrice - product.price;
+          break;
+
+        default:
+          price = product.price;
+          break;
+      }
+    }
+    return price;
+  };
+
+  const handleCartItem = () => {
+    if (product.minimumQuantity > 0) {
+      cartAddItem(
+        { ...product, selectedProductOption: slectedPr },
+        options,
+        product.minimumQuantity,
+        getNewPrice(),
+        customer
+      );
+    } else {
+      toast.error("Minimum quantity cannot be less than 0");
+    }
+  };
+
   return (
     <div className={containerClasses}>
+      <Modal isOpen={open} toggle={() => setOpen(!open)} centered size="lg">
+        <div
+          className="container"
+          style={{ minWidth: "300px", minHeight: "300px", overflowY: "scroll" }}
+        >
+          <div className="row p-5">
+            <div className="col-md-12">
+              <form
+                className="product__options"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCartItem();
+                }}
+              >
+                <div className="d-flex justify-content-between">
+                  <span>
+                    <h4>
+                      Select Options <span className="text-danger">*</span>
+                    </h4>
+                  </span>
+
+                  <span>
+                    With selected options price ={" "}
+                    <span
+                      style={{ fontSize: 18, fontWeight: "bold" }}
+                      className="text-success"
+                    >
+                      £{getNewPrice()}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="row mt-3">{open && renderOptions()}</div>
+
+                <div className="mt-3">
+                  <button
+                    type="submit"
+                    disabled={
+                      slectedPr.optionQuantity
+                        ? !(slectedPr.optionQuantity >= product.minimumQuantity)
+                        : !(product.quantity >= product.minimumQuantity)
+                    }
+                    className={classNames(
+                      "btn btn-primary product-card__addtocart"
+                    )}
+                  >
+                    {slectedPr.optionQuantity
+                      ? slectedPr.optionQuantity >= product.minimumQuantity
+                        ? "Add to cart"
+                        : product.minimumQuantity < product.quantity ||
+                          product.minimumQuantity < slectedPr.optionQuantity
+                        ? "Less Quantity Avaialable"
+                        : "Out of Stock"
+                      : product.quantity >= product.minimumQuantity
+                      ? "Add to cart"
+                      : product.minimumQuantity < product.quantity ||
+                        product.minimumQuantity < slectedPr.optionQuantity
+                      ? "Less Quantity Avaialable"
+                      : "Out of Stock"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </Modal>
       {/*<AsyncAction*/}
       {/*    action={() => quickviewOpen(product.id)}*/}
       {/*    render={({ run, loading }) => (*/}
@@ -133,31 +421,44 @@ function ProductCard(props) {
         {price}
 
         <div className="product-card__buttons">
-          {/* <AsyncAction
-						action={() => cartAddItem(product)}
-						render={({ run, loading }) => ( */}
-          <React.Fragment>
-            <Link
-              // type="button"
-              // onClick={run}
-              to={`/store/product/${product.id}`}
-              className={classNames("btn btn-primary product-card__addtocart")}
-            >
-              View Product
-            </Link>
-            <Link
-              // type="button"
-              // onClick={run}
-              to={`/store/product/${product.id}`}
-              className={classNames(
-                "btn btn-secondary product-card__addtocart product-card__addtocart--list"
-              )}
-            >
-              View Product
-            </Link>
-          </React.Fragment>
-          {/* )} */}
-          {/* /> */}
+          <AsyncAction
+            action={() => {
+              if (product.minimumQuantity > 0) {
+                return cartAddItem(
+                  product,
+                  options,
+                  product.minimumQuantity,
+                  getNewPrice(),
+                  customer
+                );
+              } else {
+                toast.error("Quantity cannot be less than 1")
+              }
+            }}
+            render={({ run, loading }) => (
+              <React.Fragment>
+                <div
+                  type="button"
+                  onClick={() => {
+                    handleProductWithOptions(product.id, run);
+                  }}
+                  className={"btn btn-primary product-card__addtocart"}
+                >
+                  Add to cart
+                </div>
+                <Link
+                  // type="button"
+                  // onClick={run}
+                  to={`/store/product/${product.id}`}
+                  className={classNames(
+                    "btn btn-secondary product-card__addtocart product-card__addtocart--list"
+                  )}
+                >
+                  View Product
+                </Link>
+              </React.Fragment>
+            )}
+          />
 
           <AsyncAction
             action={() =>
@@ -226,7 +527,11 @@ ProductCard.propTypes = {
   ]),
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => {
+  return {
+    customer: state.auth.profile,
+  };
+};
 
 const mapDispatchToProps = {
   cartAddItem,

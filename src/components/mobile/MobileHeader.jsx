@@ -141,10 +141,11 @@ class MobileHeader extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => {
+    return ({
     cart: state.cart,
     wishlist: state.wishlist,
-});
+})};
 
 const mapDispatchToProps = {
     openMobileMenu: mobileMenuOpen,

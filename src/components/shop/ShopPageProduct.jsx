@@ -129,7 +129,7 @@ function ShopPageProduct(props) {
 
       <PageHeader breadcrumb={breadcrumb} />
 
-      {loading ? <div style={{height: "80vh", width: "80vw"}}><div style={{display: "block", margin: "50% 50% 50% 50%" }}><CircularLoader/></div></div> : content}
+      {loading ? <div style={{height: "80vh", width: "80vw"}}><div style={{display: "block", margin: "25% 50% 50% 50%" }}><CircularLoader/></div></div> : content}
     </React.Fragment>
   );
 }

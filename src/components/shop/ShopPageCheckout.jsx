@@ -1,33 +1,30 @@
 /* eslint-disable react/no-direct-mutation-state */
 // react
+import _ from "lodash";
 import React, { Component } from "react";
+import { Helmet } from "react-helmet";
 
 // third-party
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { bindActionCreators } from "redux";
+import CircularLoader from "../../assets/loaders";
+
+// data stubs
+import payments from "../../data/shopPayments";
+import theme from "../../data/theme";
+import { postSaleOrder, resetCartPaid } from "../../store/cart";
+import RestService from "../../store/restService/restService";
+import { getAllCountries } from "../../store/webView";
+import { Check9x7Svg } from "../../svg";
 
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
 import PageHeader from "../shared/PageHeader";
-import { Check9x7Svg } from "../../svg";
-
-// data stubs
-import payments from "../../data/shopPayments";
-import theme from "../../data/theme";
-import { getAllCountries } from "../../store/webView";
-import { postSaleOrder, resetCartPaid } from "../../store/cart";
-import { toast } from "react-toastify";
-import PayPalButtons from "./PayPalButtons";
 import StripPayment from "../stripePayment";
-import _ from "lodash";
-import RestService from "../../store/restService/restService";
-import {
-  ConstCustomerGroupId,
-  ConstCustomerId,
-} from "../../constant/constants";
+import PayPalButtons from "./PayPalButtons";
 
 const initAddr = {
   firstName: "",
@@ -46,29 +43,26 @@ const initAddr = {
 
 class ShopPageCheckout extends Component {
   payments = payments;
-  deliveryTimeOptions = [
-    { label: "Next Day", value: "nextDay" },
-    { label: "Next Day by 12", value: "nextDayBy12" },
-    { label: "Next Day by 9.30", value: "nextDayBy930" },
-    { label: "Saturday by 12 non", value: "saturdayBy12Noon" },
-  ];
-  deliveryCharges;
 
   constructor(props) {
     super(props);
-
+    this.myform = React.createRef();
     this.state = {
       payment: "",
       formValues: {
         billing: { ...initAddr, addressType: "billing" },
         shipping: { ...initAddr, addressType: "shipping" },
       },
+      loading: false,
       orderNote: "",
       showPaypal: false,
       total: 0,
       currency: {},
       termNcondition: false,
       orderState: {},
+      submitLoading: false,
+      deliveryTimeOptions: [],
+      deliveryTime: null,
     };
   }
 
@@ -79,8 +73,8 @@ class ShopPageCheckout extends Component {
   };
 
   componentDidMount() {
+    this.getAllDeliveryTimeOptions();
     this.props.getAllCountries();
-    this.getUkShipmentCharges();
     let total = JSON.parse(localStorage.getItem("state")).cart.total
       ? JSON.parse(localStorage.getItem("state")).cart.total
       : 0;
@@ -92,15 +86,13 @@ class ShopPageCheckout extends Component {
     });
   }
 
-  getUkShipmentCharges = () => {
-    RestService.getUkShipmentCharges().then((res) => {
-      console.log("====uk delivery===", _.get(res, 'data.data'));
-    });
-  };
-
-  getUkBarrierDeliveryPrices = () => {
-    RestService.getCourierChargesPrices().then((res) => {
-      console.log("====uk delivery===", res);
+  getAllDeliveryTimeOptions = () => {
+    RestService.getAllParcelDeliveries().then((r) => {
+      if (r.data.status === "success") {
+        this.setState({
+          deliveryTimeOptions: r.data.data,
+        });
+      }
     });
   };
 
@@ -114,126 +106,156 @@ class ShopPageCheckout extends Component {
   // 	}
   // }
 
+  handleOrderAmountWithTaxAndDiscountFreeEligible = (items) => {
+    let orderAmountWithTaxAndDiscountF = 0;
+    items = items ? items : [];
+    items.map(
+      (item) =>
+        (orderAmountWithTaxAndDiscountF =
+          orderAmountWithTaxAndDiscountF + (item.ukFreeDeliverPrices || 0))
+    );
+
+    return orderAmountWithTaxAndDiscountF;
+  };
+
   handleSubmitCheckout = (event) => {
-    // if(!this.props.authUser || this.props.authUser == null || this.props.authUser == null){
-    // 	userManager.signinRedirect();
-    // }else{
-    let saleOrder = {
-      orderId: null,
-      orderIdentifier: "",
-      isOnlineOrder: false,
-      isPaymentOnline: false,
-      customerId: ConstCustomerId,
-      onlinePaymentId: "",
-      orderDate: new Date().toISOString().slice(0, 20),
-      orderDueDate: null,
-      isCancelled: false,
-      cancelReason: "",
-      orderAmountWithTaxAndDiscount: this.props.cart.total,
-      orderNotes: this.state.orderNote,
-      orderStatusId: 24,
-      isActive: true,
-      orderAddress: [],
-      orderLines: [],
-      orderStatusCode: "",
-    };
-
-    let shipping = { ...this.state.formValues.shipping };
-    shipping.addressType = "shipping";
-    shipping.orderAddressId = null;
-
-    let billing = { ...this.state.formValues.billing };
-    billing.orderAddressId = null;
-    billing.addressType = "billing";
-
-    saleOrder.orderAddress.push(shipping);
-    saleOrder.orderAddress.push(billing);
-    for (let item of this.props.cart.items) {
-      let discountThatMayApply = [];
-      let product = item.product;
-      product.discountProducts.map((p) => {
-        p.discount.discountCustomerGroups !== undefined &&
-          p.discount.discountCustomerGroups !== null &&
-          p.discount.discountCustomerGroups.map((discountGroup) => {
-            if (discountGroup.customerGroupId === ConstCustomerGroupId) {
-              discountThatMayApply.push({
-                discountId: p.discount.discountId,
-                discountName: p.discount.name,
-                discountPercentage: p.discount.discountPercentage,
-              });
-            }
-          });
-      });
-
-      let appliedDiscount = _.maxBy(
-        discountThatMayApply,
-        (obj) => obj.discountPercentage
-      );
-
-      let line = {
-        orderId: 0,
-        orderLinesId: null,
-        discountId: appliedDiscount.discountId || null,
-        discountName: appliedDiscount.discountName || "",
-        discountPercentage: appliedDiscount.discountPercentage || 0,
+    if (
+      this.state.formValues.shipping.firstName !== "" &&
+      this.state.formValues.shipping.lastName !== "" &&
+      this.state.formValues.shipping.street !== "" &&
+      this.state.formValues.billing.firstName !== "" &&
+      this.state.formValues.billing.lastName !== "" &&
+      this.state.formValues.billing.street !== ""
+    ) {
+      this.handleSubmitLoading(true);
+      let saleOrder = {
+        orderId: null,
+        orderIdentifier: "",
+        isOnlineOrder: false,
+        isPaymentOnline: false,
+        customerId: this.props.customer.customerId,
+        onlinePaymentId: "",
+        orderDate: new Date().toISOString().slice(0, 20),
+        orderDueDate: null,
+        isCancelled: false,
+        cancelReason: "",
+        orderAmountWithTaxAndDiscount: this.props.cart.total,
+        OrderAmountWithTaxAndDiscountFreeEligible: this.handleOrderAmountWithTaxAndDiscountFreeEligible(
+          this.props.cart.items
+        ),
+        orderNotes: this.state.orderNote,
+        uK_DeliveryDurationId:
+          this.state.deliveryTime && parseInt(this.state.deliveryTime),
+        orderStatusId: 24,
         isActive: true,
-        isProductReturn: false,
-        orderLineProductOptions: [],
-        productId: item.product.id,
-        productName: item.product.name,
-        quantity: item.quantity,
-        returnReason: "",
-        taxClassId: null,
-        taxClassName: "",
-        taxPercentage: 0,
-        unitPrice: item.price,
-        orderLineTaxRates: [],
+        orderAddress: [],
+        orderLines: [],
+        orderStatusCode: "",
       };
 
-      if (
-        item.product.selectedProductOption &&
-        item.product.selectedProductOption.productId
-      ) {
-        let SelectedProduct = { ...item.product.selectedProductOption };
-        SelectedProduct.orderLineProductOptionsId = 0;
-        SelectedProduct.productOptionCombination = [];
-        SelectedProduct.optionModel = SelectedProduct.optionModel
-          ? SelectedProduct.optionModel
-          : "";
+      let shipping = { ...this.state.formValues.shipping };
+      shipping.addressType = "shipping";
+      shipping.orderAddressId = null;
 
-        line.orderLineProductOptions = [SelectedProduct];
-      }
+      let billing = { ...this.state.formValues.billing };
+      billing.orderAddressId = null;
+      billing.addressType = "billing";
 
-      if (item.rates && item.rates.length > 0) {
-        let taxratesArray = [];
+      saleOrder.orderAddress.push(shipping);
+      saleOrder.orderAddress.push(billing);
+      for (let item of this.props.cart.items) {
+        let discountThatMayApply = [];
+        let product = item.product;
+        product.discountProducts.map((p) => {
+          p.discount.discountCustomerGroups !== undefined &&
+            p.discount.discountCustomerGroups !== null &&
+            p.discount.discountCustomerGroups.map((discountGroup) => {
+              if (
+                discountGroup.customerGroupId ===
+                this.props.customer.customerGroupId
+              ) {
+                discountThatMayApply.push({
+                  discountId: p.discount.discountId,
+                  discountName: p.discount.name,
+                  discountPercentage: p.discount.discountPercentage,
+                });
+              }
+            });
+        });
 
-        console.log(item.rates, "sdasdsadsadsadasd");
-        for (const rate of item.rates) {
-          taxratesArray.push({
-            orderLineTaxRateId: 0,
-            orderLineTaxRateName: rate.taxRateName,
-            orderTaxRate: rate.rate,
-            orderLineTaxRateCode: rate.taxRateCode,
-            orderLinesId: null,
-          });
+        let appliedDiscount = _.maxBy(
+          discountThatMayApply,
+          (obj) => obj.discountPercentage
+        );
+
+        let line = {
+          orderId: 0,
+          orderLinesId: null,
+          discountId: (appliedDiscount && appliedDiscount.discountId) || null,
+          discountName: (appliedDiscount && appliedDiscount.discountName) || "",
+          discountPercentage: (appliedDiscount && appliedDiscount.discountPercentage) || 0,
+          isActive: true,
+          isProductReturn: false,
+          orderLineProductOptions: [],
+          productId: item.product.id,
+          productName: item.product.name,
+          quantity: item.quantity,
+          returnReason: "",
+          taxClassId: null,
+          taxClassName: "",
+          taxPercentage: 0,
+          unitPrice: item.price,
+          orderLineTaxRates: [],
+
+          lineTotal: parseFloat(item.productTotal.toFixed(2)),
+        };
+
+        if (
+          item.product.selectedProductOption &&
+          item.product.selectedProductOption.productId
+        ) {
+          let SelectedProduct = { ...item.product.selectedProductOption };
+          SelectedProduct.orderLineProductOptionsId = 0;
+          SelectedProduct.productOptionCombination = [];
+          SelectedProduct.optionModel = SelectedProduct.optionModel
+            ? SelectedProduct.optionModel
+            : "";
+
+          line.orderLineProductOptions = [SelectedProduct];
         }
 
-        line.orderLineTaxRates = taxratesArray;
-      }
+        if (item.rates && item.rates.length > 0) {
+          let taxratesArray = [];
 
-      saleOrder.orderLines.push(line);
-    }
-    if (this.props.cart.items.length < 1) {
-      toast.error("Cart is empty");
-    } else {
-      RestService.postSaleOrder(saleOrder).then(
-        (r) =>
-          r.data.status === "success" &&
-          this.setState({ orderState: r.data.data })
-      );
+          for (const rate of item.rates) {
+            taxratesArray.push({
+              orderLineTaxRateId: 0,
+              orderLineTaxRateName: rate.taxRateName,
+              orderTaxRate: rate.rate,
+              orderLineTaxRateCode: rate.taxRateCode,
+              orderLinesId: null,
+            });
+          }
+
+          line.orderLineTaxRates = taxratesArray;
+        }
+
+        saleOrder.orderLines.push(line);
+      }
+      if (this.props.cart.items.length < 1) {
+        toast.error("Cart is empty");
+      } else {
+        RestService.postSaleOrder(saleOrder).then((r) => {
+          toast[r.data.status](r.data.message);
+          if (r.data.status === "success") {
+            this.setState({ orderState: r.data.data });
+          } else {
+            this.handleSubmitLoading(false);
+          }
+        });
+      }
     }
   };
-  // }
 
   handleAddressToggle = (event) => {
     if (event) {
@@ -390,16 +412,28 @@ class ShopPageCheckout extends Component {
     );
   }
 
+  handleSubmitLoading = (value) => {
+    this.setState({
+      submitLoading: value,
+    });
+  };
+
   render() {
     const { cart, allCountries } = this.props;
     const { billing, shipping } = this.state.formValues;
-    const { showPaypal, payment, termNcondition } = this.state;
+    const {
+      showPaypal,
+      payment,
+      termNcondition,
+      deliveryTimeOptions,
+    } = this.state;
 
     const breadcrumb = [
       { title: "Home", url: "" },
       { title: "Shopping Cart", url: "/store/cart" },
       { title: "Checkout", url: "" },
     ];
+
 
     return (
       <React.Fragment>
@@ -416,6 +450,7 @@ class ShopPageCheckout extends Component {
                 e.preventDefault();
                 this.handleSubmitCheckout(e);
               }}
+              ref={this.myform}
             >
               <div className="row">
                 <div className="col-12 col-lg-6 col-xl-7">
@@ -816,20 +851,25 @@ class ShopPageCheckout extends Component {
                       {this.renderCart()}
                       <div className="form-group">
                         <label htmlFor="checkout-country">
-                          Delivery Time Options <i style={{ color: 'red' }}>*</i>
+                          Delivery Time Options{" "}
+                          <i style={{ color: "red" }}>*</i>
                         </label>
                         <select
+                          required
                           id="delivery-time"
                           className="form-control"
                           value={billing.deliveryTime}
                           name={"country"}
-                          onChange={this.handleShipment}
-                          required
+                          onChange={(e) => {
+                            this.setState({ deliveryTime: e.target.value });
+                          }}
                         >
                           <option>Select Delivery Time...</option>
-                          {this.deliveryTimeOptions.map((item) => {
+                          {deliveryTimeOptions.map((item) => {
                             return (
-                              <option value={item.value}>{item.label}</option>
+                              <option value={item.uK_ParcelDeliveryId}>
+                                {item.duration}
+                              </option>
                             );
                           })}
                         </select>
@@ -875,9 +915,26 @@ class ShopPageCheckout extends Component {
                         />
                       )}
 
-                      {this.state.payment === "stripe" && (
-                        <StripPayment handleSubmitCheckout={this.handleSubmitCheckout} order={this.state.orderState} />
-                      )}
+                      {this.state.payment === "stripe" &&
+                        (this.state.submitLoading ? (
+                          <div className="text-center my-1">
+                            <CircularLoader />
+                          </div>
+                        ) : null)}
+
+                      <div
+                        className={
+                          this.state.submitLoading ? "d-none" : "d-block"
+                        }
+                      >
+                        {this.state.payment === "stripe" && (
+                          <StripPayment
+                            handleSubmitLoading={this.handleSubmitLoading}
+                            termNcondition={!termNcondition}
+                            order={this.state.orderState}
+                          />
+                        )}
+                      </div>
 
                       {/*<button*/}
                       {/*  type="submit"*/}
@@ -912,7 +969,7 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = (state) => ({
   cart: state.cart,
   allCountries: state.webView.allCountries,
-  authUser: state.auth.authUser,
+  customer: state.auth.profile,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCheckout);

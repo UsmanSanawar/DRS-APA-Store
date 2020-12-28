@@ -6,3 +6,8 @@
     background-color: #d7d6d6;
     color: black;
 }
+
+select {
+    outline: auto;
+    outline-color: #e5e5e5;
+}

@@ -256,5 +256,50 @@ const RestService = {
       RestService.getHeader()
     );
   },
+
+  getAllParcelDeliveries: () => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/UK_ParcelDeliveries/0/0`,
+      RestService.getHeader()
+    );
+  },
+
+  getCustomerByToken: () => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerByTokenDetailed`,
+      RestService.getHeader()
+    );
+  },
+
+
+  editCustomerProfile: (formData, customerId) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/masterdata/Customers/UpdateCustomerFromStore/${customerId}`,
+      formData,
+      RestService.getHeader()
+    );
+  },
+
+  editCustomerProfileAddress: (formData, customerAddId) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/masterdata/Customers/UpdateCustomerAddressStore/${customerAddId}`,
+      formData,
+      RestService.getHeader()
+    );
+  },
+
+  postCustomerProfileAddress: (FormData) =>
+  axios.post(
+    `${BASE_URL_API_Admin}/masterdata/Customers/AddCustomerAddressStore`,
+    FormData,
+    RestService.getHeader()
+  ),
+
+  getCustomerAddressById: (customerId) =>
+  axios.get(
+    `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerAddressByIdStore/${customerId}`,
+    RestService.getHeader()
+  ),
+
 };
 export default RestService;

@@ -21,6 +21,7 @@ import MobileHeader from "./mobile/MobileHeader";
 import MobileMenu from "./mobile/MobileMenu";
 import Quickview from "./shared/Quickview";
 import { ProtectedRoutes } from "../protectedRoutes";
+import CircularLoader from '../assets/loaders';
 
 // pages
 const AccountLayout = lazy(() => import("./account/AccountLayout"));
@@ -115,8 +116,10 @@ function Layout(props) {
         <div className="site__body">
           <Suspense
             fallback={
-              <div>
-                <Spinner />
+              <div style={{ height: "80vh", width: "80vw" }}>
+                <div style={{ display: "block", margin: "25% 50% 50% 50%" }}>
+                  <CircularLoader />
+                </div>
               </div>
             }
           >
@@ -129,6 +132,11 @@ function Layout(props) {
               {/*
                         // Shop
                         */}
+              <Redirect
+                exact
+                from="/store/products/undefined"
+                to="/store/blog/posts"
+              />
               <Redirect
                 exact
                 from="/shop"
@@ -225,7 +233,11 @@ function Layout(props) {
               />
 
               <Route exact path="/store/cart" component={PageCart} />
-              <ProtectedRoutes exact path="/store/checkout" component={PageCheckout} />
+              <ProtectedRoutes
+                exact
+                path="/store/checkout"
+                component={PageCheckout}
+              />
               <Route exact path="/store/wishlist" component={PageWishlist} />
               <Route exact path="/shop/compare" component={PageCompare} />
               <Route
@@ -238,17 +250,8 @@ function Layout(props) {
                 component={PaymentOptionsPage}
               />
 
-              {/*
-                        // Blog
-                        */}
+              {/* Blog */}
               {/* <Redirect exact from="/store/blog" to="/store/blog/posts" /> */}
-              {/* <Route
-                                exact
-                                path="/aa/aa/a/a"
-                                render={(props) => (
-                                    <BlogPageCategory {...props} layout="classic" sidebarPosition="end" />
-                                )}
-                            /> */}
               <Route
                 exact
                 path="/store/blog/posts"
@@ -261,27 +264,6 @@ function Layout(props) {
                   />
                 )}
               />
-              {/* <Route
-                                exact
-                                path="/blog/category-list"
-                                render={(props) => (
-                                    <BlogPageCategory {...props} layout="list" sidebarPosition="end" />
-                                )}
-                            />
-                            <Route
-                                exact
-                                path="/blog/category-left-sidebar"
-                                render={(props) => (
-                                    <BlogPageCategory {...props} layout="classic" sidebarPosition="start" />
-                                )}
-                            />
-                            <Route
-                                exact
-                                path="/blog/post-classic"
-                                render={(props) => (
-                                    <BlogPagePost {...props} layout="classic" sidebarPosition="end" />
-                                )}
-                            /> */}
               <Route
                 exact
                 path="/store/blog/single-post/:id"

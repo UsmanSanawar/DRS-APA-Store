@@ -6,6 +6,7 @@ import React, { Component } from "react";
 // application
 import { Helmet } from "react-helmet";
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 import { FormGroup, Input, Label } from "reactstrap";
 import "../../assets/CSS/customStylesForInputs.css";
 import { cartAddItem } from "../../store/cart";
@@ -32,7 +33,6 @@ class Product extends Component {
   }
 
   componentDidMount() {
-    // console.log(window.addthis.layers(), 'wondow addt this c');
 
     if (window.addthis && window.addthis.layers) {
       window.addthis.layers();
@@ -88,8 +88,8 @@ class Product extends Component {
           if (
             this.state.options.some(
               (option) =>
-                option.optionId === combination.optionId &&
-                (option.value === combination.optionValueId ||
+                parseInt(option.optionId) === parseInt(combination.optionId) &&
+                (parseInt(option.value) === parseInt(combination.optionValueId) ||
                   combination.optionTypeId === 6)
             )
           ) {
@@ -105,7 +105,6 @@ class Product extends Component {
         }
 
         if (!successFound) {
-          // alert('else')
           this.setState({
             slectedPr: {},
           });
@@ -120,7 +119,6 @@ class Product extends Component {
         // return item.optionValues.some(comb => comb.optionId === optionId)
         return item.optionId === optionId;
       });
-      //    alert(index)
       if (index > -1) {
         this.state.options[index].value =
           event.target.type === "checkbox"
@@ -145,6 +143,7 @@ class Product extends Component {
       wishlistAddItem,
       compareAddItem,
       cartAddItem,
+      customer
     } = this.props;
 
     const { quantity } = this.state;
@@ -265,6 +264,20 @@ class Product extends Component {
       }
       return price;
     };
+    const handleCartAddItem = () => {
+
+      if(quantity > 0){
+        cartAddItem(
+      { ...product, selectedProductOption: this.state.slectedPr },
+      this.state.options,
+      quantity,
+      getNewPrice(),
+      customer
+    );
+  } else {
+    toast.error("Quantity cannot be less then 1")
+  }
+  }
 
     return (
       <div className={`product product--layout--${layout}`}>
@@ -389,13 +402,7 @@ class Product extends Component {
               className="product__options"
               onSubmit={(e) => {
                 e.preventDefault();
-                cartAddItem(
-                  { ...product, selectedProductOption: this.state.slectedPr },
-                  this.state.options,
-                  quantity,
-                  getNewPrice()
-                );
-                // alert(2)
+                handleCartAddItem()
               }}
             >
               <div className="form-group product__option">
@@ -414,14 +421,7 @@ class Product extends Component {
                 </label>
                 <div className="product__actions">
                   <div className="product__actions-item">
-                    {console.log(
-                      this.state.slectedPr.optionQuantity,
-                      product.quantity,
-                      this.state.quantity,
-                      product.minimumQuantity,
-                      quantity,
-                      "======infinty"
-                    )}
+                    
                     <InputNumber
                       id="product-quantity"
                       aria-label="Quantity"
@@ -521,4 +521,10 @@ const mapDispatchToProps = {
   compareAddItem,
 };
 
-export default connect(() => ({}), mapDispatchToProps)(Product);
+const mapStateToProps = (state) => {
+  return ({
+  customer: state.auth.profile
+})}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Product);

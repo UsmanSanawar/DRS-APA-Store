@@ -58,7 +58,6 @@ export default class BlogPageCategory extends Component {
   };
 
   setSearch = (e) => {
-    console.log(e, 'searchString')
     this.setState({
       searchString: e
     })
@@ -102,7 +101,6 @@ export default class BlogPageCategory extends Component {
   };
 
   render() {
-    console.log(this.props, "sdasdsadaaaa");
 
     const { layout, sidebarPosition } = this.props;
     const { page, posts } = this.state;

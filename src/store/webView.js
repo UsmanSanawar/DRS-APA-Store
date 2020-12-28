@@ -103,11 +103,6 @@ export default function quickviewReducer(state = initialState, action) {
         }
 
 
-        case 'SIGNIN_USER_SUCCESS':{
-            return{...state, authUser: action.payload}
-        }
-
-
         default:
             return state;
     }

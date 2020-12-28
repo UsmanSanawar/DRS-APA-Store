@@ -50,8 +50,8 @@ function Topbar(props) {
   const accountLinks = [
     { title: "Dashboard", url: "/store/dashboard" },
     { title: "Edit Profile", url: "/store/profile" },
-    { title: "your Orders", url: "/store/orders" },
-    { title: "Addresses", url: "/store/addresses" },
+    { title: "Your Orders", url: "/store/orders" },
+    // { title: "Addresses", url: "/store/addresses" },
     { title: "Password", url: "/store/password" },
     { title: "Logout", url: "/store/login" },
   ];

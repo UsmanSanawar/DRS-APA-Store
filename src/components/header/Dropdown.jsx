@@ -51,7 +51,6 @@ class Dropdown extends Component {
     this.setState(() => ({
       open: false,
     }));
-    console.log(item.url === "Logout", "sdasdasd");
     if (item.url === "/store/login") {
         localStorage.removeItem("token");
       }

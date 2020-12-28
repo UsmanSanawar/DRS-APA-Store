@@ -17,13 +17,12 @@ function FilterCategories(props) {
     if (category.type === "parent") {
       arrow = <ArrowRoundedLeft6x9Svg className="filter-categories__arrow" />;
     }
-    console.log(sideFilters.category, "sideFilters.category", category.id, props.match.params.id)
     
     return (
       <li
         key={category.id}
         className={`filter-categories__item filter-categories__item--${
-          parseInt(props.match.params.id) === category.id
+          (sideFilters.category !== null && parseInt(props.match.params.id) === category.id)
             ? "current"
             : category.type
         }`}

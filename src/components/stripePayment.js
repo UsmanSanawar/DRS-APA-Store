@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { BASE_URL } from "../constant/constants";
 import { Button } from "reactstrap";
+import { toast } from "react-toastify";
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(
@@ -9,11 +10,9 @@ const stripePromise = loadStripe(
 );
 
 function App(props) {
-  const [submitted, setSubmitted] = useState(false)
   const handleClick = async (orderId) => {
     // Get Stripe.js instance
     const stripe = await stripePromise;
-    
     const response = await fetch(
       `${BASE_URL}/api/Store/masterdata/StoreSaleOrders/create-checkout-session-by-id/${orderId}`,
       { method: "POST" }
@@ -27,13 +26,13 @@ function App(props) {
       });
 
       if (result.error) {
-        setSubmitted(false)
+        toast.error("Error in Stripe API.")
+        props.handleSubmitLoading(false)
       }
     }
   };
 
   useEffect(() => {
-    console.log(props.order.orderId, "props.order.orderId")
 
     if (props.order.orderId) {
       handleClick(props.order.orderId);
@@ -41,7 +40,14 @@ function App(props) {
   }, [props.order]);
 
   return (
-    <Button disabled={submitted} onClick={() => {props.handleSubmitCheckout(); setSubmitted(true);}} type="submit" outline color="info" size="lg" block>
+    <Button
+      type="submit"
+      outline
+      color="info"
+      size="lg"
+      disabled={props.termNcondition}
+      block
+    >
       <i className="fas fa-credit-card m-r-10"></i> Debit / Credit Card
     </Button>
   );

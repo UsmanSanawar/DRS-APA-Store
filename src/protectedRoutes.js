@@ -12,7 +12,7 @@ export const ProtectedRoutes = ({
     {...rest}
     render={(props) =>
       JSON.parse(localStorage.getItem('token')) && isTokenValid(localStorage.getItem('token')) ? (
-        <Component {...props} />
+        <Component {...rest} {...props} />
       ) : (
         <Redirect
           to={{

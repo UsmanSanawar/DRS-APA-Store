@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // third-party
 import classNames from 'classnames';
@@ -20,10 +20,23 @@ import AccountPageDashboard from './AccountPageDashboard';
 import AccountPageOrders from './AccountPageOrders';
 import AccountPagePassword from './AccountPagePassword';
 import AccountPageProfile from './AccountPageProfile';
+import { ProtectedRoutes } from '../../protectedRoutes';
+import RestService from '../../store/restService/restService';
+import { toast } from 'react-toastify';
 
 
 export default function AccountLayout(props) {
     const { match, location } = props;
+const [customer, setCustomer] = useState({})    
+    useEffect(() => {
+        RestService.getCustomerByToken().then(res => {
+            if (res.data.status === 'success') {
+                setCustomer(res.data.data)
+            } else {
+                toast.error(res.data.message)
+            }
+        })
+    }, [])
 
     const breadcrumb = [
         { title: 'Home', url: '' },
@@ -34,7 +47,7 @@ export default function AccountLayout(props) {
         { title: 'Dashboard', url: 'dashboard' },
         { title: 'Edit Profile', url: 'profile' },
         { title: 'Your Orders', url: 'orders' },
-        { title: 'Addresses', url: 'addresses' },
+        // { title: 'Addresses', url: 'addresses' },
         { title: 'Password', url: 'password' },
     ].map((link) => {
         const url = `${match.url}/${link.url}`;
@@ -66,11 +79,13 @@ export default function AccountLayout(props) {
                         <div className="col-12 col-lg-9 mt-4 mt-lg-0">
                             <Switch>
                                 <Redirect exact from={match.path} to={`${match.path}/dashboard`} />
-                                <Route exact path={`${match.path}/dashboard`} component={AccountPageDashboard} />
-                                <Route exact path={`${match.path}/profile`} component={AccountPageProfile} />
-                                <Route exact path={`${match.path}/orders`} component={AccountPageOrders} />
-                                <Route exact path={`${match.path}/addresses`} component={AccountPageAddresses} />
-                                <Route exact path={`${match.path}/password`} component={AccountPagePassword} />
+                      
+                                    <ProtectedRoutes exact path={`${match.path}/dashboard`} customer={customer} component={AccountPageDashboard} />
+                                    <ProtectedRoutes exact path={`${match.path}/profile`} customer={customer} component={AccountPageProfile} />
+                                    <ProtectedRoutes exact path={`${match.path}/orders`} customer={customer} component={AccountPageOrders} />
+                                    <ProtectedRoutes exact path={`${match.path}/addresses`} customer={customer} component={AccountPageAddresses} />
+                                    <ProtectedRoutes exact path={`${match.path}/password`} customer={customer} component={AccountPagePassword} />
+
                             </Switch>
                         </div>
                     </div>

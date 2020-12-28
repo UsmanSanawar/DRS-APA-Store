@@ -18,6 +18,7 @@ function IndicatorCart(props) {
   let dropdown;
   let totals;
 
+
   if (cart && cart.extraLines.length > 0) {
     const extraLines = cart.extraLines.map((extraLine, index) => (
       <tr key={index}>
@@ -52,7 +53,7 @@ function IndicatorCart(props) {
     return "";
   };
 
-  const items = cart.items.map((item) => {
+  const items = cart && cart.items.map((item) => {
     let options;
     let image;
 

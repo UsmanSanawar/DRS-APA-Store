@@ -43,7 +43,7 @@ class ProductsView extends Component {
       this.state.pagination.currentPage = 1;
       this.handleGetProducts(
         this.state.pagination.currentPage,
-        this.state.itemLength,
+        this.state.itemLength,  
         this.props.sideFilters,
         true
       );
@@ -59,6 +59,7 @@ class ProductsView extends Component {
           data.map((item) => {
             array.push(productObjectConverter(item));
           });
+          
 
           this.setState({
             products: [...this.state.products, ...array].filter(
@@ -135,7 +136,6 @@ class ProductsView extends Component {
       "view-options--offcanvas--mobile": offcanvas === "mobile",
     });
 
-    console.log(this.state.products.length, this.state.products.length === pagination.totalCount, pagination.totalCount, "====ConditonCheck===");
 
     return (
       <div className="products-view">
