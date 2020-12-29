@@ -62,6 +62,7 @@ export default function AccountPageProfile(props) {
   const handleRegistration = () => {
     userFormData.isActive = true;
     let array = [];
+    
     userFormData.shipping.addressType = "shipping";
     if (userFormData.shipping.firstName && userFormData.shipping.city) {
       userFormData.shipping.customerId = userFormData.customerId;
@@ -83,6 +84,7 @@ export default function AccountPageProfile(props) {
 
       array.push({ ...userFormData.shipping });
     }
+    
     userFormData.billing.addressType = "billing";
     if (userFormData.billing.firstName && userFormData.billing.city) {
       userFormData.billing.customerId = userFormData.customerId;

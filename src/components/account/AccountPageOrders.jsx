@@ -145,7 +145,7 @@ class AccountPageOrders extends Component {
         {this.state.selected === "order" ? (
           moment().diff(moment(new Date(order.date)), "hours") < 24 ? (
             <td>
-              <Link to={""} className="btn btn-outline-success" type="button">
+              <Link to={{pathname: "/store/checkout", state: {fromCustomerOrders: order.orderId}}} className="btn btn-outline-success" type="button">
                 <i>Pay Now</i>
               </Link>
             </td>

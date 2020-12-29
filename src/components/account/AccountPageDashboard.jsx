@@ -31,8 +31,6 @@ export default function AccountPageDashboard(props) {
     }
   }, [props.customer]);
 
-  debugger;
-
   let address = {};
   let customerAddresses = state.customerAddress || []
   for (const item of customerAddresses) {

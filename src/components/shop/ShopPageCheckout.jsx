@@ -434,6 +434,7 @@ class ShopPageCheckout extends Component {
       { title: "Checkout", url: "" },
     ];
 
+  console.log(this.props, "aaaaaaaaaaaaaaa");
 
     return (
       <React.Fragment>
