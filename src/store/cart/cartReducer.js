@@ -70,7 +70,6 @@ function calcTotal(subtotal, extraLines) {
   );
 }
 
-
 function addItem(state, product, options, quantity = 0, customer) {
   // const itemIndex = findItemIndex(state.items, product, options);
   // const STORE_STATE = store.getState();
@@ -113,7 +112,9 @@ function addItem(state, product, options, quantity = 0, customer) {
       ? Math.max(...discountThatMayApply)
       : 0;
 
-      discountPercentageToBeApplied = isFinite(discountPercentageToBeApplied) ? discountPercentageToBeApplied : 0;
+    discountPercentageToBeApplied = isFinite(discountPercentageToBeApplied)
+      ? discountPercentageToBeApplied
+      : 0;
 
     discountedPrice =
       (product.price * quantity * discountPercentageToBeApplied) / 100;
@@ -146,7 +147,7 @@ function addItem(state, product, options, quantity = 0, customer) {
 
   let discount = 0;
   discount = discount + handleDiscount(product);
-  discount = isFinite(discount) ? discount : 0; 
+  discount = isFinite(discount) ? discount : 0;
 
   let tax = 0;
   tax = tax + handleTaxCalc(product);
@@ -228,7 +229,6 @@ function updateQuantities(state, quantities) {
 
     needUpdate = true;
 
-
     return {
       ...item,
       quantity: quantity.value,
@@ -237,7 +237,6 @@ function updateQuantities(state, quantities) {
   });
 
   if (needUpdate) {
-
     const totalDiscounts = calcDiscounts(newItems);
     const totalTaxs = calcTaxes(newItems);
     const totalUkFreeDeliverPrices = calcUkFreeDeliverPrices(newItems);
@@ -301,7 +300,13 @@ const initialState = {
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case CART_ADD_ITEM: {
-      return addItem(state, action.product, action.options, action.quantity, action.customer);
+      return addItem(
+        state,
+        action.product,
+        action.options,
+        action.quantity,
+        action.customer
+      );
     }
 
     case CART_REMOVE_ITEM:
@@ -344,4 +349,3 @@ export default function cartReducer(state = initialState, action) {
       return state;
   }
 }
-

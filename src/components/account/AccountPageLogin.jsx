@@ -52,6 +52,7 @@ export default function AccountPageLogin(props) {
   const handleSubmitLogin = () => {
     RestService.userAuthenticate(loginFormData).then(async (r) => {
       if (r.data.token) {
+
         localStorage.setItem("token", JSON.stringify(r.data.token));
         localStorage.setItem("identity", JSON.stringify(r.data.id));
         toast.success("User authenticated");
@@ -67,7 +68,7 @@ export default function AccountPageLogin(props) {
       } else {
         toast.error("Invald credentials");
       }
-    });
+    }).catch(error => error && toast.error('Invalid credentials.'));
   };
 
   const [registerFormData, setRegisterFormData] = useState({

@@ -2,11 +2,11 @@
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, FormGroup, Input, Label, Modal } from "reactstrap";
+import { FormGroup, Input, Label, Modal } from "reactstrap";
 import { cartAddItem } from "../../store/cart";
 import { compareAddItem } from "../../store/compare";
 import { quickviewOpen } from "../../store/quickview";
@@ -158,7 +158,6 @@ function ProductCard(props) {
       }
     }
   };
-
 
   const handleInputChange = (event, optionId) => {
     if (event !== undefined && optionId !== undefined) {
@@ -432,7 +431,7 @@ function ProductCard(props) {
                   customer
                 );
               } else {
-                toast.error("Quantity cannot be less than 1")
+                toast.error("Quantity cannot be less than 1");
               }
             }}
             render={({ run, loading }) => (

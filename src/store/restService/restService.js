@@ -9,7 +9,7 @@ const RestService = {
   getHeader: () => ({
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${JSON.parse(localStorage.getItem('token'))}`   
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     },
   }),
 
@@ -132,10 +132,17 @@ const RestService = {
       RestService.getHeader()
     ),
 
-  postSaleOrder: (FormData) =>
+  calculateSaleOrderShipment: (formData) =>
+    axios.post(
+      `${BASE_URL_API}/masterdata/OrderStore/CalculateShipment`,
+      formData,
+      RestService.getHeader()
+    ),
+
+  postSaleOrder: (formData) =>
     axios.post(
       `${BASE_URL_API}/masterdata/OrderStore`,
-      FormData,
+      formData,
       RestService.getHeader()
     ),
 
@@ -199,7 +206,7 @@ const RestService = {
 
   getCourierChargesPrices: () =>
     axios.get(`${BASE_URL}/api/DRS.APA/Shipment/StoreEU_CourierCharges/0/0`),
-    
+
   userAuthenticate: (FormData) =>
     axios.post(
       `${BASE_URL}/Users/LoginCustomerUser`,
@@ -271,7 +278,6 @@ const RestService = {
     );
   },
 
-
   editCustomerProfile: (formData, customerId) => {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/UpdateCustomerFromStore/${customerId}`,
@@ -289,17 +295,16 @@ const RestService = {
   },
 
   postCustomerProfileAddress: (FormData) =>
-  axios.post(
-    `${BASE_URL_API_Admin}/masterdata/Customers/AddCustomerAddressStore`,
-    FormData,
-    RestService.getHeader()
-  ),
+    axios.post(
+      `${BASE_URL_API_Admin}/masterdata/Customers/AddCustomerAddressStore`,
+      FormData,
+      RestService.getHeader()
+    ),
 
   getCustomerAddressById: (customerId) =>
-  axios.get(
-    `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerAddressByIdStore/${customerId}`,
-    RestService.getHeader()
-  ),
-
+    axios.get(
+      `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerAddressByIdStore/${customerId}`,
+      RestService.getHeader()
+    ),
 };
 export default RestService;

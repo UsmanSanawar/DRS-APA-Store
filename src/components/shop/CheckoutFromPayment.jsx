@@ -73,6 +73,11 @@ class ShopPageCheckout extends Component {
   };
 
   componentDidMount() {
+  let {id} = this.props.match.params;
+  RestService.getOrderById(id).then(res => {
+    
+  })
+
     this.getAllDeliveryTimeOptions();
     this.props.getAllCountries();
     let total = JSON.parse(localStorage.getItem("state")).cart.total

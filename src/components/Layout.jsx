@@ -29,6 +29,7 @@ const AccountPageLogin = lazy(() => import("./account/AccountPageLogin"));
 const BlogPageCategory = lazy(() => import("./blog/BlogPageCategory"));
 const SitePageAboutUs = lazy(() => import("./site/SitePageAboutUs"));
 const PageCart = lazy(() => import("./shop/ShopPageCart"));
+const PageCheckoutPayment = lazy(() => import("./shop/CheckoutFromPayment"));
 const PageCheckout = lazy(() => import("./shop/ShopPageCheckout"));
 const PageCompare = lazy(() => import("./shop/ShopPageCompare"));
 const SitePageComponents = lazy(() => import("./site/SitePageComponents"));
@@ -237,6 +238,11 @@ function Layout(props) {
                 exact
                 path="/store/checkout"
                 component={PageCheckout}
+              />
+              <ProtectedRoutes
+                exact
+                path="/store/paynow/checkout/:id"
+                component={PageCheckoutPayment}
               />
               <Route exact path="/store/wishlist" component={PageWishlist} />
               <Route exact path="/shop/compare" component={PageCompare} />

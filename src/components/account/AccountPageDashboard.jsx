@@ -79,7 +79,7 @@ export default function AccountPageDashboard(props) {
       <Helmet>
         <title>{`My Account — ${theme.name}`}</title>
       </Helmet>
-
+      
       <div className="dashboard__profile card profile-card">
         <div className="card-body profile-card__body">
           <div className="profile-card__avatar">

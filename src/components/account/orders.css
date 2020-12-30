@@ -10,3 +10,15 @@
     cursor: pointer;
     font-weight: bold;
 }
+
+.items-cell {
+    text-decoration: underline;
+    font-weight: bold;
+    color: black;
+}
+
+.items-cell:hover {
+    color: darkorange;
+    cursor: pointer;
+    transition: linear 0.25s;
+}

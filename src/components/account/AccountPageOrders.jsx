@@ -15,6 +15,7 @@ import "./orders.css";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 
 class AccountPageOrders extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class AccountPageOrders extends Component {
       selected: "order",
       headers: {},
       page: 1,
+      open: false,
+      orderProducts: [],
     };
   }
 
@@ -40,44 +43,44 @@ class AccountPageOrders extends Component {
 
   handleGetOrders = (page, pageSize = 15) => {
     if (this.state.selected === "order") {
-      RestService.getOrderByCustomerId(page, pageSize, this.props.customer.customerId).then(
-        (r) => {
-          if (r.data.status === "success") {
-            let data = [];
-            let response = r.data.data;
+      RestService.getOrderByCustomerId(
+        page,
+        pageSize,
+        this.props.customer.customerId
+      ).then((r) => {
+        if (r.data.status === "success") {
+          let data = [];
+          let response = r.data.data;
 
+          this.setState({ headers: JSON.parse(r.headers["x-pagination"]) });
+          response.sort(function (a, b) {
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.orderDate) - new Date(a.orderDate);
+          });
+          console.log(response, "asdasdasaaaaa");
 
-            this.setState({ headers: JSON.parse(r.headers["x-pagination"]) });
-            response.sort(function (a, b) {
-              // Turn your strings into dates, and then subtract them
-              // to get a value that is either negative, positive, or zero.
-              return new Date(b.orderDate) - new Date(a.orderDate);
-            });
-
-            response.length > 0 &&
-              response.map((item) => {
-                data.push({
-                  orderId: item.orderId,
-                  date: item.orderDate
-                    ? new Date(item.orderDate).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })
-                    : "Invalid date",
-                  status: item.orderStatusName,
-                  items: item.orderLines.length,
-                  total: (
-                    <Currency value={item.orderAmountWithTaxAndDiscount} />
-                  ),
-                });
+          response.length > 0 &&
+            response.map((item) => {
+              data.push({
+                orderId: item.orderId,
+                date: item.orderDate
+                  ? new Date(item.orderDate).toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
+                  : "Invalid date",
+                status: item.orderStatusName,
+                items: item.orderLines,
+                total: <Currency value={item.orderAmountWithTaxAndDiscount} />,
               });
-            this.setState({
-              orders: data,
             });
-          }
+          this.setState({
+            orders: data,
+          });
         }
-      );
+      });
     } else if (this.state.selected === "saleOrder") {
       RestService.getSaleOrderByCustomerId(
         page,
@@ -94,7 +97,6 @@ class AccountPageOrders extends Component {
             // to get a value that is either negative, positive, or zero.
             return new Date(b.orderDate) - new Date(a.orderDate);
           });
-
           response.length > 0 &&
             response.map((item) => {
               data.push({
@@ -133,25 +135,52 @@ class AccountPageOrders extends Component {
     this.setState({ selected: val });
   };
 
+  handleItemView = (items) => {
+    items = items || [];
+    this.setState({ open: true, orderProducts: items });
+  };
+  handleToggle = () => {
+    this.setState({
+      open: !this.state.open,
+    });
+  };
+
   render() {
-    const { page, orders } = this.state;
+    const { page, orders, orderProducts } = this.state;
 
     const ordersList = orders.map((order) => (
       <tr key={order.id}>
         <td>{`#${order.orderId}`}</td>
         <td>{order.date}</td>
+        <td>
+          <p
+            onClick={() => this.handleItemView(order.items)}
+            className="items-cell"
+          >
+            {order.items.length} items
+          </p>
+        </td>
         <td>{order.status}</td>
         <td>{order.total}</td>
         {this.state.selected === "order" ? (
-          moment().diff(moment(new Date(order.date)), "hours") < 24 ? (
+          true || moment().diff(moment(new Date(order.date)), "hours") < 24 ? (
             <td>
-              <Link to={{pathname: "/store/checkout", state: {fromCustomerOrders: order.orderId}}} className="btn btn-outline-success" type="button">
+              <Link
+                to={`/store/paynow/checkout/${order.orderId}`}
+                className="btn btn-outline-success"
+                type="button"
+              >
                 <i>Pay Now</i>
               </Link>
             </td>
           ) : (
             <td>
-              <Link to={""} className="btn btn-outline-danger disabled" disabled type="button">
+              <Link
+                to={""}
+                className="btn btn-outline-danger disabled"
+                disabled
+                type="button"
+              >
                 <i>Expired</i>
               </Link>
             </td>
@@ -160,11 +189,67 @@ class AccountPageOrders extends Component {
       </tr>
     ));
 
+    const ordersItemsList = orderProducts.map((item) => (
+      <tr key={item.productId}>
+        <td>{item.productName}</td>
+        <td>{item.lineTotal}</td>
+      </tr>
+    ));
+
     return (
       <div className="card">
         <Helmet>
           <title>{`Your Orders — ${theme.name}`}</title>
         </Helmet>
+
+        <Modal
+          isOpen={this.state.open}
+          toggle={() => this.handleToggle()}
+          centered
+          size="lg"
+        >
+          <div
+            className="container"
+            style={{
+              minWidth: "300px",
+              minHeight: "300px",
+              overflowY: "scroll",
+            }}
+          >
+            <div className="card-divider" />
+            <div className="card-table p-4">
+              <div
+                style={{
+                  marginBottom: 10,
+                  borderBottom: "2px solid lightgray",
+                }}
+                className="w-100"
+              >
+                <h4 className="text-center">Order Items</h4>
+              </div>
+              <div className="table-responsive-sm">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Product Name</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ordersItemsList.length > 0 ? (
+                      ordersItemsList
+                    ) : (
+                      <tr>
+                        <td className="text-left font-weight-bold">No product found.</td>
+                        <td className="text-left font-weight-bold">£0</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </Modal>
 
         <div className="card-header">
           <div className="row">
@@ -215,6 +300,7 @@ class AccountPageOrders extends Component {
                 <tr>
                   <th>Order</th>
                   <th>Date</th>
+                  <th>Items</th>
                   <th>Status</th>
                   <th>Total</th>
                 </tr>
@@ -236,8 +322,8 @@ class AccountPageOrders extends Component {
   }
 }
 
-const mapStateToProps = ({auth}) => ({
-  customer: auth.profile
-})
+const mapStateToProps = ({ auth }) => ({
+  customer: auth.profile,
+});
 
-export default connect(mapStateToProps)(AccountPageOrders)
+export default connect(mapStateToProps)(AccountPageOrders);
