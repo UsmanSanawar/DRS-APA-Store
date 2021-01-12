@@ -47,28 +47,28 @@ export default function AccountPageLogin(props) {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-
   const dispatch = useDispatch();
   const handleSubmitLogin = () => {
-    RestService.userAuthenticate(loginFormData).then(async (r) => {
-      if (r.data.token) {
+    RestService.userAuthenticate(loginFormData)
+      .then(async (r) => {
+        if (r.data.token) {
+          localStorage.setItem("token", JSON.stringify(r.data.token));
+          localStorage.setItem("identity", JSON.stringify(r.data.id));
+          toast.success("User authenticated");
 
-        localStorage.setItem("token", JSON.stringify(r.data.token));
-        localStorage.setItem("identity", JSON.stringify(r.data.id));
-        toast.success("User authenticated");
-        
-        await RestService.getCustomerByToken().then(res => {
-          if(res.data.status === "success") {
-            dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
-          }
-        })
+          props.history.push("/store");
+          await RestService.getCustomerByToken().then((res) => {
+            if (res.data.status === "success") {
+              dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
+            }
+          });
 
-        setLoginFormData({});
-        return props.history.push("/store");
-      } else {
-        toast.error("Invald credentials");
-      }
-    }).catch(error => error && toast.error('Invalid credentials.'));
+          setLoginFormData({});
+        } else {
+          toast.error("Invald credentials");
+        }
+      })
+      .catch((error) => error && toast.error("Invalid credentials."));
   };
 
   const [registerFormData, setRegisterFormData] = useState({
@@ -97,7 +97,7 @@ export default function AccountPageLogin(props) {
     RestService.userregistration(registerFormData).then((res) => {
       toast[res.data.status](res.data.message);
 
-      setRegisterFormData({ gender: "", shipping: {}, billing: {} });
+      setRegisterFormData({ gender: "male", shipping: {}, billing: {} });
     });
   };
 
@@ -273,7 +273,9 @@ export default function AccountPageLogin(props) {
                         <div className="pt-4">
                           <div className="form-row">
                             <div className="form-group col-6">
-                              <label htmlFor="name">First Name</label>
+                              <label htmlFor="name">
+                                First Name<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="firstName"
                                 required
@@ -292,7 +294,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="form-group col-6">
-                              <label htmlFor="name">Last Name</label>
+                              <label htmlFor="name">
+                                Last Name<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="lastName"
                                 required
@@ -374,8 +378,12 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="form-group col-6">
-                              <label htmlFor="phone">Customer Group</label>
+                              <label htmlFor="phone">
+                                Customer Group
+                                <span className="text-danger">*</span>
+                              </label>
                               <select
+                                required
                                 id="customerGroupId"
                                 className="form-control border"
                                 placeholder="Select customer group"
@@ -407,6 +415,7 @@ export default function AccountPageLogin(props) {
                             <div className="form-group col-6">
                               <label htmlFor="register-email">
                                 Email address
+                                <span className="text-danger">*</span>
                               </label>
                               <input
                                 id="register-email"
@@ -426,7 +435,7 @@ export default function AccountPageLogin(props) {
 
                             <div className="form-group col-6">
                               <label htmlFor="register-password">
-                                Password
+                                Password<span className="text-danger">*</span>
                               </label>
                               <input
                                 required
@@ -444,6 +453,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
                           </div>
+
                           <div className="form-group w-100 mb-0 d-inline-flex">
                             <input
                               style={{

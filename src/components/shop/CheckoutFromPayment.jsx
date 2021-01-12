@@ -1,15 +1,14 @@
 /* eslint-disable react/no-direct-mutation-state */
 // react
-import _ from "lodash";
 import React, { Component } from "react";
 import { Helmet } from "react-helmet";
-
 // third-party
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { bindActionCreators } from "redux";
 import CircularLoader from "../../assets/loaders";
+import { sumBy } from "lodash";
 
 // data stubs
 import payments from "../../data/shopPayments";
@@ -18,13 +17,13 @@ import { postSaleOrder, resetCartPaid } from "../../store/cart";
 import RestService from "../../store/restService/restService";
 import { getAllCountries } from "../../store/webView";
 import { Check9x7Svg } from "../../svg";
-
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
 import PageHeader from "../shared/PageHeader";
 import StripPayment from "../stripePayment";
 import PayPalButtons from "./PayPalButtons";
+import ShippingCollapse from "./ShippingCollapse";
 
 const initAddr = {
   firstName: "",
@@ -46,7 +45,6 @@ class ShopPageCheckout extends Component {
 
   constructor(props) {
     super(props);
-    this.myform = React.createRef();
     this.state = {
       payment: "",
       formValues: {
@@ -63,6 +61,11 @@ class ShopPageCheckout extends Component {
       submitLoading: false,
       deliveryTimeOptions: [],
       deliveryTime: null,
+      orderById: {},
+      collapse: false,
+      sloading: false,
+      calculations: {},
+      shippingTotal: 0,
     };
   }
 
@@ -73,11 +76,21 @@ class ShopPageCheckout extends Component {
   };
 
   componentDidMount() {
-  let {id} = this.props.match.params;
-  RestService.getOrderById(id).then(res => {
-    
-  })
+    let { id } = this.props.match.params;
+    if (id) {
+      RestService.getOrderById(id).then((res) => {
+        if (res.data.status === "success") {
+          let obj = {
+            ...this.state.formValues,
+            ...res.data.data,
+          };
 
+          this.setState({
+            formValues: obj,
+          });
+        }
+      });
+    }
     this.getAllDeliveryTimeOptions();
     this.props.getAllCountries();
     let total = JSON.parse(localStorage.getItem("state")).cart.total
@@ -101,16 +114,6 @@ class ShopPageCheckout extends Component {
     });
   };
 
-  // componentDidUpdate(prevProps, prevState) {
-
-  // 	if (prevProps.cart.orderId !== this.props.cart.orderId) {
-  // 				return <Redirect to={{
-  // 					pathname: `/store/payments-cashier/${this.props.cart.orderId}`,
-  // 					state: { order: this.props.cart.orderId }
-  // 				}} />
-  // 	}
-  // }
-
   handleOrderAmountWithTaxAndDiscountFreeEligible = (items) => {
     let orderAmountWithTaxAndDiscountF = 0;
     items = items ? items : [];
@@ -124,30 +127,7 @@ class ShopPageCheckout extends Component {
   };
 
   handleSaleorderObject = () => {
-    let saleOrder = {
-      orderId: null,
-      orderIdentifier: "",
-      isOnlineOrder: false,
-      isPaymentOnline: false,
-      customerId: this.props.customer.customerId,
-      onlinePaymentId: "",
-      orderDate: new Date().toISOString().slice(0, 20),
-      orderDueDate: null,
-      isCancelled: false,
-      cancelReason: "",
-      orderAmountWithTaxAndDiscount: this.props.cart.total,
-      orderAmountWithTaxAndDiscountFreeEligible: this.handleOrderAmountWithTaxAndDiscountFreeEligible(
-        this.props.cart.items
-      ),
-      orderNotes: this.state.orderNote,
-      uK_DeliveryDurationId:
-        this.state.deliveryTime && parseInt(this.state.deliveryTime),
-      orderStatusId: 24,
-      isActive: true,
-      orderAddress: [],
-      orderLines: [],
-      orderStatusCode: "",
-    };
+    let saleOrder = this.state.formValues;
 
     let shipping = { ...this.state.formValues.shipping };
     shipping.addressType = "shipping";
@@ -159,89 +139,6 @@ class ShopPageCheckout extends Component {
 
     saleOrder.orderAddress.push(shipping);
     saleOrder.orderAddress.push(billing);
-
-    for (let item of this.props.cart.items) {
-      let discountThatMayApply = [];
-      let product = item.product;
-      product.discountProducts.map((p) => {
-        p.discount.discountCustomerGroups !== undefined &&
-          p.discount.discountCustomerGroups !== null &&
-          p.discount.discountCustomerGroups.map((discountGroup) => {
-            if (
-              discountGroup.customerGroupId ===
-              this.props.customer.customerGroupId
-            ) {
-              discountThatMayApply.push({
-                discountId: p.discount.discountId,
-                discountName: p.discount.name,
-                discountPercentage: p.discount.discountPercentage,
-              });
-            }
-          });
-      });
-
-      let appliedDiscount = _.maxBy(
-        discountThatMayApply,
-        (obj) => obj.discountPercentage
-      );
-
-      let line = {
-        orderId: 0,
-        orderLinesId: null,
-        discountId: (appliedDiscount && appliedDiscount.discountId) || null,
-        discountName: (appliedDiscount && appliedDiscount.discountName) || "",
-        discountPercentage:
-          (appliedDiscount && appliedDiscount.discountPercentage) || 0,
-        isActive: true,
-        isProductReturn: false,
-        orderLineProductOptions: [],
-        productId: item.product.id,
-        productName: item.product.name,
-        quantity: item.quantity,
-        returnReason: "",
-        taxClassId: item.product.taxClassId,
-        taxClassName: "",
-        taxPercentage: 0,
-        unitPrice: item.price,
-        orderLineTaxRates: [],
-
-        lineTotal: parseFloat(item.productTotal.toFixed(2)),
-      };
-
-      if (
-        item.product.selectedProductOption &&
-        item.product.selectedProductOption.productId
-      ) {
-        let SelectedProduct = { ...item.product.selectedProductOption };
-        SelectedProduct.orderLineProductOptionsId = 0;
-        SelectedProduct.productOptionCombination = [];
-        SelectedProduct.optionModel = SelectedProduct.optionModel
-          ? SelectedProduct.optionModel
-          : "";
-
-        line.orderLineProductOptions = [SelectedProduct];
-      }
-
-      if (item.rates && item.rates.length > 0) {
-        let taxratesArray = [];
-
-        for (const rate of item.rates) {
-          taxratesArray.push({
-            orderLineTaxRateId: 0,
-            orderLineTaxRateName: rate.taxRateName,
-            orderTaxRate: rate.rate,
-            orderLineTaxRateCode: rate.taxRateCode,
-            orderLinesId: null,
-          });
-        }
-
-        line.orderLineTaxRates = taxratesArray;
-        line.taxPercentage = _.sumBy(taxratesArray, "orderTaxRate");
-      }
-
-      saleOrder.orderLines.push(line);
-    }
-
     return saleOrder;
   };
 
@@ -261,14 +158,19 @@ class ShopPageCheckout extends Component {
       if (this.props.cart.items.length < 1) {
         toast.error("Cart is empty");
       } else {
-        RestService.postSaleOrder(saleOrder).then((r) => {
-          toast[r.data.status](r.data.message);
-          if (r.data.status === "success") {
-            this.setState({ orderState: r.data.data });
-          } else {
-            this.handleSubmitLoading(false);
-          }
-        });
+
+          this.setState({
+            orderState: saleOrder
+          })
+
+        // RestService.postSaleOrder(saleOrder).then((r) => {
+        //   toast[r.data.status](r.data.message);
+        //   if (r.data.status === "success") {
+        //     this.setState({ orderState: r.data.data });
+        //   } else {
+        //     this.handleSubmitLoading(false);
+        //   }
+        // });
       }
     }
   };
@@ -336,13 +238,34 @@ class ShopPageCheckout extends Component {
   }
 
   renderCart() {
-    const { cart } = this.props;
+    const { formValues } = this.state;
+    console.log(formValues && formValues.orderLines, "sdasdasdasdasd");
+    const { orderLines } = formValues || [];
 
-    const items = cart.items.map((item) => (
+    let discount = 0;
+    let tax = 0;
+    let orderTotal = 0;
+
+    let cart = orderLines || [];
+
+    function totalValue(prod) {
+      let total = prod.quantity * prod.unitPrice;
+
+      if (prod.orderLineTaxRates && prod.orderLineTaxRates.length > 0) {
+        let totalTaxRate = sumBy(prod.orderLineTaxRates, "orderTaxRate");
+        let taxOnProduct = (total * totalTaxRate) / 100;
+
+        tax = tax + taxOnProduct;
+      }
+
+      return total;
+    }
+
+    const items = cart.map((item) => (
       <tr key={item.id}>
-        <td>{`${item.product.name} × ${item.quantity}`}</td>
+        <td>{`${item.productName} × ${item.quantity}`}</td>
         <td>
-          <Currency value={item.total} />
+          <Currency value={totalValue(item)} />
         </td>
       </tr>
     ));
@@ -367,13 +290,24 @@ class ShopPageCheckout extends Component {
           <tr style={{ fontSize: 15 }}>
             <th>Total Tax</th>
             <td>
-              <Currency value={cart.totalTaxs} />
+              <Currency value={tax} />
+            </td>
+          </tr>
+          <tr style={{ fontSize: 15 }}>
+            <th>Total Shipping</th>
+            <td>
+              <Currency value={this.state.shippingTotal} />
             </td>
           </tr>
           <tr>
             <th>Total</th>
             <td>
-              <Currency value={cart.total} />
+              <Currency
+                value={
+                  formValues.orderAmountWithTaxAndDiscount +
+                  this.state.shippingTotal
+                }
+              />
             </td>
           </tr>
         </tfoot>
@@ -381,20 +315,27 @@ class ShopPageCheckout extends Component {
     );
   }
 
-  handleShipmentCalculation = (e) => {
-    console.log("saleOder", this.handleSaleorderObject());
+  handleShipmentCalculation = async (e) => {
+    this.setState({ sloading: true });
     let formDataSaleOrders = this.handleSaleorderObject();
     let data = { ...formDataSaleOrders };
     data.uK_DeliveryDurationId = parseInt(e.target.value);
     console.log(data, "dasdasdasdasd");
-    RestService.calculateSaleOrderShipment({ ...data })
+
+    await RestService.calculateSaleOrderShipment({ ...data })
       .then((res) => {
+        this.setState({ sloading: false });
         console.log(res, "response of API.");
-        if (res.data.status === "success") {
-          console.log(res.data.data, "successful");
+        if (res.data.error === "") {
+          console.log(res.data.order, "successful");
+          this.setState({
+            calculations: res.data.order,
+          });
         }
       })
       .catch((err) => err && console.log(err, "error"));
+
+    this.handleShipping();
   };
 
   renderPaymentsList() {
@@ -450,6 +391,72 @@ class ShopPageCheckout extends Component {
     });
   };
 
+  handleCollapseToggle = () => {
+    this.setState({
+      collapse: !this.state.collapse,
+    });
+  };
+
+  handleShipping = () => {
+    let totalShipping = 0;
+
+    const eligiableTrue = [
+      // "parcelWeightNotEligible",
+      "totalParcelWeight",
+      "parcelPriceNotEligible",
+
+      // "totalBarriersNotEligible",
+      "totalBarriers",
+      "totalBarrierPriceNotEligible",
+
+      // "totalRetrofitsNotEligible",
+      "totalRetrofits",
+      "totalRetrofitPricesNotEligible",
+
+      // "totalOperatorsNotEligible",
+      "totalOperators",
+      "totalOperatorPricesNotEligible",
+
+      "numberOfRacksUsed",
+      "totalRackPrice",
+    ];
+
+    //? IsOrderEligibleForFreeDelivery=false
+    const eligiableFalse = [
+      "totalParcelWeight",
+      "totalParcelPrice",
+      "totalOperators",
+      "totalOperatorPrice",
+      "totalBarriers",
+      "totalBarrierPrice",
+      "totalRackPrice",
+      "totalRetrofitPrices",
+      "numberOfRacksUsed",
+      "totalRetrofits",
+    ];
+
+    const condEligible = this.state.calculations.isOrderEligibleForFreeDelivery
+      ? eligiableTrue
+      : eligiableFalse;
+    const shippingKeys = Object.keys(this.state.calculations);
+
+    shippingKeys.map((item) => {
+      if (
+        condEligible.some((arrItem) => arrItem === item) &&
+        parseInt(this.state.calculations[item]) !== 0
+      ) {
+        if (item.includes("Price")) {
+          totalShipping =
+            totalShipping + parseInt(this.state.calculations[item]);
+        }
+      }
+    });
+
+    this.setState({
+      shippingTotal: totalShipping,
+    });
+  };
+
   render() {
     const { cart, allCountries } = this.props;
     const { billing, shipping } = this.state.formValues;
@@ -458,6 +465,7 @@ class ShopPageCheckout extends Component {
       payment,
       termNcondition,
       deliveryTimeOptions,
+      calculations,
     } = this.state;
 
     const breadcrumb = [
@@ -465,6 +473,8 @@ class ShopPageCheckout extends Component {
       { title: "Shopping Cart", url: "/store/cart" },
       { title: "Checkout", url: "" },
     ];
+
+    console.log(this.state.formValues, "ssssssssssssss");
 
     return (
       <React.Fragment>
@@ -481,7 +491,6 @@ class ShopPageCheckout extends Component {
                 e.preventDefault();
                 this.handleSubmitCheckout(e);
               }}
-              ref={this.myform}
             >
               <div className="row">
                 <div className="col-12 col-lg-6 col-xl-7">
@@ -879,7 +888,6 @@ class ShopPageCheckout extends Component {
                   <div className="card mb-0">
                     <div className="card-body">
                       <h3 className="card-title">Your Orders</h3>
-                      {this.renderCart()}
                       <div className="form-group">
                         <label htmlFor="checkout-country">
                           Delivery Time Options{" "}
@@ -892,11 +900,13 @@ class ShopPageCheckout extends Component {
                           value={billing.deliveryTime}
                           name={"country"}
                           onChange={(e) => {
-                            this.handleShipmentCalculation(e);
                             this.setState({ deliveryTime: e.target.value });
+                            this.handleShipmentCalculation(e);
                           }}
                         >
-                          <option>Select Delivery Time...</option>
+                          <option key={null} value={null}>
+                            Select Delivery Time...
+                          </option>
                           {deliveryTimeOptions.map((item) => {
                             return (
                               <option value={item.uK_ParcelDeliveryId}>
@@ -905,7 +915,45 @@ class ShopPageCheckout extends Component {
                             );
                           })}
                         </select>
+
+                        <div
+                          onClick={() => {
+                            this.handleCollapseToggle();
+                          }}
+                          style={
+                            !this.state.deliveryTime
+                              ? { pointerEvents: "none", opacity: "0.7" }
+                              : { cursor: "pointer" }
+                          }
+                          className="text-center border-bottom mt-3 w-100"
+                        >
+                          <h6>
+                            Shipping{" "}
+                            <i
+                              className={
+                                !this.state.collapse
+                                  ? "fa fa-chevron-down my-auto float-right"
+                                  : "fa fa-chevron-up my-auto float-right"
+                              }
+                            />
+                          </h6>
+                        </div>
                       </div>
+
+                      <div>
+                        <ShippingCollapse
+                          toggle={this.handleCollapseToggle}
+                          open={this.state.collapse}
+                          isLoading={this.state.sloading}
+                          setShippingTotal={this.setShippingTotal}
+                          calculations={calculations}
+                        />
+                      </div>
+
+                      <div className="text-center border-bottom w-100">
+                        <h6>Order Items</h6>
+                      </div>
+                      {this.renderCart()}
                       {this.renderPaymentsList()}
                       <div className="checkout__agree form-group">
                         <div className="form-check">

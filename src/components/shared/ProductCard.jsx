@@ -21,10 +21,8 @@ import Rating from "./Rating";
 function ProductCard(props) {
   const {
     layout,
-    quickviewOpen,
     cartAddItem,
     wishlistAddItem,
-    compareAddItem,
     wishlistRemoveItem,
     customer,
   } = props;
@@ -35,6 +33,7 @@ function ProductCard(props) {
   const [slectedPr, setSlectedPr] = useState({});
 
   let product = props.product;
+  product.productId = product.id || product.productId;
 
   const getProductById = async () => {
     await RestService.getProductById(product.productId).then((res) => {
@@ -296,7 +295,7 @@ function ProductCard(props) {
       cartAddItem(
         { ...product, selectedProductOption: slectedPr },
         options,
-        product.minimumQuantity,
+        product.minimumQuantity > 0 ? product.minimumQuantity : 0,
         getNewPrice(),
         customer
       );
@@ -426,12 +425,12 @@ function ProductCard(props) {
                 return cartAddItem(
                   product,
                   options,
-                  product.minimumQuantity,
+                  product.minimumQuantity > 0 ? product.minimumQuantity : 1,
                   getNewPrice(),
                   customer
                 );
               } else {
-                toast.error("Quantity cannot be less than 1");
+                toast.error("Quantity cannot be less than 0");
               }
             }}
             render={({ run, loading }) => (

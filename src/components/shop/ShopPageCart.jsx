@@ -85,7 +85,10 @@ class ShopPageCart extends Component {
     product.discountProducts.map((p) => {
       p.discount.discountCustomerGroups !== null &&
         p.discount.discountCustomerGroups.map((discountGroup) => {
-          if (discountGroup.customerGroupId === this.props.customer.customerGroupId) {
+          if (
+            discountGroup.customerGroupId ===
+            this.props.customer.customerGroupId
+          ) {
             discountThatMayApply.push(p.discount.discountPercentage);
           }
         });
@@ -98,7 +101,7 @@ class ShopPageCart extends Component {
       : 0;
 
     discountedPrice = (item.total * discountPercentageToBeApplied) / 100;
-    discountedPrice  = isFinite(discountedPrice) ? discountedPrice : 0;
+    discountedPrice = isFinite(discountedPrice) ? discountedPrice : 0;
     return parseFloat(discountedPrice);
   };
 
@@ -224,7 +227,15 @@ class ShopPageCart extends Component {
             className="cart-table__column cart-table__column--quantity"
             data-title="Quantity"
           >
-            <InputNumber
+            {console.log(
+              this.state.slectedPr.optionQuantity,
+              item.product.quantity,
+              this.state.quantity,
+              this.getItemQuantity(item),
+              item.product.minimumQuantity
+            )}
+            {this.getItemQuantity(item)}
+            {/* <InputNumber
               onChange={(quantity) => {
                 this.handleChangeQuantity(item, quantity);
               }}
@@ -233,7 +244,7 @@ class ShopPageCart extends Component {
               stateQuantity={this.state.quantity}
               value={this.getItemQuantity(item)}
               min={item.product.minimumQuantity}
-            />
+            /> */}
           </td>
           <td
             className="cart-table__column cart-table__column--price"
@@ -318,14 +329,16 @@ class ShopPageCart extends Component {
           });
 
           return (
-            <button
-              type="button"
-              onClick={run}
-              className={classes}
-              disabled={!this.cartNeedUpdate()}
-            >
-              Update Cart
-            </button>
+            <>
+              {/* <button
+                type="button"
+                onClick={run}
+                className={classes}
+                disabled={!this.cartNeedUpdate()}
+              >
+                Update Cart
+              </button> */}
+            </>
           );
         }}
       />
@@ -381,88 +394,35 @@ class ShopPageCart extends Component {
           </div>
 
           <div className="row justify-content-between pt-md-5 pt-4">
-            <div className="col-12 col-md-7 col-lg-6 col-xl-5">
-              {this.props.customer.customerId && this.props.customer.customerGroupId ? <div className="card">
-                <div className="card-body p-0">
-                  <h3 className="card-title">Shipping Charges</h3>
-                  {"( ---under development section--- )"}
-                  <table className="cart__totals">
-                    {this.renderTotals()}
-                    <tfoot className="cart__totals-footer">
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Parcel Weight</th>
-                        <td>
-                          -<Currency value={cart.totalDiscounts} />
-                        </td>
-                      </tr>
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Parcel Price</th>
-                        <td>
-                          <Currency value={cart.totalTaxs} />
-                        </td>
-                      </tr>
-
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Number Of Racks Used</th>
-                        <td>
-                          <Currency value={cart.totalTaxs} />
-                        </td>
-                      </tr>
-
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Rack Price</th>
-                        <td>
-                          <Currency value={cart.totalTaxs} />
-                        </td>
-                      </tr>
-
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Barrier Price</th>
-                        <td>
-                          <Currency value={cart.totalTaxs} />
-                        </td>
-                      </tr>
-
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Retrofit Prices</th>
-                        <td>
-                          <Currency value={cart.totalTaxs} />
-                        </td>
-                      </tr>
-
-                      {/* <tr>
-                        <th>Total</th>
-                        <td>
-                          <Currency value={cart.total} />
-                        </td>
-                      </tr> */}
-                    </tfoot>
-                  </table>
-               
-                </div>
-              </div> : null}
-            </div>
-
-            <div className="col-12 col-md-7 col-lg-6 col-xl-5">
+            <div className="col-12 col-md-7 col-lg-6 col-xl-5 ml-auto">
               <div className="card">
                 <div className="card-body p-0">
                   <h3 className="card-title">Cart Totals</h3>
                   <table className="cart__totals">
                     {this.renderTotals()}
                     <tfoot className="cart__totals-footer">
-                      {this.props.customer.customerId && this.props.customer.customerGroupId ? <> 
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Discount</th>
-                        <td>
-                          -<Currency value={cart.totalDiscounts} />
-                        </td>
-                      </tr>
-                      <tr style={{ fontSize: "15px" }}>
-                        <th>Total Tax</th>
-                        <td>
-                          <Currency value={cart.totalTaxs} />
-                        </td>
-                      </tr></> : <p style={{fontSize: 14, width: "100%"}}><span className="text-danger">*</span> Login to see discount and taxes.</p>}
+                      {this.props.customer.customerId &&
+                      this.props.customer.customerGroupId ? (
+                        <>
+                          <tr style={{ fontSize: "15px" }}>
+                            <th>Total Discount</th>
+                            <td>
+                              -<Currency value={cart.totalDiscounts} />
+                            </td>
+                          </tr>
+                          <tr style={{ fontSize: "15px" }}>
+                            <th>Total Tax</th>
+                            <td>
+                              <Currency value={cart.totalTaxs} />
+                            </td>
+                          </tr>
+                        </>
+                      ) : (
+                        <p style={{ fontSize: 14, width: "100%" }}>
+                          <span className="text-danger">*</span> Login to see
+                          discount and taxes.
+                        </p>
+                      )}
                       <tr>
                         <th>Total</th>
                         <td>
