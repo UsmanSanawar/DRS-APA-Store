@@ -82,7 +82,29 @@ export default function quickviewReducer(state = initialState, action) {
                 }
             }
 
-            state.categories = newArr
+            let newNewArray = newArr;
+            newNewArray.push({code: null,
+                hasSubMenu: false,
+                isActive: true,
+                metaDescription: "",
+                metaKeywords: "",
+                metaTitle: "",
+                name: "Blogs",
+                parentCategoryId: null,
+                parentCategoryName: null,
+                productCategoryId: undefined,
+                slug: "/store/products/undefined",
+                subCategories: [],
+                thumbPath: "",
+                urlSeo: "",
+                visibleOnMainMenu: true,
+                webMenuId: undefined,
+                webMenuTitle: "Blogs",
+                webSubMenu: [],
+                webSubMenuTitle: "Blogs"})
+            state.categories = newNewArray
+
+
 
             return {
                 ...state,

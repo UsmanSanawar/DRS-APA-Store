@@ -45,16 +45,19 @@ export default function BlogPost(props) {
   ));
 
   const submitComment = () => {
+    formData.customerId = parseInt(
+      JSON.parse(localStorage.getItem("identity"))
+    );
     RestService.postBlogComment(formData).then((r) => {
       toast[r.data.status](r.data.message);
       if (r.data.status === "success") {
-          setFormData({
-            firstName: "",
-            lastName: "",
-            email: "",
-            blogId: props.blogId,
-            comment: "",
-          })
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          blogId: props.blogId,
+          comment: "",
+        });
       }
     });
   };
@@ -81,16 +84,13 @@ export default function BlogPost(props) {
             })}
           </div>
           <div className="post-header__meta-item">
-            ({(blogPostComments && blogPostComments.length) || 0})
-            Comments
+            ({(blogPostComments && blogPostComments.length) || 0}) Comments
           </div>
         </div>
       </div>
 
       <div className="post__featured">
-     
-          <img src={`${IMAGE_URL}/blogs/${blogPost.image}`} alt="" />
-
+        <img src={`${IMAGE_URL}/blogs/${blogPost.image}`} alt="" />
       </div>
 
       <div
@@ -159,77 +159,82 @@ export default function BlogPost(props) {
       </section>
 
       <section className="post__section">
-        <h4 className="post__section-title">Write A Comment</h4>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            submitComment();
-          }}
-        >
-          <div className="form-row">
-            <div className="form-group col-md-4">
-              <label htmlFor="comment-first-name">First Name</label>
-              <input
-                type="text"
+        <h4 className="post__section-title">
+          {localStorage.getItem("token")
+            ? "Write a comment"
+            : "Login to write a Comment"}
+        </h4>
+        {localStorage.getItem("token") !== null && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitComment();
+            }}
+          >
+            <div className="form-row">
+              <div className="form-group col-md-4">
+                <label htmlFor="comment-first-name">First Name</label>
+                <input
+                  type="text"
+                  required
+                  className="form-control"
+                  id="comment-first-name"
+                  value={formData.firstName}
+                  placeholder="First Name"
+                  onChange={(e) =>
+                    setFormData({ ...formData, firstName: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group col-md-4">
+                <label htmlFor="comment-last-name">Last Name</label>
+                <input
+                  type="text"
+                  required
+                  className="form-control"
+                  id="comment-last-name"
+                  value={formData.lastName}
+                  placeholder="Last Name"
+                  onChange={(e) =>
+                    setFormData({ ...formData, lastName: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group col-md-4">
+                <label htmlFor="comment-email">Email Address</label>
+                <input
+                  type="email"
+                  required
+                  className="form-control"
+                  id="comment-email"
+                  value={formData.email}
+                  placeholder="Email Address"
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="comment-content">Comment</label>
+              <textarea
                 required
                 className="form-control"
-                id="comment-first-name"
-                value={formData.firstName}
-                placeholder="First Name"
+                value={formData.comment}
                 onChange={(e) =>
-                  setFormData({ ...formData, firstName: e.target.value })
+                  setFormData({ ...formData, comment: e.target.value })
                 }
+                id="comment-content"
+                rows="6"
               />
             </div>
-            <div className="form-group col-md-4">
-              <label htmlFor="comment-last-name">Last Name</label>
-              <input
-                type="text"
-                required
-                className="form-control"
-                id="comment-last-name"
-                value={formData.lastName}
-                placeholder="Last Name"
-                onChange={(e) =>
-                  setFormData({ ...formData, lastName: e.target.value })
-                }
-              />
+            <div className="form-group mt-4">
+              <button type="submit" className="btn btn-primary btn-lg">
+                Post Comment
+              </button>
             </div>
-            <div className="form-group col-md-4">
-              <label htmlFor="comment-email">Email Address</label>
-              <input
-                type="email"
-                required
-                className="form-control"
-                id="comment-email"
-                value={formData.email}
-                placeholder="Email Address"
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="comment-content">Comment</label>
-            <textarea
-              required
-              className="form-control"
-              value={formData.comment}
-              onChange={(e) =>
-                setFormData({ ...formData, comment: e.target.value })
-              }
-              id="comment-content"
-              rows="6"
-            />
-          </div>
-          <div className="form-group mt-4">
-            <button type="submit" className="btn btn-primary btn-lg">
-              Post Comment
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </section>
     </div>
   );

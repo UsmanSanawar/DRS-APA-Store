@@ -1,5 +1,6 @@
 // react
 import React, { useState, useEffect } from "react";
+import StarRatingInput from "react-star-ratings";
 
 // application
 import Pagination from "../shared/Pagination";
@@ -14,7 +15,7 @@ import { Spinner } from "reactstrap";
 
 function ProductTabReviews(props) {
   let initReview = { rating: 5, text: "", productId: null };
-
+  console.log(localStorage.getItem("token"), "tokentoerk");
   const [loading, setloading] = useState(true);
   const [formData, setformData] = useState(initReview);
   const [reviews, setreviews] = useState([]);
@@ -59,7 +60,7 @@ function ProductTabReviews(props) {
             <img src={"images/avatars/avatar-1.jpg"} alt="" />
           </div>
           <div className=" review__content">
-            <div className=" review__author">Dumy Text</div>
+            <div className=" review__author">{review.customerName}</div>
             <div className=" review__rating">
               <Rating value={review.rating} />
             </div>
@@ -79,6 +80,7 @@ function ProductTabReviews(props) {
 
   function handleSubmit(event) {
     formData.productId = props.productId ? props.productId : null;
+    formData.customerId = JSON.parse(localStorage.getItem("identity"));
     if (formData.text != "" && formData.productId != null) {
       try {
         RestService.postReview(formData).then((res) => {
@@ -118,8 +120,8 @@ function ProductTabReviews(props) {
               <h1 className="text-center">No Reviews Yet</h1>
             ) : (
               <ReactPaginate
-                previousLabel={"prev"}
-                nextLabel={"next"}
+                previousLabel={"<"}
+                nextLabel={">"}
                 breakLabel={"..."}
                 breakClassName={"break-me"}
                 pageCount={reviewPagination.totalPages}
@@ -143,45 +145,47 @@ function ProductTabReviews(props) {
           handleSubmit(event);
         }}
       >
-        <h3 className="reviews-view__header">Write A Review</h3>
-        <div className="row">
-          <div className="col-12 col-lg-9 col-xl-8">
-            <div className="form-row">
-              <div className="form-group col-md-4">
-                <label htmlFor="review-stars">Review Stars</label>
-                <select
-                  id="review-stars"
-                  name="rating"
-                  className="form-control"
+        <h5 className="reviews-view__header">
+          {localStorage.getItem("token") !== null
+            ? "Write A Review"
+            : "Login to write a review"}
+        </h5>
+        {localStorage.getItem("token") !== null ? (
+          <div className="row">
+            <div className="col-12 col-lg-9 col-xl-8">
+              <div className="form-row">
+                <div className="form-group col-md-4">
+                  <label htmlFor="review-stars">Review Stars</label>
+                  <StarRatingInput
+                    rating={formData.rating}
+                    starRatedColor="#ffd333"
+                    starDimension="25px"
+                    starSpacing="3px"
+                    changeRating={(e) => setformData({...formData, rating: e})}
+                    numberOfStars={5}
+                    name='rating'
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="review-text">Your Review</label>
+                <textarea
                   onChange={handleChange}
-                  value={formData.rating}
-                >
-                  <option value={5}>5 Stars Rating</option>
-                  <option value={4}>4 Stars Rating</option>
-                  <option value={3}>3 Stars Rating</option>
-                  <option value={2}>2 Stars Rating</option>
-                  <option value={1}>1 Stars Rating</option>
-                </select>
+                  value={formData.text}
+                  name="text"
+                  className="form-control"
+                  id="review-text"
+                  rows="6"
+                />
+              </div>
+              <div className=" mb-0">
+                <button type="submit" className="btn btn-primary btn-lg">
+                  Post Your Review
+                </button>
               </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="review-text">Your Review</label>
-              <textarea
-                onChange={handleChange}
-                value={formData.text}
-                name="text"
-                className="form-control"
-                id="review-text"
-                rows="6"
-              />
-            </div>
-            <div className=" mb-0">
-              <button type="submit" className="btn btn-primary btn-lg">
-                Post Your Review
-              </button>
-            </div>
           </div>
-        </div>
+        ) : null}
       </form>
     </div>
   );

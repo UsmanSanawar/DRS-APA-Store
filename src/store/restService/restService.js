@@ -181,22 +181,22 @@ const RestService = {
     ),
 
   getBlogCategories: () =>
-    axios.get(`${BASE_URL}/api/DRS.APA/website/BlogCategory/0/0`),
+    axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlogCategory/0/0`),
 
   getBlogPosts: (pg = 1, filter = "") =>
-    axios.get(`${BASE_URL}/api/DRS.APA/website/Blog/${pg}/${10}?${filter}`),
+    axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${pg}/${10}?${filter}`),
 
   getBlogPostById: (id) =>
-    axios.get(`${BASE_URL}/api/DRS.APA/website/Blog/${id}`),
+    axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${id}`),
 
   getBlogPostCommentsByBlogId: (blogId) =>
     axios.get(
-      `${BASE_URL}/api/DRS.APA/website/BlogComment/0/0?BlogId=${blogId}`
+      `${BASE_URL}/api/DRS.APA/website/StoreBlogComment/0/0?BlogId=${blogId}`
     ),
 
   postBlogComment: (FormData) =>
     axios.post(
-      `${BASE_URL_API}/website/BlogComment`,
+      `${BASE_URL}/api/DRS.APA/website/StoreBlogComment`,
       FormData,
       RestService.getHeader()
     ),

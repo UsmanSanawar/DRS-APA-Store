@@ -20,6 +20,8 @@ function DepartmentsLinks(props) {
       let submenu = null;
       let itemClass = "";
 
+      console.log(department, "departmentDepartment");
+
       if (department.hasSubMenu) {
         arrow = <ArrowRoundedRight6x9Svg className="departments__link-arrow" />;
       }
