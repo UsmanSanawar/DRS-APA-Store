@@ -1,10 +1,10 @@
 // react
 // third-party
 import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { IntlProvider } from "react-intl";
-import { connect } from "react-redux";
-import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
+import React, {Component} from "react";
+import {IntlProvider} from "react-intl";
+import {connect} from "react-redux";
+import {HashRouter, Redirect, Route, Switch} from "react-router-dom";
 // application
 import messages from "../i18n";
 import HomePageOne from "./home/HomePageOne";
@@ -14,6 +14,8 @@ import Layout from "./Layout";
 import ScrollToTop from "./scrollToTop";
 import PasswordChangePage from "./site/changePassword";
 import UnsubscribePage from "./site/unSubscribed";
+import AccountActivated from "./site/accountActivated";
+
 
 // export const store = configureStore();
 class Root extends Component {
@@ -33,20 +35,22 @@ class Root extends Component {
   }
 
   render() {
-    const { locale } = this.props;
+    const {locale} = this.props;
 
     return (
       <IntlProvider locale={locale} messages={messages[locale]}>
         <HashRouter basename={process.env.PUBLIC_URL}>
           <ScrollToTop>
             <Switch>
+              <Route exact path="/account-activated" component={AccountActivated}/>
+
               <Route exact path="/unsubscribe-newsletter" render={
-                  (props) => <UnsubscribePage {...props} />
-              } />
+                (props) => <UnsubscribePage {...props} />
+              }/>
 
               <Route exact path="/change-forgotten-password" render={
-                  (props) => <PasswordChangePage {...props} />
-              } />
+                (props) => <PasswordChangePage {...props} />
+              }/>
 
               <Route
                 path="/store"
@@ -69,7 +73,7 @@ class Root extends Component {
                   />
                 )}
               />
-              <Redirect to="/" />
+              <Redirect to="/"/>
             </Switch>
           </ScrollToTop>
         </HashRouter>

@@ -61,7 +61,7 @@ export default function Footer(props) {
                         {' '}
                         <a href={theme.author.profile_url} target="_blank" rel="noopener noreferrer">
                             {theme.author.name}
-                        </a> {'    ' + "Build: 090121"}
+                        </a> {'    ' + "Build: 160121"}
                     </div>
                     {/* <div className="site-footer__payments">
                         <img src="images/payments.png" alt="" />

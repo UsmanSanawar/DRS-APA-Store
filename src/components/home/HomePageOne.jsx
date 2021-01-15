@@ -1,8 +1,7 @@
 // react
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 // third-party
-import { Helmet } from "react-helmet";
-import { IMAGE_URL } from "../../constant/constants";
+import {Helmet} from "react-helmet";
 // data stubs
 import products from "../../data/shopProducts";
 import theme from "../../data/theme";
@@ -12,13 +11,14 @@ import BlockBanner from "../blocks/BlockBanner";
 import BlockFeatures from "../blocks/BlockFeatures";
 import BlockSlideShow from "../blocks/BlockSlideShow";
 import BlockTabbedProductsCarousel from "../blocks/BlockTabbedProductsCarousel";
+import {productObjectConverter} from "../../constant/helpers";
 
 function HomePageOne() {
   const [productList, setProductList] = useState([]);
   useEffect(() => {
     RestService.getAllHomePageCollection().then((res) => {
       if (res.data.status === "success") {
-        const { data } = res.data;
+        const {data} = res.data;
 
         setProductList(data);
       }
@@ -41,31 +41,15 @@ function HomePageOne() {
   ];
 
   const handleListProduct = (item) => {
-    const { productCategoriesJunctionForHome } = item;
+    const {productCategoriesJunctionForHome} = item;
     let productLists = [];
     if (
       productCategoriesJunctionForHome != null &&
       productCategoriesJunctionForHome.length > 0
     ) {
+      // eslint-disable-next-line array-callback-return
       productCategoriesJunctionForHome.map((product) => {
-        let item = {};
-        let images = [];
-        if (
-          product.product &&
-          product.product.productPhotos &&
-          product.product.productPhotos.length > 0
-        ) {
-          product.product.productPhotos.map((image) => {
-            images.push(`${IMAGE_URL}/images/${image.name}`);
-          });
-        }
-        item.id = product.product.productId;
-        item.name = product.product.productName;
-        item.price = product.product.price;
-        item.images = images;
-        item.rating = product.totalRating;
-        item.reviews = product.totalReviews;
-
+        let item = productObjectConverter(product);
         productLists.push(item);
       });
     }
@@ -84,19 +68,19 @@ function HomePageOne() {
         // above being used as side space for dropdown
       />
 
-      <BlockFeatures />
+      <BlockFeatures/>
       {productList && productList.length > 0
         ? productList.map((item) => {
-            return (
-              <BlockTabbedProductsCarousel
-                products={handleListProduct(item)}
-                title={item.productCategoryName}
-                layout="grid-4"
-              />
-            );
-          })
+          return (
+            <BlockTabbedProductsCarousel
+              products={handleListProduct(item)}
+              title={item.productCategoryName}
+              layout="grid-4"
+            />
+          );
+        })
         : null}
-      <BlockBanner />
+      <BlockBanner/>
 
       {/* <BlockCategories title="Popular Categories" layout="classic" categories={categories}/> */}
 
