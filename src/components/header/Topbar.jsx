@@ -12,6 +12,9 @@ import Dropdown from "./Dropdown";
 function Topbar(props) {
   const [Organization, setOrganization] = useState({ defaultAddress: {} });
   useEffect(() => {
+
+
+    console.log(Organization, "ddddddd")
     setOrganization(props.organization);
   }, [props.organization]);
 

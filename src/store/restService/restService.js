@@ -184,7 +184,9 @@ const RestService = {
     axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlogCategory/0/0`),
 
   getBlogPosts: (pg = 1, filter = "") =>
-    axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${pg}/${10}?${filter}`),
+    axios.get(
+      `${BASE_URL}/api/DRS.APA/website/StoreBlog/${pg}/${10}?${filter}`
+    ),
 
   getBlogPostById: (id) =>
     axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${id}`),
@@ -306,5 +308,19 @@ const RestService = {
       `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerAddressByIdStore/${customerId}`,
       RestService.getHeader()
     ),
+
+  activateCustomerByCode: (code) => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/masterdata/Customers/ActivateCustomer/${code}`,
+      RestService.getHeader()
+    );
+  },
+
+  activateUserByCode: (code) => {
+    return axios.get(
+      `${BASE_URL_API_Admin}/JWT/User/ActivateUser/${code}`,
+      RestService.getHeader()
+    );
+  },
 };
 export default RestService;

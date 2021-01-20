@@ -77,9 +77,11 @@ function Layout(props) {
           res.data.data && res.data.data.locations
             ? res.data.data.locations
             : [];
+
         addresses = res.data.data.locations.filter(
           (item) => item.isDefault === true
         );
+
         if (addresses.length > 0) {
           org.defaultAddress = addresses[0];
         }

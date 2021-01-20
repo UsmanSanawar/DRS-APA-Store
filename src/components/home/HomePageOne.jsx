@@ -19,7 +19,7 @@ function HomePageOne() {
     RestService.getAllHomePageCollection().then((res) => {
       if (res.data.status === "success") {
         const {data} = res.data;
-
+        console.log(data, "sssssss");
         setProductList(data);
       }
     });
@@ -48,7 +48,7 @@ function HomePageOne() {
       productCategoriesJunctionForHome.length > 0
     ) {
       // eslint-disable-next-line array-callback-return
-      productCategoriesJunctionForHome.map((product) => {
+      productCategoriesJunctionForHome.map(({product}) => {
         let item = productObjectConverter(product);
         productLists.push(item);
       });
