@@ -1,27 +1,26 @@
 // react
-import React, { useEffect, useState, Suspense, lazy } from "react";
-
 // third-party
 import PropTypes from "prop-types";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-
+import CircularLoader from "../assets/loaders";
 // data stubs
 import theme from "../data/theme";
-import CommonComp from "./common";
+import { ProtectedRoutes } from "../protectedRoutes";
 import RestService from "../store/restService/restService";
-import { Spinner } from "reactstrap";
-
+import CommonComp from "./common";
 // application
 import Footer from "./footer";
 import Header from "./header";
 import MobileHeader from "./mobile/MobileHeader";
 import MobileMenu from "./mobile/MobileMenu";
 import Quickview from "./shared/Quickview";
-import { ProtectedRoutes } from "../protectedRoutes";
-import CircularLoader from '../assets/loaders';
+
+
+
 
 // pages
 const AccountLayout = lazy(() => import("./account/AccountLayout"));

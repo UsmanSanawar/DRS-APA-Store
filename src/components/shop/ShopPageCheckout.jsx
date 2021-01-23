@@ -202,7 +202,9 @@ class ShopPageCheckout extends Component {
       ) {
         let SelectedProduct = { ...item.product.selectedProductOption };
         SelectedProduct.orderLineProductOptionsId = 0;
-        SelectedProduct.productOptionCombination = [];
+        SelectedProduct.orderLineProductOptionCombinations = SelectedProduct.productOptionCombination;
+
+        delete SelectedProduct.productOptionCombination;
         SelectedProduct.optionModel = SelectedProduct.optionModel
           ? SelectedProduct.optionModel
           : "";
@@ -380,14 +382,11 @@ class ShopPageCheckout extends Component {
     let formDataSaleOrders = this.handleSaleorderObject();
     let data = { ...formDataSaleOrders };
     data.uK_DeliveryDurationId = parseInt(e.target.value);
-    console.log(data, "dasdasdasdasd");
 
     await RestService.calculateSaleOrderShipment({ ...data })
       .then((res) => {
         this.setState({ sloading: false });
-        console.log(res, "response of API.");
         if (res.data.error === "") {
-          console.log(res.data.order, "successful");
           this.setState({
             calculations: res.data.order,
           });

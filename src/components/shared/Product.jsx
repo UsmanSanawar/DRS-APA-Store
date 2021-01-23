@@ -33,7 +33,6 @@ class Product extends Component {
   }
 
   componentDidMount() {
-
     if (window.addthis && window.addthis.layers) {
       window.addthis.layers();
     }
@@ -63,6 +62,14 @@ class Product extends Component {
         quantity: parseInt(this.props.product.minimumQuantity),
       });
     }
+
+    if (prevState.slectedPr.images !== this.state.slectedPr.images) {
+      this.getNewWeight();
+    }
+
+    if (prevState.slectedPr !== this.state.slectedPr) {
+      this.getNewWeight();
+    }
   }
 
   getProductOptionCombination = () => {
@@ -89,7 +96,8 @@ class Product extends Component {
             this.state.options.some(
               (option) =>
                 parseInt(option.optionId) === parseInt(combination.optionId) &&
-                (parseInt(option.value) === parseInt(combination.optionValueId) ||
+                (parseInt(option.value) ===
+                  parseInt(combination.optionValueId) ||
                   combination.optionTypeId === 6)
             )
           ) {
@@ -136,6 +144,35 @@ class Product extends Component {
     }
   };
 
+  getNewWeight = () => {
+    let weight = parseFloat(this.props.product.weight);
+
+    if (this.state.slectedPr.optionWeight) {
+      switch (this.state.slectedPr.weightParam) {
+        case "equal":
+          weight = parseFloat(this.state.slectedPr.optionWeight);
+          break;
+
+        case "plus":
+          weight =
+            parseFloat(this.state.slectedPr.optionWeight) +
+            parseFloat(this.props.product.weight);
+          break;
+
+        case "minus":
+          weight =
+            parseFloat(this.state.slectedPr.optionWeight) -
+            parseFloat(this.props.product.weight);
+          break;
+
+        default:
+          weight = parseFloat(this.props.product.weight);
+          break;
+      }
+    }
+    return this.props.handleOptionWeight(weight);
+  };
+
   render() {
     const {
       product,
@@ -143,8 +180,10 @@ class Product extends Component {
       wishlistAddItem,
       compareAddItem,
       cartAddItem,
-      customer
+      customer,
     } = this.props;
+
+    console.log(this.state.slectedPr, "this.stateThis.state");
 
     const { quantity } = this.state;
 
@@ -264,20 +303,20 @@ class Product extends Component {
       }
       return price;
     };
-    const handleCartAddItem = () => {
 
-      if(quantity > 0){
+    const handleCartAddItem = () => {
+      if (quantity > 0) {
         cartAddItem(
-      { ...product, selectedProductOption: this.state.slectedPr },
-      this.state.options,
-      quantity,
-      getNewPrice(),
-      customer
-    );
-  } else {
-    toast.error("Quantity cannot be less then 1")
-  }
-  }
+          { ...product, selectedProductOption: this.state.slectedPr },
+          this.state.options,
+          quantity,
+          getNewPrice(),
+          customer
+        );
+      } else {
+        toast.error("Quantity cannot be less then 1");
+      }
+    };
 
     return (
       <div className={`product product--layout--${layout}`}>
@@ -402,7 +441,7 @@ class Product extends Component {
               className="product__options"
               onSubmit={(e) => {
                 e.preventDefault();
-                handleCartAddItem()
+                handleCartAddItem();
               }}
             >
               <div className="form-group product__option">
@@ -421,7 +460,6 @@ class Product extends Component {
                 </label>
                 <div className="product__actions">
                   <div className="product__actions-item">
-                    
                     <InputNumber
                       id="product-quantity"
                       aria-label="Quantity"
@@ -487,11 +525,6 @@ class Product extends Component {
 
           <div className="product__footer">
             <div className="product__share-links share-links">
-              {/* <div className="addthis_inline_share_toolbox" data-url={'http://drsapa.ddns.net:2550/#/store/product/104'}
-                        data-description={product.description}
-                        data-title={product.productName} data-media={`${IMAGE_URL}/${product.productPhotos && product.productPhotos.length > 0 ? product.productPhotos[0].name: ''}`  }
-                        ></div> */}
-
               <div
                 className="addthis_inline_share_toolbox"
                 data-url="https://drsapa.ddns.net:2550/#/store/product/104"
@@ -505,7 +538,7 @@ class Product extends Component {
 }
 
 Product.propTypes = {
-  // /** product object */
+  /** product object */
   product: PropTypes.object.isRequired,
   /** one of ['standard', 'sidebar', 'columnar', 'quickview'] (default: 'standard') */
   layout: PropTypes.oneOf(["standard", "sidebar", "columnar", "quickview"]),
@@ -522,9 +555,9 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  return ({
-  customer: state.auth.profile
-})}
-
+  return {
+    customer: state.auth.profile,
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

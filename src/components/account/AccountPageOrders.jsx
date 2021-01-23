@@ -58,7 +58,6 @@ class AccountPageOrders extends Component {
             // to get a value that is either negative, positive, or zero.
             return new Date(b.orderDate) - new Date(a.orderDate);
           });
-          console.log(response, "asdasdasaaaaa");
 
           response.length > 0 &&
             response.map((item) => {

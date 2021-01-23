@@ -239,7 +239,6 @@ class ShopPageCheckout extends Component {
 
   renderCart() {
     const { formValues } = this.state;
-    console.log(formValues && formValues.orderLines, "sdasdasdasdasd");
     const { orderLines } = formValues || [];
 
     let discount = 0;
@@ -320,14 +319,11 @@ class ShopPageCheckout extends Component {
     let formDataSaleOrders = this.handleSaleorderObject();
     let data = { ...formDataSaleOrders };
     data.uK_DeliveryDurationId = parseInt(e.target.value);
-    console.log(data, "dasdasdasdasd");
 
     await RestService.calculateSaleOrderShipment({ ...data })
       .then((res) => {
         this.setState({ sloading: false });
-        console.log(res, "response of API.");
         if (res.data.error === "") {
-          console.log(res.data.order, "successful");
           this.setState({
             calculations: res.data.order,
           });
@@ -473,8 +469,6 @@ class ShopPageCheckout extends Component {
       { title: "Shopping Cart", url: "/store/cart" },
       { title: "Checkout", url: "" },
     ];
-
-    console.log(this.state.formValues, "ssssssssssssss");
 
     return (
       <React.Fragment>

@@ -28,7 +28,7 @@ import ProductTabs from "./ProductTabs";
 function ShopPageProduct(props) {
   const { layout, sidebarPosition, match } = props;
   const [product, setProduct] = useState({});
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const breadcrumb = [
     // {title: 'Home', url: ''},
@@ -56,8 +56,18 @@ function ShopPageProduct(props) {
         }
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params.productId]);
+  const handleOptionWeight = (evt) => {
+    console.log(evt, "freqqq");
+    if (parseFloat(product.weight) !== evt) {
+      setProduct({
+        ...product,
+        newWeight: evt,
+      });
+    }
+  };
+
   const { relatedProducts } = useSelector(({ webView }) => webView);
 
   let content;
@@ -85,7 +95,11 @@ function ShopPageProduct(props) {
           {sidebarPosition === "start" && sidebar}
           <div className=" shop-layout__content">
             <div className=" block">
-              <Product product={product} layout={layout} />
+              <Product
+                handleOptionWeight={handleOptionWeight}
+                product={product}
+                layout={layout}
+              />
               <ProductTabs product={product} withSidebar />
             </div>
 
@@ -105,7 +119,11 @@ function ShopPageProduct(props) {
       <React.Fragment>
         <div className="block">
           <div className="container">
-            <Product product={product} layout={layout} />
+            <Product
+              handleOptionWeight={handleOptionWeight}
+              product={product}
+              layout={layout}
+            />
             <ProductTabs product={product} />
           </div>
         </div>
@@ -129,7 +147,15 @@ function ShopPageProduct(props) {
 
       <PageHeader breadcrumb={breadcrumb} />
 
-      {loading ? <div style={{height: "80vh", width: "80vw"}}><div style={{display: "block", margin: "25% 50% 50% 50%" }}><CircularLoader/></div></div> : content}
+      {loading ? (
+        <div style={{ height: "80vh", width: "80vw" }}>
+          <div style={{ display: "block", margin: "25% 50% 50% 50%" }}>
+            <CircularLoader />
+          </div>
+        </div>
+      ) : (
+        content
+      )}
     </React.Fragment>
   );
 }

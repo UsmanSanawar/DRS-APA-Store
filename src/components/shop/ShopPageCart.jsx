@@ -226,13 +226,7 @@ class ShopPageCart extends Component {
             className="cart-table__column cart-table__column--quantity"
             data-title="Quantity"
           >
-            {console.log(
-              this.state.slectedPr.optionQuantity,
-              item.product.quantity,
-              this.state.quantity,
-              this.getItemQuantity(item),
-              item.product.minimumQuantity
-            )}
+
             {this.getItemQuantity(item)}
             {/* <InputNumber
               onChange={(quantity) => {

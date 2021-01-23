@@ -19,7 +19,6 @@ function HomePageOne() {
     RestService.getAllHomePageCollection().then((res) => {
       if (res.data.status === "success") {
         const {data} = res.data;
-        console.log(data, "sssssss");
         setProductList(data);
       }
     });

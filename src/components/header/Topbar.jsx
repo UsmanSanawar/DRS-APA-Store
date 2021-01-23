@@ -14,7 +14,6 @@ function Topbar(props) {
   useEffect(() => {
 
 
-    console.log(Organization, "ddddddd")
     setOrganization(props.organization);
   }, [props.organization]);
 

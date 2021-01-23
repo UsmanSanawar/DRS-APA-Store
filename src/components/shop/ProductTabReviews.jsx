@@ -15,7 +15,6 @@ import { Spinner } from "reactstrap";
 
 function ProductTabReviews(props) {
   let initReview = { rating: 5, text: "", productId: null };
-  console.log(localStorage.getItem("token"), "tokentoerk");
   const [loading, setloading] = useState(true);
   const [formData, setformData] = useState(initReview);
   const [reviews, setreviews] = useState([]);

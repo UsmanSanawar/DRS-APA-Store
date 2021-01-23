@@ -25,7 +25,7 @@ export function compareAddItem(product) {
             setTimeout(() => {
                 dispatch(compareAddItemSuccess(product));
                 resolve();
-            }, 500);
+            }, 100);
         })
     );
 }
@@ -37,7 +37,7 @@ export function compareRemoveItem(productId) {
             setTimeout(() => {
                 dispatch(compareRemoveItemSuccess(productId));
                 resolve();
-            }, 500);
+            }, 100);
         })
     );
 }

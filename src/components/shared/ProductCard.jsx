@@ -405,7 +405,6 @@ function ProductCard(props) {
         <div className="product-card__buttons">
           <AsyncAction
             action={() => {
-              console.log(product.minimumQuantity, product, "productAddTocart")
               if (product.minimumQuantity > 0) {
                 return cartAddItem(
                   product,
