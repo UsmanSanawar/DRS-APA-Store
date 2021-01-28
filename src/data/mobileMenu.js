@@ -1,19 +1,3 @@
-//
-// -             {
-// -                 type: 'link',
-//     -                 label: 'Machine Tools',
-//     -                 url: '',
-//     -                 children: [
-//     -                     { type: 'link', label: 'Thread Cutting', url: '' },
-//     -                     { type: 'link', label: 'Chip Blowers', url: '' },
-//     -                     { type: 'link', label: 'Sharpening Machines', url: '' },
-//     -                     { type: 'link', label: 'Pipe Cutters', url: '' },
-//     -                     { type: 'link', label: 'Slotting machines', url: '' },
-//     -                     { type: 'link', label: 'Lathes', url: '' },
-//     -                 ],
-//     -             },
-
-
 export default [
     {
         label: 'HOME',

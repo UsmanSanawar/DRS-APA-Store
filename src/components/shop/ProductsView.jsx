@@ -23,7 +23,7 @@ class ProductsView extends Component {
     super(props);
 
     this.state = {
-      itemLength: 10,
+      itemLength: 20,
       products: [],
       pagination: { currentPage: 1, totalCount: 10 },
     };

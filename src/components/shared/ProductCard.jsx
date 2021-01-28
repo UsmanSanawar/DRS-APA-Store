@@ -1,17 +1,17 @@
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React, {useEffect, useState} from "react";
-import {connect, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
-import {toast} from "react-toastify";
-import {FormGroup, Input, Label, Modal} from "reactstrap";
-import {cartAddItem} from "../../store/cart";
-import {compareAddItem} from "../../store/compare";
-import {quickviewOpen} from "../../store/quickview";
+import React, { useEffect, useState } from "react";
+import { connect, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FormGroup, Input, Label, Modal } from "reactstrap";
+import { cartAddItem } from "../../store/cart";
+import { compareAddItem } from "../../store/compare";
+import { quickviewOpen } from "../../store/quickview";
 import RestService from "../../store/restService/restService";
-import {wishlistAddItem, wishlistRemoveItem} from "../../store/wishlist";
-import {Wishlist16Svg, Wishlist16SvgRed} from "../../svg";
+import { wishlistAddItem, wishlistRemoveItem } from "../../store/wishlist";
+import { Wishlist16Svg, Wishlist16SvgRed } from "../../svg";
 
 // application
 import AsyncAction from "./AsyncAction";
@@ -51,7 +51,7 @@ function ProductCard(props) {
     }
   }, [open]);
 
-  const {wishlist} = useSelector((state) => state);
+  const { wishlist } = useSelector((state) => state);
 
   const containerClasses = classNames("product-card", {
     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
@@ -74,7 +74,7 @@ function ProductCard(props) {
     image = (
       <div className="product-card__image">
         <Link to={`/store/product/${product.id}`}>
-          <img src={product.images[0]} alt="Product"/>
+          <img src={product.images[0]} alt="Product" />
         </Link>
       </div>
     );
@@ -84,17 +84,17 @@ function ProductCard(props) {
     price = (
       <div className="product-card__prices">
         <span className="product-card__new-price">
-          <Currency value={product.price}/>
+          <Currency value={product.price} />
         </span>{" "}
         <span className="product-card__old-price">
-          <Currency value={product.compareAtPrice}/>
+          <Currency value={product.compareAtPrice} />
         </span>
       </div>
     );
   } else {
     price = (
       <div className="product-card__prices">
-        <Currency value={product.price}/>
+        <Currency value={product.price} />
       </div>
     );
   }
@@ -207,7 +207,7 @@ function ProductCard(props) {
           <Label for="exampleSelect">{item.optionName}</Label>
           <Input
             onChange={(e) => handleInputChange(e, item.optionId)}
-            style={{width: "55%"}}
+            style={{ width: "55%" }}
             name={item.optionName}
             id="exampleText"
           />
@@ -220,7 +220,7 @@ function ProductCard(props) {
           <Input
             onChange={(e) => handleInputChange(e, item.optionId)}
             className="checkbox"
-            style={{display: "block", marginLeft: "10px"}}
+            style={{ display: "block", marginLeft: "10px" }}
             type="checkbox"
             name={item.optionName}
           />
@@ -232,20 +232,20 @@ function ProductCard(props) {
           <FormGroup check required>
             <Label for="exampleSelect">{item.optionName}</Label>
             {item.optionValues &&
-            item.optionValues.map((optValue) => (
-              <FormGroup check required>
-                <Label check>
-                  <Input
-                    required
-                    type="radio"
-                    name={item.optionName}
-                    onChange={(e) => handleInputChange(e, item.optionId)}
-                    value={optValue.optionValueId}
-                  />{" "}
-                  {optValue.name}
-                </Label>
-              </FormGroup>
-            ))}
+              item.optionValues.map((optValue) => (
+                <FormGroup check required>
+                  <Label check>
+                    <Input
+                      required
+                      type="radio"
+                      name={item.optionName}
+                      onChange={(e) => handleInputChange(e, item.optionId)}
+                      value={optValue.optionValueId}
+                    />{" "}
+                    {optValue.name}
+                  </Label>
+                </FormGroup>
+              ))}
           </FormGroup>
           {/* <Input onChange={e => handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" /> */}
         </div>
@@ -292,7 +292,7 @@ function ProductCard(props) {
   const handleCartItem = () => {
     if (product.minimumQuantity > 0) {
       cartAddItem(
-        {...product, selectedProductOption: slectedPr},
+        { ...product, selectedProductOption: slectedPr },
         options,
         product.minimumQuantity > 0 ? product.minimumQuantity : 1,
         getNewPrice(),
@@ -308,7 +308,7 @@ function ProductCard(props) {
       <Modal isOpen={open} toggle={() => setOpen(!open)} centered size="lg">
         <div
           className="container"
-          style={{minWidth: "300px", minHeight: "300px", overflowY: "scroll"}}
+          style={{ minWidth: "300px", minHeight: "300px", overflowY: "scroll" }}
         >
           <div className="row p-5">
             <div className="col-md-12">
@@ -329,7 +329,7 @@ function ProductCard(props) {
                   <span>
                     With selected options price ={" "}
                     <span
-                      style={{fontSize: 18, fontWeight: "bold"}}
+                      style={{ fontSize: 18, fontWeight: "bold" }}
                       className="text-success"
                     >
                       £{getNewPrice()}
@@ -355,15 +355,15 @@ function ProductCard(props) {
                       ? slectedPr.optionQuantity >= product.minimumQuantity
                         ? "Add to cart"
                         : product.minimumQuantity < product.quantity ||
-                        product.minimumQuantity < slectedPr.optionQuantity
-                          ? "Less Quantity Avaialable"
-                          : "Out of Stock"
+                          product.minimumQuantity < slectedPr.optionQuantity
+                        ? "Less Quantity Avaialable"
+                        : "Out of Stock"
                       : product.quantity >= product.minimumQuantity
-                        ? "Add to cart"
-                        : product.minimumQuantity < product.quantity ||
+                      ? "Add to cart"
+                      : product.minimumQuantity < product.quantity ||
                         product.minimumQuantity < slectedPr.optionQuantity
-                          ? "Less Quantity Avaialable"
-                          : "Out of Stock"}
+                      ? "Less Quantity Avaialable"
+                      : "Out of Stock"}
                   </button>
                 </div>
               </form>
@@ -375,13 +375,13 @@ function ProductCard(props) {
       {image}
       <div className="product-card__info">
         <div
-          style={{color: "#ee7647", fontWeight: "bold"}}
+          style={{ color: "#ee7647", fontWeight: "bold" }}
           className="product-card__name"
         >
           <Link to={`/store/product/${product.id}`}>{product.name}</Link>
         </div>
         <div className="product-card__rating">
-          <Rating value={product.rating / product.reviews}/>
+          <Rating value={product.rating / product.reviews} />
           <div className=" product-card__rating-legend">{`${product.reviews} Reviews`}</div>
         </div>
         {features}
@@ -394,7 +394,7 @@ function ProductCard(props) {
 
         <div className="product-card__availability">
           Manufacturer:
-          <span style={{fontWeight: "bold", color: "black"}}>
+          <span style={{ fontWeight: "bold", color: "black" }}>
             {" "}
             {product.model}
           </span>
@@ -417,7 +417,7 @@ function ProductCard(props) {
                 toast.error("Quantity cannot be less than 0");
               }
             }}
-            render={({run, loading}) => (
+            render={({ run, loading }) => (
               <React.Fragment>
                 <div
                   type="button"
@@ -449,7 +449,7 @@ function ProductCard(props) {
                 ? wishlistRemoveItem(product.productId)
                 : wishlistAddItem(product)
             }
-            render={({run, loading}) => (
+            render={({ run, loading }) => (
               <button
                 type="button"
                 onClick={run}
@@ -464,27 +464,13 @@ function ProductCard(props) {
                 wishlist.some(
                   (item) => item.productId === product.productId
                 ) ? (
-                  <Wishlist16SvgRed/>
+                  <Wishlist16SvgRed />
                 ) : (
-                  <Wishlist16Svg/>
+                  <Wishlist16Svg />
                 )}
               </button>
             )}
           />
-          {/* <AsyncAction */}
-          {/*    action={() => compareAddItem(product)}*/}
-          {/*    render={({ run, loading }) => (*/}
-          {/*        <button*/}
-          {/*            type="button"*/}
-          {/*            onClick={run}*/}
-          {/*            className={classNames('btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare', {*/}
-          {/*                'btn-loading': loading,*/}
-          {/*            })}*/}
-          {/*        >*/}
-          {/*            <Compare16Svg />*/}
-          {/*        </button>*/}
-          {/*    )}*/}
-          {/*/>*/}
         </div>
       </div>
     </div>

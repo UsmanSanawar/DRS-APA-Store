@@ -52,6 +52,8 @@ function ShopPageProduct(props) {
 
       RestService.getRelatedProductById(productId).then((res) => {
         if (res.data.status === "success") {
+          console.log(res.data.data, "res.data.datares.data.data");
+
           dispatch({ type: "RELATED_PRODUCTS", data: res.data.data });
         }
       });
@@ -69,6 +71,8 @@ function ShopPageProduct(props) {
   };
 
   const { relatedProducts } = useSelector(({ webView }) => webView);
+
+  console.log(relatedProducts, "relatedProductsrelatedProducts");
 
   let content;
 

@@ -65,8 +65,7 @@ export default function FooterNewsletter(props) {
         <div className="site-footer__widget footer-newsletter">
             <h5 className="footer-newsletter__title">Newsletter</h5>
             <div className="footer-newsletter__text">
-                Praesent pellentesque volutpat ex, vitae auctor lorem pulvinar mollis felis
-                at lacinia.
+                Subscribe to our newsletter for more info and details.
             </div>
 
             <form onSubmit={(e) => {e.preventDefault(); handleNewsLetterSubx();}} className="footer-newsletter__form">

@@ -188,6 +188,9 @@ export default class BlockProductsCarousel extends Component {
             loading,
         } = this.props;
 
+        console.log(this.props, "relatedProd")
+
+
         const blockClasses = classNames('block block-products-carousel', {
             'block-products-carousel--loading': loading,
         });

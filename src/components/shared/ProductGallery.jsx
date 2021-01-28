@@ -1,271 +1,322 @@
 // react
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 // third-party
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import {IMAGE_URL } from "../../constant/constants"
-import SliderImage from 'react-zoom-slider';
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { IMAGE_URL } from "../../constant/constants";
+import SliderImage from "react-zoom-slider";
 
 const slickSettingsFeatured = {
+  dots: false,
+  arrows: false,
+  infinite: false,
+  speed: 400,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
+const slickSettingsThumbnails = {
+  standard: {
     dots: false,
     arrows: false,
     infinite: false,
     speed: 400,
-    slidesToShow: 1,
+    slidesToShow: 5,
     slidesToScroll: 1,
-};
-const slickSettingsThumbnails = {
-    standard: {
-        dots: false,
-        arrows: false,
-        infinite: false,
-        speed: 400,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        responsive: [
-            { breakpoint: 1199, settings: { slidesToShow: 4 } },
-            { breakpoint: 991, settings: { slidesToShow: 3 } },
-            { breakpoint: 767, settings: { slidesToShow: 5 } },
-            { breakpoint: 479, settings: { slidesToShow: 4 } },
-            { breakpoint: 379, settings: { slidesToShow: 3 } },
-        ],
-    },
-    sidebar: {
-        dots: false,
-        arrows: false,
-        infinite: false,
-        speed: 400,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        responsive: [
-            { breakpoint: 1199, settings: { slidesToShow: 3 } },
-            { breakpoint: 767, settings: { slidesToShow: 5 } },
-            { breakpoint: 479, settings: { slidesToShow: 4 } },
-            { breakpoint: 379, settings: { slidesToShow: 3 } },
-        ],
-    },
-    columnar: {
-        dots: false,
-        arrows: false,
-        infinite: false,
-        speed: 400,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        responsive: [
-            { breakpoint: 1199, settings: { slidesToShow: 3 } },
-            { breakpoint: 767, settings: { slidesToShow: 5 } },
-            { breakpoint: 479, settings: { slidesToShow: 4 } },
-            { breakpoint: 379, settings: { slidesToShow: 3 } },
-        ],
-    },
-    quickview: {
-        dots: false,
-        arrows: false,
-        infinite: false,
-        speed: 400,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        responsive: [
-            { breakpoint: 1199, settings: { slidesToShow: 4 } },
-            { breakpoint: 767, settings: { slidesToShow: 5 } },
-            { breakpoint: 479, settings: { slidesToShow: 4 } },
-            { breakpoint: 379, settings: { slidesToShow: 3 } },
-        ],
-    },
+    responsive: [
+      { breakpoint: 1199, settings: { slidesToShow: 4 } },
+      { breakpoint: 991, settings: { slidesToShow: 3 } },
+      { breakpoint: 767, settings: { slidesToShow: 5 } },
+      { breakpoint: 479, settings: { slidesToShow: 4 } },
+      { breakpoint: 379, settings: { slidesToShow: 3 } },
+    ],
+  },
+  sidebar: {
+    dots: false,
+    arrows: false,
+    infinite: false,
+    speed: 400,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      { breakpoint: 1199, settings: { slidesToShow: 3 } },
+      { breakpoint: 767, settings: { slidesToShow: 5 } },
+      { breakpoint: 479, settings: { slidesToShow: 4 } },
+      { breakpoint: 379, settings: { slidesToShow: 3 } },
+    ],
+  },
+  columnar: {
+    dots: false,
+    arrows: false,
+    infinite: false,
+    speed: 400,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      { breakpoint: 1199, settings: { slidesToShow: 3 } },
+      { breakpoint: 767, settings: { slidesToShow: 5 } },
+      { breakpoint: 479, settings: { slidesToShow: 4 } },
+      { breakpoint: 379, settings: { slidesToShow: 3 } },
+    ],
+  },
+  quickview: {
+    dots: false,
+    arrows: false,
+    infinite: false,
+    speed: 400,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    responsive: [
+      { breakpoint: 1199, settings: { slidesToShow: 4 } },
+      { breakpoint: 767, settings: { slidesToShow: 5 } },
+      { breakpoint: 479, settings: { slidesToShow: 4 } },
+      { breakpoint: 379, settings: { slidesToShow: 3 } },
+    ],
+  },
 };
 
 class ProductGallery extends Component {
-    gallery;
+  gallery;
 
-    /** @var {Promise} */
-    createGallery = null;
+  /** @var {Promise} */
+  createGallery = null;
 
-    imagesRefs = [];
+  imagesRefs = [];
 
-    unmounted = false;
+  unmounted = false;
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            currentIndex: 0,
-            transition: false,
-        };
+    this.state = {
+      currentIndex: 0,
+      transition: false,
+    };
+  }
+
+  componentDidMount() {
+    this.createGallery = import("../../photoswipe").then(
+      (module) => module.createGallery
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.images !== this.props.images) {
+      this.getImages()
+    }
+  }
+  
+
+
+  componentWillUnmount() {
+    if (this.gallery) {
+      this.gallery.destroy();
     }
 
-    componentDidMount() {
-        this.createGallery = import('../../photoswipe').then((module) => module.createGallery);
+    this.unmounted = true;
+  }
+
+  getImages = () => {
+    const { images } = this.props;
+
+    let imagesArr = [];
+    if (images && images.length > 0) {
+      for (const [i, item] of images.entries()) {
+        imagesArr.push({
+          image:
+            item.name && item.name.includes("catalog")
+              ? `${IMAGE_URL}/${item.name}`
+              : `${IMAGE_URL}/images/${item.name}`,
+          text: `${i + 1}/${images.length}`,
+        });
+      }
     }
 
-    componentWillUnmount() {
-        if (this.gallery) {
-            this.gallery.destroy();
+    return imagesArr;
+  };
+
+  handleFeaturedClick = (event, index) => {
+    if (!this.createGallery) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const { images } = this.props;
+
+    const items = images.map((image) => ({
+      src:
+        image.name && image.name.startsWith("catalog")
+          ? `${IMAGE_URL}/${image.name}`
+          : `${IMAGE_URL}/images/${image.name}`,
+      msrc:
+        image.name && image.name.startsWith("catalog")
+          ? `${IMAGE_URL}/${image.name}`
+          : `${IMAGE_URL}/images/${image.name}`,
+      w: 700,
+      h: 700,
+    }));
+
+    const options = {
+      getThumbBoundsFn: (index) => {
+        if (!this.imagesRefs[index]) {
+          return null;
         }
 
-        this.unmounted = true;
+        const imageElement = this.imagesRefs[index];
+        const pageYScroll =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const rect = imageElement.getBoundingClientRect();
+
+        return {
+          x: rect.left,
+          y: rect.top + pageYScroll,
+          w: rect.width,
+        };
+      },
+      index,
+      bgOpacity: 0.9,
+      history: false,
+    };
+
+    this.createGallery.then((createGallery) => {
+      if (this.unmounted) {
+        return;
+      }
+
+      this.gallery = createGallery(items, options);
+
+      this.gallery.listen("beforeChange", () => {
+        if (this.gallery && this.slickFeaturedRef) {
+          this.slickFeaturedRef.slickGoTo(this.gallery.getCurrentIndex(), true);
+        }
+      });
+      this.gallery.listen("destroy", () => {
+        this.gallery = null;
+      });
+
+      this.gallery.init();
+    });
+  };
+
+  handleThumbnailClick = (index) => {
+    const { transition } = this.state;
+
+    if (transition) {
+      return;
     }
 
-    getImages = () =>{
+    this.setState(() => ({ currentIndex: index }));
 
+    if (this.slickFeaturedRef) {
+      this.slickFeaturedRef.slickGoTo(index);
+    }
+  };
 
-        const {images} = this.props;
+  handleFeaturedBeforeChange = (oldIndex, newIndex) => {
+    this.setState(() => ({
+      currentIndex: newIndex,
+      transition: true,
+    }));
+  };
 
-        let imagesArr = []
-        if (images && images.length > 0) {
-          for (const [i, item] of images.entries()) {
-            imagesArr.push({ image: `${IMAGE_URL}/images/${item.name}`, text: `${i+1}/${images.length}` })
+  handleFeaturedAfterChange = (index) => {
+    this.setState(() => ({
+      currentIndex: index,
+      transition: false,
+    }));
+  };
+
+  setSlickFeaturedRef = (ref) => {
+    this.slickFeaturedRef = ref;
+  };
+
+  render() {
+
+    console.log(this.getImages(), "ssssssssssss")
+
+    const { layout, images } = this.props;
+    const { currentIndex } = this.state;
+
+    console.log(images, "imagesimagesimagesimages");
+
+    const featured = images.map((image, index) => (
+      <Link
+        key={index}
+        to={
+          image.name && image.name.startsWith("catalog")
+            ? `${IMAGE_URL}/${image.name}`
+            : `${IMAGE_URL}/images/${image.name}`
+        }
+        onClick={(event) => this.handleFeaturedClick(event, index)}
+        target="_blank"
+      >
+        <img
+          style={{ maxHeight: "400px" }}
+          src={
+            image.name && image.name.startsWith("catalog")
+              ? `${IMAGE_URL}/${image.name}`
+              : `${IMAGE_URL}/images/${image.name}`
           }
-        }
-        
-        return imagesArr
-    }
+          alt="Product"
+          ref={(element) => {
+            this.imagesRefs[index] = element;
+          }}
+        />
+      </Link>
+    ));
 
-    handleFeaturedClick = (event, index) => {
-        if (!this.createGallery) {
-            return;
-        }
+    const thumbnails = images.map((image, index) => {
+      const classes = classNames("product-gallery__carousel-item", {
+        "product-gallery__carousel-item--active": index === currentIndex,
+      });
 
-        event.preventDefault();
-
-        const { images } = this.props;
-
-        const items = images.map((image) => ({
-            src: `${IMAGE_URL}/images/${image.name}`,
-            msrc: `${IMAGE_URL}/images/${image.name}`,
-            w: 700,
-            h: 700,
-        }));
-
-        const options = {
-            getThumbBoundsFn: (index) => {
-                if (!this.imagesRefs[index]) {
-                    return null;
-                }
-
-                const imageElement = this.imagesRefs[index];
-                const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
-                const rect = imageElement.getBoundingClientRect();
-
-                return {
-                    x: rect.left,
-                    y: rect.top + pageYScroll,
-                    w: rect.width,
-                };
-            },
-            index,
-            bgOpacity: 0.9,
-            history: false,
-        };
-
-        this.createGallery.then((createGallery) => {
-            if (this.unmounted) {
-                return;
+      return (
+        <button
+          type="button"
+          key={index}
+          onClick={() => this.handleThumbnailClick(index)}
+          className={classes}
+        >
+          <img
+            className="product-gallery__carousel-image"
+            src={
+              image.name && image.name.startsWith("catalog")
+                ? `${IMAGE_URL}/${image.name}`
+                : `${IMAGE_URL}/images/${image.name}`
             }
+            alt=""
+          />
+        </button>
+      );
+    });
 
-            this.gallery = createGallery(items, options);
-
-            this.gallery.listen('beforeChange', () => {
-                if (this.gallery && this.slickFeaturedRef) {
-                    this.slickFeaturedRef.slickGoTo(this.gallery.getCurrentIndex(), true);
-                }
-            });
-            this.gallery.listen('destroy', () => {
-                this.gallery = null;
-            });
-
-            this.gallery.init();
-        });
-    };
-
-    handleThumbnailClick = (index) => {
-        const { transition } = this.state;
-
-        if (transition) {
-            return;
-        }
-
-        this.setState(() => ({ currentIndex: index }));
-
-        if (this.slickFeaturedRef) {
-            this.slickFeaturedRef.slickGoTo(index);
-        }
-    };
-
-    handleFeaturedBeforeChange = (oldIndex, newIndex) => {
-        this.setState(() => ({
-            currentIndex: newIndex,
-            transition: true,
-        }));
-    };
-
-    handleFeaturedAfterChange = (index) => {
-        this.setState(() => ({
-            currentIndex: index,
-            transition: false,
-        }));
-    };
-
-    setSlickFeaturedRef = (ref) => {
-        this.slickFeaturedRef = ref;
-    };
-
-    render() {
-        const { layout, images } = this.props;
-        const { currentIndex } = this.state;
-
-
-
-        const featured = images.map((image, index) => (
-            <Link key={index} to={`${IMAGE_URL}/images/${image.name}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
-                <img style={{maxHeight: "400px"}}  src={`${IMAGE_URL}/images/${image.name}`} alt="Product" ref={(element) => { this.imagesRefs[index] = element; }} />
-            </Link>
-        ));
-
-        const thumbnails = images.map((image, index) => {
-            const classes = classNames('product-gallery__carousel-item', {
-                'product-gallery__carousel-item--active': index === currentIndex,
-            });
-
-            return (
-                <button
-                    type="button"
-                    key={index}
-                    onClick={() => this.handleThumbnailClick(index)}
-                    className={classes}
-                >
-                    <img className="product-gallery__carousel-image" src={`${IMAGE_URL}/images/${image.name}`} alt="" />
-                </button>
-            );
-        });
-
-        return (
-            <div className="product__gallery">
-                <div className="product-gallery">
-                    {/* <div className="product-gallery__featured"> */}
-                    {
-              images && images.length > 0 ?
+    return (
+      <div className="product__gallery">
+        <div className="product-gallery">
+          {images && images.length > 0 ? (
             <SliderImage
               data={this.getImages()}
+              width="500px"
               showDescription={true}
               direction="right"
             />
-             : null}
-                </div>
-            </div>
-        );
-    }
+          ) : null}
+        </div>
+      </div>
+    );
+  }
 }
 
 ProductGallery.propTypes = {
-    images: PropTypes.array,
-    layout: PropTypes.oneOf(['standard', 'sidebar', 'columnar', 'quickview']),
+  images: PropTypes.array,
+  layout: PropTypes.oneOf(["standard", "sidebar", "columnar", "quickview"]),
 };
 
 ProductGallery.defaultProps = {
-    images: [],
-    layout: 'standard',
+  images: [],
+  layout: "standard",
 };
 
 export default ProductGallery;

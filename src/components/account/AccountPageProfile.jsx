@@ -1,18 +1,16 @@
 // react
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 
 // third-party
-import { Helmet } from "react-helmet";
+import {Helmet} from "react-helmet";
 
 // data stubs
 import theme from "../../data/theme";
-import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
+import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import _ from "lodash";
 import classNames from "classnames";
 import RestService from "../../store/restService/restService";
-import { toast } from "react-toastify";
-import { connect } from "react-redux";
-import { UserData } from "react-oidc";
+import {toast} from "react-toastify";
 
 export default function AccountPageProfile(props) {
   const [userFormData, setUserFormData] = useState({
@@ -62,7 +60,7 @@ export default function AccountPageProfile(props) {
   const handleRegistration = () => {
     userFormData.isActive = true;
     let array = [];
-    
+
     userFormData.shipping.addressType = "shipping";
     if (userFormData.shipping.firstName && userFormData.shipping.city) {
       userFormData.shipping.customerId = userFormData.customerId;
@@ -82,9 +80,9 @@ export default function AccountPageProfile(props) {
         );
       }
 
-      array.push({ ...userFormData.shipping });
+      array.push({...userFormData.shipping});
     }
-    
+
     userFormData.billing.addressType = "billing";
     if (userFormData.billing.firstName && userFormData.billing.city) {
       userFormData.billing.customerId = userFormData.customerId;
@@ -104,7 +102,7 @@ export default function AccountPageProfile(props) {
         );
       }
 
-      array.push({ ...userFormData.billing });
+      array.push({...userFormData.billing});
     }
 
     userFormData.customerAddress = [];
@@ -125,7 +123,7 @@ export default function AccountPageProfile(props) {
       <div className="card-header">
         <h5>Edit Profile</h5>
       </div>
-      <div className="card-divider" />
+      <div className="card-divider"/>
       <div className="card-body m-0">
         <div className="row no-gutters">
           <div className="col-12 col-lg-9 col-xl-9">
@@ -135,11 +133,11 @@ export default function AccountPageProfile(props) {
                 handleRegistration();
               }}
             >
-              <input hidden value={userFormData.password || ""} />
+              <input hidden value={userFormData.password || ""}/>
               <Nav tabs>
                 <NavItem>
                   <NavLink
-                    className={classNames({ active: activeTab === "1" })}
+                    className={classNames({active: activeTab === "1"})}
                     onClick={() => {
                       toggle("1");
                     }}
@@ -149,7 +147,7 @@ export default function AccountPageProfile(props) {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    className={classNames({ active: activeTab === "2" })}
+                    className={classNames({active: activeTab === "2"})}
                     onClick={() => {
                       toggle("2");
                     }}
@@ -301,14 +299,14 @@ export default function AccountPageProfile(props) {
                           </option>
 
                           {customerGroups &&
-                            _.filter(
-                              customerGroups,
-                              (item) => item.displayOnSite === true
-                            ).map((item) => (
-                              <option value={item.customerGroupId}>
-                                {item.customerGroupName}
-                              </option>
-                            ))}
+                          _.filter(
+                            customerGroups,
+                            (item) => item.displayOnSite === true
+                          ).map((item) => (
+                            <option value={item.customerGroupId}>
+                              {item.customerGroupName}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>

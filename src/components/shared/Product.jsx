@@ -29,6 +29,7 @@ class Product extends Component {
       // productPlusOptions: this.props.product.productOptions ? this.props.product.productOptions : [],
       options: [],
       slectedPr: {},
+      productPhotos: [],
     };
   }
 
@@ -36,6 +37,12 @@ class Product extends Component {
     if (window.addthis && window.addthis.layers) {
       window.addthis.layers();
     }
+
+    let id = this.props.product.productId;
+    if (id) {
+      this.handleProductById(id);
+    }
+
     if (this.props.product.minimumQuantity) {
       this.setState({
         quantity:
@@ -47,6 +54,23 @@ class Product extends Component {
 
     this.getProductOptionCombination();
   }
+
+  handleProductById = (id) => {
+    RestService.getProductById(id).then((res) => {
+      if (res.data.status === "success") {
+        let { data } = res.data;
+
+        let array = data && data.productPhotos;
+        array.unshift({ name: data.image });
+
+        console.log("sssssawadasD", array);
+
+        this.setState({
+          productPhotos: array,
+        });
+      }
+    });
+  };
 
   handleChangeQuantity = (quantity) => {
     this.setState({ quantity });
@@ -69,6 +93,10 @@ class Product extends Component {
 
     if (prevState.slectedPr !== this.state.slectedPr) {
       this.getNewWeight();
+    }
+
+    if (prevProps.product.productId !== this.props.product.productId) {
+      this.handleProductById(this.props.product.productId);
     }
   }
 
@@ -183,7 +211,7 @@ class Product extends Component {
       customer,
     } = this.props;
 
-    console.log(this.state.slectedPr, "this.stateThis.state");
+    console.log(this.props.product, "this.stateThis.state");
 
     const { quantity } = this.state;
 
@@ -321,7 +349,7 @@ class Product extends Component {
     return (
       <div className={`product product--layout--${layout}`}>
         <Helmet>
-          <title>{`FAQ — ${product.productName}`}</title>
+          <title>{`Product — ${product.productName}`}</title>
           <meta property="og:title" content="European Travel Destinations" />
           <meta
             property="og:description"
@@ -329,21 +357,29 @@ class Product extends Component {
           />
           <meta
             property="og:image"
-            content="https://drsapa.ddns.net:3450/Uploads/800px_COLOURBOX2650448.jpg"
+            // content="https://drsapa.ddns.net:3450/Uploads/800px_COLOURBOX2650448.jpg"
+            content="http://77.68.93.42:90/Uploads/800px_COLOURBOX2650448.jpg"
           />
           <meta
             property="og:url"
-            content="https://drsapa.ddns.net:2550/#/store/product/104"
+            // content="https://drsapa.ddns.net:2550/#/store/product/104"
+            content="http://77.68.93.42:90/store/product/104"
           ></meta>
         </Helmet>
-
+        {console.log(
+          this.state.slectedPr.images,
+          product.productPhotos,
+          product.images,
+          "ffofopfosfddl"
+        )}
         <div className="product__content">
+          {console.log(product.images, "Sdasdasdasd")}
           <ProductGallery
             layout={layout}
             images={
               this.state.slectedPr.images
                 ? [{ name: this.state.slectedPr.images }]
-                : product.productPhotos
+                : this.state.productPhotos
             }
           />
 
@@ -396,7 +432,6 @@ class Product extends Component {
               </div>
             </div>
             <div className="product__description">
-              {/* <div dangerouslySetInnerHTML={{__html: product.description}} />  */}
             </div>
             <ul className="product__features">
               <li>Speed: 750 RPM</li>
@@ -446,7 +481,7 @@ class Product extends Component {
             >
               <div className="form-group product__option">
                 <h4>Available Options</h4>
-                <div className="input-radio-label">{renderOptions()}</div>
+                <div className="input-radio-label" style={{maxHeight: 400, overflowY: "scroll"}}>{renderOptions()}</div>
               </div>
               <div className="form-group product__option">
                 <label
@@ -454,9 +489,9 @@ class Product extends Component {
                   className="product__option-label"
                 >
                   Quantity{" "}
-                  <small style={{ color: "green" }}>
+                  {product.stockStatusName === "Out Of Stock" ? null : <small style={{ color: "green" }}>
                     (Avaiable Quantity: {product.quantity})
-                  </small>
+                  </small>}
                 </label>
                 <div className="product__actions">
                   <div className="product__actions-item">
@@ -527,7 +562,8 @@ class Product extends Component {
             <div className="product__share-links share-links">
               <div
                 className="addthis_inline_share_toolbox"
-                data-url="https://drsapa.ddns.net:2550/#/store/product/104"
+                // data-url="https://drsapa.ddns.net:2550/#/store/product/104"
+                data-url="http://77.68.93.42:90/#/store/product/104"
               ></div>
             </div>
           </div>

@@ -1,13 +1,24 @@
 import { IMAGE_URL } from "./constants";
-import RestService from '../store/restService/restService';
+import RestService from "../store/restService/restService";
 
 export function productObjectConverter(item) {
   let images = [];
   if (item.productPhotos && item.productPhotos.length > 0) {
+
+    console.log(item.productPhotos, "item.productPhotos objcrt");
     item.productPhotos.map((image) => {
-      images.push(`${IMAGE_URL}/images/${image.name}`);
+      if (image.name.startsWith("catalog")) {
+        images.push(`${IMAGE_URL}/${image.name}`);
+      } else {
+        images.push(`${IMAGE_URL}/images/${image.name}`);
+      }
     });
+
   }
+
+
+  images.push(`${IMAGE_URL}/${item.image}`)
+
   item.id = item.productId;
   item.name = item.productName;
   item.price = item.price;

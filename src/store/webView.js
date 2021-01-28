@@ -32,6 +32,9 @@ export default function quickviewReducer(state = initialState, action) {
             let dataList = action.data;
             let array = [];
             dataList.map(item => {
+
+                console.log(item , "ASspaASspa")
+
                 array.push(productObjectConverter(item))
             })
 

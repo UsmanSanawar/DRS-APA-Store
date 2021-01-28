@@ -14,21 +14,12 @@ export default function Footer(props) {
     const informationLinks = [
         { title: 'About Us', url: '/about-us' },
         { title: 'Contact Us', url: '/contact-us' },
-        { title: 'Delivery Information', url: '' },
-        { title: 'Privacy Policy', url: '' },
-        { title: 'Brands', url: '' },
-        { title: 'Returns', url: '' },
-        { title: 'Site Map', url: '' },
+        { title: 'Privacy Policy', url: '/privacy-policy' },
     ];
 
     const accountLinks = [
-        { title: 'Store Location', url: '' },
-        { title: 'Your Orders', url: '' },
+        { title: 'Your Orders', url: '/store/orders' },
         { title: 'Wish List', url: '/store/wishlist' },
-        { title: 'Newsletter', url: '' },
-        { title: 'Specials', url: '' },
-        { title: 'Gift Certificates', url: '' },
-        { title: 'Affiliate', url: '' },
     ];
 
     return (
@@ -53,15 +44,7 @@ export default function Footer(props) {
 
                 <div className="site-footer__bottom">
                     <div className="site-footer__copyright">
-                        Powered by
-                        {' '}
-                        <a href="https://reactjs.org/" rel="noopener noreferrer" target="_blank">React</a>
-                        {' '}
-                        — Design by
-                        {' '}
-                        <a href={theme.author.profile_url} target="_blank" rel="noopener noreferrer">
-                            {theme.author.name}
-                        </a> {'    ' + "Build: 160121"}
+                       All rights reserved &copy; 2021 APA Ltd Build: 270121
                     </div>
                     {/* <div className="site-footer__payments">
                         <img src="images/payments.png" alt="" />
