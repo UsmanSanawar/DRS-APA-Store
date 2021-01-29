@@ -348,40 +348,20 @@ class Product extends Component {
 
     return (
       <div className={`product product--layout--${layout}`}>
+                <div className="product__content">
         <Helmet>
           <title>{`Product — ${product.productName}`}</title>
-          <meta property="og:title" content="European Travel Destinations" />
-          <meta
-            property="og:description"
-            content="Offering tour packages for individuals or groups."
-          />
-          <meta
-            property="og:image"
-            // content="https://drsapa.ddns.net:3450/Uploads/800px_COLOURBOX2650448.jpg"
-            content="http://77.68.93.42:90/Uploads/800px_COLOURBOX2650448.jpg"
-          />
-          <meta
-            property="og:url"
-            // content="https://drsapa.ddns.net:2550/#/store/product/104"
-            content="http://77.68.93.42:90/store/product/104"
-          ></meta>
         </Helmet>
-        {console.log(
-          this.state.slectedPr.images,
-          product.productPhotos,
-          product.images,
-          "ffofopfosfddl"
-        )}
-        <div className="product__content">
-          {console.log(product.images, "Sdasdasdasd")}
-          <ProductGallery
-            layout={layout}
-            images={
-              this.state.slectedPr.images
-                ? [{ name: this.state.slectedPr.images }]
-                : this.state.productPhotos
-            }
-          />
+
+            <ProductGallery
+              layout={layout}
+              images={
+                this.state.slectedPr.images
+                  ? [{ name: this.state.slectedPr.images }]
+                  : this.state.productPhotos
+              }
+            />
+
 
           <div className="product__info">
             <div className="product__wishlist-compare">

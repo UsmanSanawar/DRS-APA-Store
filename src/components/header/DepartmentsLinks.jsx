@@ -36,7 +36,7 @@ function DepartmentsLinks(props) {
 
       return department.url === "/store/blog/posts" ? (
         <li key={index} className={`departments__item ${itemClass}`}>
-          <Link to="" onClick={() => props.history.push('/store/blog/posts')}>
+          <Link to={department.url} onClick={() => props.history.push('/store/blog/posts')}>
             {department.name}
             {arrow}
           </Link>

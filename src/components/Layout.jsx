@@ -100,11 +100,11 @@ function Layout(props) {
 
       <Quickview />
 
-      <MobileMenu />
+      <MobileMenu layout={headerLayout} />
 
       <div className="site">
         <header className="site__header d-lg-none">
-          <MobileHeader />
+          <MobileHeader layout={headerLayout} />
         </header>
 
         <header className="site__header d-lg-block d-none">

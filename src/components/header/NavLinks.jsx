@@ -12,7 +12,12 @@ import Menu from "./Menu";
 import { ArrowRoundedDown9x6Svg } from "../../svg";
 
 function NavLinks(props) {
-  const { storeView, menu, categories } = useSelector(({ webView }) => webView);
+  let { menu, categories } = useSelector(({ webView }) => webView);
+
+  let index = menu.findIndex(item => item.slug === '/home');
+  if (index > -1) {
+    delete menu[index]
+  }
 
   const onMenuClick = (item) => {
     props.history.replace({
@@ -71,6 +76,8 @@ function NavLinks(props) {
         const classes = classNames("nav-links__item", {
           "nav-links__item--with-webSubMenu": item.webSubMenu,
         });
+        if (!(item.slug === "/home") && !(item.slug === '/store')) {
+          
         return (
           <li key={index} className={classes} onMouseEnter={handleMouseEnter}>
             <a
@@ -86,6 +93,7 @@ function NavLinks(props) {
             {webSubMenu}
           </li>
         );
+      }
       })
     );
   };

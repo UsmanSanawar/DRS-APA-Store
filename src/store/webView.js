@@ -12,15 +12,27 @@ const initialState = {
 export default function quickviewReducer(state = initialState, action) {
 
     switch (action.type) {
-        case 'STORE_VIEW':
+        case 'STORE_VIEW': {
+
             return {
                 ...state,
                 storeView: action.storeView,
                 menu: state.menu
             };
+        }
 
         case 'SAVE_WEB_MENU': {
             let dataList = action.data.sort((a, b) => a.order - b.order)
+            dataList.unshift({
+                hasSubMenu: false,
+                order: 1,
+                slug: "/store",
+                webMenuId: 5,
+                webMenuTitle: "STORE",
+                webPageId: 2,
+                webPageTitle: "Store Page",
+                webSubMenu: []
+            })
             return {
                 ...state,
                 menu: dataList,
@@ -107,7 +119,16 @@ export default function quickviewReducer(state = initialState, action) {
                 webSubMenuTitle: "Blogs"})
             state.categories = newNewArray
 
-
+                state.categories.unshift({
+                    hasSubMenu: false,
+                    order: 1,
+                    slug: "/home",
+                    webMenuId: 5,
+                    webMenuTitle: "Home",
+                    webPageId: 2,
+                    webPageTitle: "Homepage",
+                    webSubMenu: []
+                })
 
             return {
                 ...state,

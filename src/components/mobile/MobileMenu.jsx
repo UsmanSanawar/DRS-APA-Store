@@ -21,22 +21,12 @@ function MobileMenu(props) {
     closeMobileMenu,
     changeLocale,
     changeCurrency,
+    layout
   } = props;
 
-  const {storeView, menu} = useSelector(({webView}) => webView);
+  const {categories, menu} = useSelector(({webView}) => webView);
 
-  menu.unshift({
-    hasSubMenu: false,
-    order: 1,
-    slug: "/store",
-    webMenuId: 5,
-    webMenuTitle: "STORE",
-    webPageId: 2,
-    webPageTitle: "Store Page",
-    webSubMenu: []
-  })
-
-  console.log(menu, "sadsadasd")
+  let menulinks = layout === 'compact' ? categories : menu;
 
   const classes = classNames('mobilemenu', {
     'mobilemenu--open': mobileMenuState.open,
@@ -72,7 +62,7 @@ function MobileMenu(props) {
           </button>
         </div>
         <div className="mobilemenu__content">
-          <MobileLinks links={menu} onItemClick={handleItemClick}/>
+          <MobileLinks links={menulinks} onItemClick={handleItemClick}/>
         </div>
       </div>
     </div>

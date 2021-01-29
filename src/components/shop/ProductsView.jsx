@@ -160,17 +160,17 @@ class ProductsView extends Component {
             {/*<div className="view-options__legend">Showing 6 of 98 products</div>*/}
             <div className="view-options__divider" />
             <div className="view-options__control">
-              <label htmlFor="view-options-sort">Sort By</label>
-              <div>
-                <select
-                  className="form-control form-control-sm"
-                  name=""
-                  id="view-options-sort"
-                >
-                  <option value="">Default</option>
-                  <option value="">Name (A-Z)</option>
-                </select>
-              </div>
+              {/*<label htmlFor="view-options-sort">Sort By</label>*/}
+              {/*<div>*/}
+              {/*  <select*/}
+              {/*    className="form-control form-control-sm"*/}
+              {/*    name=""*/}
+              {/*    id="view-options-sort"*/}
+              {/*  >*/}
+              {/*    <option value="">Default</option>*/}
+              {/*    <option value="">Name (A-Z)</option>*/}
+              {/*  </select>*/}
+              {/*</div>*/}
             </div>
           </div>
         </div>
