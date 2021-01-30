@@ -1,27 +1,26 @@
 // react
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import classnames from "classnames";
 // third-party
-import { Helmet } from "react-helmet";
-import { Link, Redirect } from "react-router-dom";
+import {Helmet} from "react-helmet";
 
 // application
 import PageHeader from "../shared/PageHeader";
-import { Check9x7Svg } from "../../svg";
+import {Check9x7Svg} from "../../svg";
 
 // data stubs
 import theme from "../../data/theme";
 import RestService from "../../store/restService/restService";
-import { toast } from "react-toastify";
-import { isTokenValid } from "../../constant/helpers";
-import { Modal, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
+import {toast} from "react-toastify";
+import {isTokenValid} from "../../constant/helpers";
+import {Modal, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import _ from "lodash";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 
 export default function AccountPageLogin(props) {
   const breadcrumb = [
-    { title: "Home", url: "" },
-    { title: "My Account", url: "" },
+    {title: "Home", url: ""},
+    {title: "My Account", url: ""},
   ];
   const [customerGroups, setcustomerGroups] = useState([]);
   useEffect(() => {
@@ -59,7 +58,7 @@ export default function AccountPageLogin(props) {
           props.history.push("/store");
           await RestService.getCustomerByToken().then((res) => {
             if (res.data.status === "success") {
-              dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
+              dispatch({type: "SIGNIN_USER_SUCCESS", payload: res.data.data});
             }
           });
 
@@ -74,7 +73,7 @@ export default function AccountPageLogin(props) {
   const [registerFormData, setRegisterFormData] = useState({
     shipping: {},
     billing: {},
-    gender: "male",
+    gender: "",
   });
 
   const handleRegistration = () => {
@@ -82,11 +81,11 @@ export default function AccountPageLogin(props) {
     let array = [];
     registerFormData.shipping.addressType = "shipping";
     if (registerFormData.shipping.firstName && registerFormData.shipping.city) {
-      array.push({ ...registerFormData.shipping });
+      array.push({...registerFormData.shipping});
     }
     registerFormData.billing.addressType = "billing";
     if (registerFormData.billing.firstName && registerFormData.billing.city) {
-      array.push({ ...registerFormData.billing });
+      array.push({...registerFormData.billing});
     }
 
     registerFormData.customerAddress = array;
@@ -97,7 +96,7 @@ export default function AccountPageLogin(props) {
     RestService.userregistration(registerFormData).then((res) => {
       toast[res.data.status](res.data.message);
 
-      setRegisterFormData({ gender: "male", shipping: {}, billing: {} });
+      setRegisterFormData({gender: "male", shipping: {}, billing: {}});
     });
   };
 
@@ -113,7 +112,7 @@ export default function AccountPageLogin(props) {
     <React.Fragment>
       <Modal isOpen={open} toggle={() => setOpen(!open)} centered size="md">
         <div
-          style={{ borderBottom: "1px solid lightgray" }}
+          style={{borderBottom: "1px solid lightgray"}}
           className="content pt-3 pl-4"
         >
           <h4>Forgot Password</h4>
@@ -139,7 +138,9 @@ export default function AccountPageLogin(props) {
             className="btn btn-sm btn-primary float-right"
           />
 
-          <small>*An email will be sent to email address if it exists</small>
+          <small>*Enter the email you used to register your account. We’ll email you instructions on how
+            to reset your password.
+          </small>
         </div>
       </Modal>
 
@@ -147,7 +148,7 @@ export default function AccountPageLogin(props) {
         <title>{`Login — ${theme.name}`}</title>
       </Helmet>
 
-      <PageHeader header="My Account" breadcrumb={breadcrumb} />
+      <PageHeader header="My Account" breadcrumb={breadcrumb}/>
 
       <div className="block">
         <div className="container">
@@ -212,8 +213,8 @@ export default function AccountPageLogin(props) {
                               type="checkbox"
                               className="input-check__input"
                             />
-                            <span className="input-check__box" />
-                            <Check9x7Svg className="input-check__icon" />
+                            <span className="input-check__box"/>
+                            <Check9x7Svg className="input-check__icon"/>
                           </span>
                         </span>
                         <label
@@ -249,7 +250,7 @@ export default function AccountPageLogin(props) {
                     <Nav tabs>
                       <NavItem>
                         <NavLink
-                          className={classnames({ active: activeTab === "1" })}
+                          className={classnames({active: activeTab === "1"})}
                           onClick={() => {
                             toggle("1");
                           }}
@@ -259,7 +260,7 @@ export default function AccountPageLogin(props) {
                       </NavItem>
                       <NavItem>
                         <NavLink
-                          className={classnames({ active: activeTab === "2" })}
+                          className={classnames({active: activeTab === "2"})}
                           onClick={() => {
                             toggle("2");
                           }}
@@ -350,32 +351,32 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="form-group col-6">
-                              <label htmlFor="phone">Gender</label>
-                              <select
-                                id="gender"
-                                className="form-control border"
-                                placeholder="Select gender"
-                                name="gender"
-                                onChange={(event) =>
-                                  setRegisterFormData({
-                                    ...registerFormData,
-                                    gender: event.target.value,
-                                  })
-                                }
-                                value={registerFormData.gender || ""}
-                              >
-                                <option value="male" key="male">
-                                  Male
-                                </option>
-                                <option value="female" key="female">
-                                  Female
-                                </option>
-                                <option value="other" key="other">
-                                  Other
-                                </option>
-                              </select>
-                            </div>
+                            {/*<div className="form-group col-6">*/}
+                            {/*  <label htmlFor="phone">Gender</label>*/}
+                            {/*  <select*/}
+                            {/*    id="gender"*/}
+                            {/*    className="form-control border"*/}
+                            {/*    placeholder="Select gender"*/}
+                            {/*    name="gender"*/}
+                            {/*    onChange={(event) =>*/}
+                            {/*      setRegisterFormData({*/}
+                            {/*        ...registerFormData,*/}
+                            {/*        gender: event.target.value,*/}
+                            {/*      })*/}
+                            {/*    }*/}
+                            {/*    value={registerFormData.gender || ""}*/}
+                            {/*  >*/}
+                            {/*    <option value="male" key="male">*/}
+                            {/*      Male*/}
+                            {/*    </option>*/}
+                            {/*    <option value="female" key="female">*/}
+                            {/*      Female*/}
+                            {/*    </option>*/}
+                            {/*    <option value="other" key="other">*/}
+                            {/*      Other*/}
+                            {/*    </option>*/}
+                            {/*  </select>*/}
+                            {/*</div>*/}
 
                             <div className="form-group col-6">
                               <label htmlFor="phone">
@@ -401,14 +402,14 @@ export default function AccountPageLogin(props) {
                                 </option>
 
                                 {customerGroups &&
-                                  _.filter(
-                                    customerGroups,
-                                    (item) => item.displayOnSite === true
-                                  ).map((item) => (
-                                    <option value={item.customerGroupId}>
-                                      {item.customerGroupName}
-                                    </option>
-                                  ))}
+                                _.filter(
+                                  customerGroups,
+                                  (item) => item.displayOnSite === true
+                                ).map((item) => (
+                                  <option value={item.customerGroupId}>
+                                    {item.customerGroupName}
+                                  </option>
+                                ))}
                               </select>
                             </div>
 

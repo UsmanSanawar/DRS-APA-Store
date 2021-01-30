@@ -52,7 +52,6 @@ function ShopPageProduct(props) {
 
       RestService.getRelatedProductById(productId).then((res) => {
         if (res.data.status === "success") {
-          console.log(res.data.data, "res.data.datares.data.data");
 
           dispatch({ type: "RELATED_PRODUCTS", data: res.data.data });
         }
@@ -61,7 +60,6 @@ function ShopPageProduct(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params.productId]);
   const handleOptionWeight = (evt) => {
-    console.log(evt, "freqqq");
     if (parseFloat(product.weight) !== evt) {
       setProduct({
         ...product,
@@ -71,8 +69,6 @@ function ShopPageProduct(props) {
   };
 
   const { relatedProducts } = useSelector(({ webView }) => webView);
-
-  console.log(relatedProducts, "relatedProductsrelatedProducts");
 
   let content;
 

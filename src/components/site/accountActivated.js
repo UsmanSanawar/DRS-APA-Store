@@ -26,6 +26,9 @@ function App(props) {
           Congrats! Your account is now activated you can now login to your
           account. 
         </CardText>
+        <div className="text-center">
+          <a href="#/home" className="btn btn-success">Go to Home</a>
+        </div>
       </Card>
     </div>
   );

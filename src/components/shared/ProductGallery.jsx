@@ -1,12 +1,15 @@
 // react
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 // third-party
-import classNames from "classnames";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { IMAGE_URL } from "../../constant/constants";
-import SliderImage from "react-zoom-slider";
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
+// application
+import SlickWithPreventSwipeClick from './SlickWithPreventSwipeClick';
+import {IMAGE_URL} from "../../constant/constants";
+
 
 const slickSettingsFeatured = {
   dots: false,
@@ -96,18 +99,8 @@ class ProductGallery extends Component {
   }
 
   componentDidMount() {
-    this.createGallery = import("../../photoswipe").then(
-      (module) => module.createGallery
-    );
+    this.createGallery = import('../../photoswipe').then((module) => module.createGallery);
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.images !== this.props.images) {
-      this.getImages()
-    }
-  }
-  
-
 
   componentWillUnmount() {
     if (this.gallery) {
@@ -117,25 +110,6 @@ class ProductGallery extends Component {
     this.unmounted = true;
   }
 
-  getImages = () => {
-    const { images } = this.props;
-
-    let imagesArr = [];
-    if (images && images.length > 0) {
-      for (const [i, item] of images.entries()) {
-        imagesArr.push({
-          image:
-            item.name && item.name.includes("catalog")
-              ? `${IMAGE_URL}/${item.name}`
-              : `${IMAGE_URL}/images/${item.name}`,
-          text: `${i + 1}/${images.length}`,
-        });
-      }
-    }
-
-    return imagesArr;
-  };
-
   handleFeaturedClick = (event, index) => {
     if (!this.createGallery) {
       return;
@@ -144,16 +118,13 @@ class ProductGallery extends Component {
     event.preventDefault();
 
     const { images } = this.props;
-
     const items = images.map((image) => ({
-      src:
-        image.name && image.name.startsWith("catalog")
-          ? `${IMAGE_URL}/${image.name}`
-          : `${IMAGE_URL}/images/${image.name}`,
-      msrc:
-        image.name && image.name.startsWith("catalog")
-          ? `${IMAGE_URL}/${image.name}`
-          : `${IMAGE_URL}/images/${image.name}`,
+      src: image.name && image.name.startsWith("catalog")
+        ? `${IMAGE_URL}/${image.name}`
+        : `${IMAGE_URL}/images/${image.name}`,
+      msrc: image.name && image.name.startsWith("catalog")
+        ? `${IMAGE_URL}/${image.name}`
+        : `${IMAGE_URL}/images/${image.name}`,
       w: 700,
       h: 700,
     }));
@@ -165,8 +136,7 @@ class ProductGallery extends Component {
         }
 
         const imageElement = this.imagesRefs[index];
-        const pageYScroll =
-          window.pageYOffset || document.documentElement.scrollTop;
+        const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
         const rect = imageElement.getBoundingClientRect();
 
         return {
@@ -187,12 +157,12 @@ class ProductGallery extends Component {
 
       this.gallery = createGallery(items, options);
 
-      this.gallery.listen("beforeChange", () => {
+      this.gallery.listen('beforeChange', () => {
         if (this.gallery && this.slickFeaturedRef) {
           this.slickFeaturedRef.slickGoTo(this.gallery.getCurrentIndex(), true);
         }
       });
-      this.gallery.listen("destroy", () => {
+      this.gallery.listen('destroy', () => {
         this.gallery = null;
       });
 
@@ -233,43 +203,20 @@ class ProductGallery extends Component {
   };
 
   render() {
-
-    console.log(this.getImages(), "ssssssssssss")
-
     const { layout, images } = this.props;
     const { currentIndex } = this.state;
 
-    console.log(images, "imagesimagesimagesimages");
-
     const featured = images.map((image, index) => (
-      <Link
-        key={index}
-        to={
-          image.name && image.name.startsWith("catalog")
-            ? `${IMAGE_URL}/${image.name}`
-            : `${IMAGE_URL}/images/${image.name}`
-        }
-        onClick={(event) => this.handleFeaturedClick(event, index)}
-        target="_blank"
-      >
-        <img
-          style={{ maxHeight: "400px" }}
-          src={
-            image.name && image.name.startsWith("catalog")
-              ? `${IMAGE_URL}/${image.name}`
-              : `${IMAGE_URL}/images/${image.name}`
-          }
-          alt="Product"
-          ref={(element) => {
-            this.imagesRefs[index] = element;
-          }}
-        />
+      <Link key={index} to={`/${image}`} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
+        <img src={image.name && image.name.startsWith("catalog")
+          ? `${IMAGE_URL}/${image.name}`
+          : `${IMAGE_URL}/images/${image.name}`} alt="" ref={(element) => { this.imagesRefs[index] = element; }} />
       </Link>
     ));
 
     const thumbnails = images.map((image, index) => {
-      const classes = classNames("product-gallery__carousel-item", {
-        "product-gallery__carousel-item--active": index === currentIndex,
+      const classes = classNames('product-gallery__carousel-item', {
+        'product-gallery__carousel-item--active': index === currentIndex,
       });
 
       return (
@@ -279,15 +226,9 @@ class ProductGallery extends Component {
           onClick={() => this.handleThumbnailClick(index)}
           className={classes}
         >
-          <img
-            className="product-gallery__carousel-image"
-            src={
-              image.name && image.name.startsWith("catalog")
-                ? `${IMAGE_URL}/${image.name}`
-                : `${IMAGE_URL}/images/${image.name}`
-            }
-            alt=""
-          />
+          <img className="product-gallery__carousel-image" src={image.name && image.name.startsWith("catalog")
+            ? `${IMAGE_URL}/${image.name}`
+            : `${IMAGE_URL}/images/${image.name}`} alt="" />
         </button>
       );
     });
@@ -295,14 +236,21 @@ class ProductGallery extends Component {
     return (
       <div className="product__gallery">
         <div className="product-gallery">
-          {images && images.length > 0 ? (
-            <SliderImage
-              data={this.getImages()}
-              width="500px"
-              showDescription={true}
-              direction="right"
-            />
-          ) : null}
+          <div className="product-gallery__featured">
+            <SlickWithPreventSwipeClick
+              ref={this.setSlickFeaturedRef}
+              {...slickSettingsFeatured}
+              beforeChange={this.handleFeaturedBeforeChange}
+              afterChange={this.handleFeaturedAfterChange}
+            >
+              {featured}
+            </SlickWithPreventSwipeClick>
+          </div>
+          <div className="product-gallery__carousel">
+            <SlickWithPreventSwipeClick {...slickSettingsThumbnails[layout]}>
+              {thumbnails}
+            </SlickWithPreventSwipeClick>
+          </div>
         </div>
       </div>
     );
@@ -311,12 +259,12 @@ class ProductGallery extends Component {
 
 ProductGallery.propTypes = {
   images: PropTypes.array,
-  layout: PropTypes.oneOf(["standard", "sidebar", "columnar", "quickview"]),
+  layout: PropTypes.oneOf(['standard', 'sidebar', 'columnar', 'quickview']),
 };
 
 ProductGallery.defaultProps = {
   images: [],
-  layout: "standard",
+  layout: 'standard',
 };
 
 export default ProductGallery;

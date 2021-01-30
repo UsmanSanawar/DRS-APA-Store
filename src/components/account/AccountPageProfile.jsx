@@ -114,6 +114,21 @@ export default function AccountPageProfile(props) {
     );
   };
 
+
+  const handleSameAsShip = () => {
+    let shipping = userFormData.shipping;
+    let billingAddressId = 0;
+    if (userFormData.billing.customerAddressId) {
+      billingAddressId = userFormData.billing.customerAddressId
+    }
+
+    userFormData.billing = {...shipping, customerAddressId: billingAddressId, addressType: 'billing'};
+
+    setUserFormData({...userFormData, billing: userFormData.billing})
+  }
+
+  console.log(userFormData, "Waresssst")
+
   return (
     <div className="card">
       <Helmet>
@@ -528,6 +543,15 @@ export default function AccountPageProfile(props) {
                           value={userFormData.shipping.zipCode || ""}
                         />
                       </div>
+                    </div>
+
+                    <div className="form-row">
+                      <input style={{
+                        margin: 1,
+                        height: 20,
+                        width: 15,
+                      }} type="checkbox" name="sameAsShipping" onChange={handleSameAsShip}/>
+                      <span className="ml-2">Same as shipping</span>
                     </div>
 
                     <div className="form-row my-2">

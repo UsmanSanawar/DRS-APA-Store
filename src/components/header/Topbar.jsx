@@ -19,13 +19,7 @@ function Topbar(props) {
 
   const links = [
     {
-      title: <FormattedMessage id="topbar.aboutUs" defaultMessage="About Us" />,
-      url: "/site/about-us",
-    },
-    {
-      title: (
-        <FormattedMessage id="topbar.contacts" defaultMessage="Contacts" />
-      ),
+      title: <FormattedMessage id="topbar.contactUs" defaultMessage="Contact Us" />,
       url: "/site/contact-us",
     },
     {

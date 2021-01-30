@@ -1,21 +1,21 @@
 /* eslint-disable react/no-direct-mutation-state */
 // react
 import _ from "lodash";
-import React, { Component } from "react";
-import { Helmet } from "react-helmet";
+import React, {Component} from "react";
+import {Helmet} from "react-helmet";
 // third-party
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { bindActionCreators } from "redux";
+import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
+import {bindActionCreators} from "redux";
 import CircularLoader from "../../assets/loaders";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
-import { postSaleOrder, resetCartPaid } from "../../store/cart";
+import {postSaleOrder, resetCartPaid} from "../../store/cart";
 import RestService from "../../store/restService/restService";
-import { getAllCountries } from "../../store/webView";
-import { Check9x7Svg } from "../../svg";
+import {getAllCountries} from "../../store/webView";
+import {Check9x7Svg} from "../../svg";
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
@@ -47,8 +47,8 @@ class ShopPageCheckout extends Component {
     this.state = {
       payment: "",
       formValues: {
-        billing: { ...initAddr, addressType: "billing" },
-        shipping: { ...initAddr, addressType: "shipping" },
+        billing: {...initAddr, addressType: "billing"},
+        shipping: {...initAddr, addressType: "shipping"},
       },
       loading: false,
       orderNote: "",
@@ -70,11 +70,43 @@ class ShopPageCheckout extends Component {
 
   showPaypalButtons = () => {
     if (this.state.payment === "paypal") {
-      this.setState({ showPaypal: true });
+      this.setState({showPaypal: true});
     }
   };
 
   componentDidMount() {
+
+    let token = localStorage.getItem("token");
+    RestService.getCustomerByToken(token).then(res => {
+      if (res.data.status === "success") {
+        let {customerAddress} = res.data.data;
+        if (customerAddress.length > 0) {
+          let shipping;
+          let billing;
+          customerAddress.map(address => {
+
+            if (address.addressType === "shipping") {
+              shipping = {
+                ...initAddr, ...address
+              }
+            }
+
+            if (address.addressType === "billing") {
+              billing = {
+                ...initAddr, ...address
+              }
+            }
+          })
+          this.setState({
+            formValues: {
+              billing: billing,
+              shipping: shipping
+            }
+          })
+        }
+      }
+    })
+
     this.getAllDeliveryTimeOptions();
     this.props.getAllCountries();
     let total = JSON.parse(localStorage.getItem("state")).cart.total
@@ -137,11 +169,11 @@ class ShopPageCheckout extends Component {
       orderStatusCode: "",
     };
 
-    let shipping = { ...this.state.formValues.shipping };
+    let shipping = {...this.state.formValues.shipping};
     shipping.addressType = "shipping";
     shipping.orderAddressId = null;
 
-    let billing = { ...this.state.formValues.billing };
+    let billing = {...this.state.formValues.billing};
     billing.orderAddressId = null;
     billing.addressType = "billing";
 
@@ -153,19 +185,19 @@ class ShopPageCheckout extends Component {
       let product = item.product;
       product.discountProducts.map((p) => {
         p.discount.discountCustomerGroups !== undefined &&
-          p.discount.discountCustomerGroups !== null &&
-          p.discount.discountCustomerGroups.map((discountGroup) => {
-            if (
-              discountGroup.customerGroupId ===
-              this.props.customer.customerGroupId
-            ) {
-              discountThatMayApply.push({
-                discountId: p.discount.discountId,
-                discountName: p.discount.name,
-                discountPercentage: p.discount.discountPercentage,
-              });
-            }
-          });
+        p.discount.discountCustomerGroups !== null &&
+        p.discount.discountCustomerGroups.map((discountGroup) => {
+          if (
+            discountGroup.customerGroupId ===
+            this.props.customer.customerGroupId
+          ) {
+            discountThatMayApply.push({
+              discountId: p.discount.discountId,
+              discountName: p.discount.name,
+              discountPercentage: p.discount.discountPercentage,
+            });
+          }
+        });
       });
 
       let appliedDiscount = _.maxBy(
@@ -200,7 +232,7 @@ class ShopPageCheckout extends Component {
         item.product.selectedProductOption &&
         item.product.selectedProductOption.productId
       ) {
-        let SelectedProduct = { ...item.product.selectedProductOption };
+        let SelectedProduct = {...item.product.selectedProductOption};
         SelectedProduct.orderLineProductOptionsId = 0;
         SelectedProduct.orderLineProductOptionCombinations = SelectedProduct.productOptionCombination;
 
@@ -250,11 +282,14 @@ class ShopPageCheckout extends Component {
 
       if (this.props.cart.items.length < 1) {
         toast.error("Cart is empty");
+      } else if (this.state.deliveryTime === null) {
+        toast.warn('Please select delivery time.')
+        this.handleSubmitLoading(false)
       } else {
         RestService.postSaleOrder(saleOrder).then((r) => {
           toast[r.data.status](r.data.message);
           if (r.data.status === "success") {
-            this.setState({ orderState: r.data.data });
+            this.setState({orderState: r.data.data});
           } else {
             this.handleSubmitLoading(false);
           }
@@ -284,18 +319,18 @@ class ShopPageCheckout extends Component {
       // eslint-disable-next-line react/no-direct-mutation-state
       this.state.formValues[addressType][name] = event.target.value;
 
-      this.setState({ formValues: this.state.formValues });
+      this.setState({formValues: this.state.formValues});
     }
   };
 
   handlePaymentChange = (event) => {
     if (event.target.checked) {
-      this.setState({ payment: event.target.value });
+      this.setState({payment: event.target.value});
     }
   };
 
   renderTotals() {
-    const { cart } = this.props;
+    const {cart} = this.props;
 
     if (cart.extraLines.length <= 0) {
       return null;
@@ -305,7 +340,7 @@ class ShopPageCheckout extends Component {
       <tr key={index}>
         <th>{extraLine.title}</th>
         <td>
-          <Currency value={extraLine.price} />
+          <Currency value={extraLine.price}/>
         </td>
       </tr>
     ));
@@ -313,26 +348,26 @@ class ShopPageCheckout extends Component {
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
-          <tr>
-            <th>Subtotal</th>
-            <td>
-              <Currency value={cart.subtotal} />
-            </td>
-          </tr>
-          {extraLines}
+        <tr>
+          <th>Subtotal</th>
+          <td>
+            <Currency value={cart.subtotal}/>
+          </td>
+        </tr>
+        {extraLines}
         </tbody>
       </React.Fragment>
     );
   }
 
   renderCart() {
-    const { cart } = this.props;
+    const {cart} = this.props;
 
     const items = cart.items.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.name} × ${item.quantity}`}</td>
         <td>
-          <Currency value={item.total} />
+          <Currency value={item.total}/>
         </td>
       </tr>
     ));
@@ -340,52 +375,52 @@ class ShopPageCheckout extends Component {
     return (
       <table className="checkout__totals">
         <thead className="checkout__totals-header">
-          <tr>
-            <th>Product</th>
-            <th>Total</th>
-          </tr>
+        <tr>
+          <th>Product</th>
+          <th>Total</th>
+        </tr>
         </thead>
         <tbody className="checkout__totals-products">{items}</tbody>
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Discount</th>
-            <td>
-              -<Currency value={cart.totalDiscounts} />
-            </td>
-          </tr>
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Tax</th>
-            <td>
-              <Currency value={cart.totalTaxs} />
-            </td>
-          </tr>
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Shipping</th>
-            <td>
-              <Currency value={this.state.shippingTotal} />
-            </td>
-          </tr>
-          <tr>
-            <th>Total</th>
-            <td>
-              <Currency value={cart.total + this.state.shippingTotal} />
-            </td>
-          </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Discount</th>
+          <td>
+            -<Currency value={cart.totalDiscounts}/>
+          </td>
+        </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Tax</th>
+          <td>
+            <Currency value={cart.totalTaxs}/>
+          </td>
+        </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Shipping</th>
+          <td>
+            <Currency value={this.state.shippingTotal}/>
+          </td>
+        </tr>
+        <tr>
+          <th>Total</th>
+          <td>
+            <Currency value={cart.total + this.state.shippingTotal}/>
+          </td>
+        </tr>
         </tfoot>
       </table>
     );
   }
 
   handleShipmentCalculation = async (e) => {
-    this.setState({ sloading: true });
+    this.setState({sloading: true});
     let formDataSaleOrders = this.handleSaleorderObject();
-    let data = { ...formDataSaleOrders };
+    let data = {...formDataSaleOrders};
     data.uK_DeliveryDurationId = parseInt(e.target.value);
 
-    await RestService.calculateSaleOrderShipment({ ...data })
+    await RestService.calculateSaleOrderShipment({...data})
       .then((res) => {
-        this.setState({ sloading: false });
+        this.setState({sloading: false});
         if (res.data.error === "") {
           this.setState({
             calculations: res.data.order,
@@ -398,10 +433,10 @@ class ShopPageCheckout extends Component {
   };
 
   renderPaymentsList() {
-    const { payment: currentPayment } = this.state;
+    const {payment: currentPayment} = this.state;
 
     const payments = this.payments.map((payment) => {
-      const renderPayment = ({ setItemRef, setContentRef }) => (
+      const renderPayment = ({setItemRef, setContentRef}) => (
         <li className="payment-methods__item" ref={setItemRef}>
           <label className="payment-methods__item-header">
             <span className="payment-methods__item-radio input-radio">
@@ -414,7 +449,7 @@ class ShopPageCheckout extends Component {
                   checked={currentPayment === payment.key}
                   onChange={this.handlePaymentChange}
                 />
-                <span className="input-radio__circle" />
+                <span className="input-radio__circle"/>
               </span>
             </span>
             <span className="payment-methods__item-title">{payment.title}</span>
@@ -517,8 +552,8 @@ class ShopPageCheckout extends Component {
   };
 
   render() {
-    const { cart, allCountries } = this.props;
-    const { billing, shipping } = this.state.formValues;
+    const {cart, allCountries} = this.props;
+    const {billing, shipping} = this.state.formValues;
     const {
       showPaypal,
       payment,
@@ -528,9 +563,9 @@ class ShopPageCheckout extends Component {
     } = this.state;
 
     const breadcrumb = [
-      { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/store/cart" },
-      { title: "Checkout", url: "" },
+      {title: "Home", url: ""},
+      {title: "Shopping Cart", url: "/store/cart"},
+      {title: "Checkout", url: ""},
     ];
 
     return (
@@ -539,7 +574,7 @@ class ShopPageCheckout extends Component {
           <title>{`Checkout — ${theme.name}`}</title>
         </Helmet>
 
-        <PageHeader header="Checkout" breadcrumb={breadcrumb} />
+        <PageHeader header="Checkout" breadcrumb={breadcrumb}/>
 
         <div className="checkout block">
           <div className="container">
@@ -553,16 +588,16 @@ class ShopPageCheckout extends Component {
                 <div className="col-12 col-lg-6 col-xl-7">
                   <div className="card mb-lg-0">
                     <div className="card-body">
-                      <h3 className="card-title">Billing details</h3>
+                      <h3 className="card-title">Billing Details</h3>
                       <div className="form-row">
                         <div className="form-group col-md-6">
                           <label htmlFor="checkout-first-name">
-                            First Name
+                            First Name <small className="text-danger">*</small>
                           </label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-first-name"
+                            id="billing-first-name"
                             placeholder="First Name"
                             value={billing.firstName}
                             name={"firstName"}
@@ -571,11 +606,11 @@ class ShopPageCheckout extends Component {
                           />
                         </div>
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-last-name">Last Name</label>
+                          <label htmlFor="billing-last-name">Last Name <small className="text-danger">*</small></label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-last-name"
+                            id="billing-last-name"
                             placeholder="Last Name"
                             value={billing.lastName}
                             name={"lastName"}
@@ -585,14 +620,14 @@ class ShopPageCheckout extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="checkout-company-name">
+                        <label htmlFor="billing-company-name">
                           Company Name{" "}
-                          <span className="text-muted">(Optional)</span>
+                          <span className="text-muted">(Optional)</span> <small className="text-danger">*</small>
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="checkout-company-name"
+                          id="billing-company-name"
                           placeholder="Company Name"
                           value={billing.companyName}
                           name={"companyName"}
@@ -601,9 +636,9 @@ class ShopPageCheckout extends Component {
                       </div>
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-country">Country</label>
+                          <label htmlFor="billing-country">Country <small className="text-danger">*</small></label>
                           <select
-                            id="checkout-country"
+                            id="billing-country"
                             className="form-control"
                             value={billing.country}
                             name={"country"}
@@ -612,22 +647,22 @@ class ShopPageCheckout extends Component {
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                              allCountries.map((item) => {
-                                return (
-                                  <option value={item.countryName}>
-                                    {item.countryName}
-                                  </option>
-                                );
-                              })}
+                            allCountries.map((item) => {
+                              return (
+                                <option value={item.countryName}>
+                                  {item.countryName}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-city">Town / City</label>
+                          <label htmlFor="billing-city">Town / City <small className="text-danger">*</small></label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-city"
+                            id="billing-city"
                             value={billing.city}
                             name={"city"}
                             placeholder="Town / City"
@@ -638,13 +673,13 @@ class ShopPageCheckout extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="checkout-street-address">
-                          Street Address
+                        <label htmlFor="billing-street-address">
+                          Street Address <small className="text-danger">*</small>
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="checkout-street-address"
+                          id="billing-street-address"
                           placeholder="Street Address"
                           value={billing.street}
                           name={"street"}
@@ -655,11 +690,11 @@ class ShopPageCheckout extends Component {
 
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-state">State / County</label>
+                          <label htmlFor="billing-state">State / County <small className="text-danger">*</small></label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-state"
+                            id="billing-state"
                             value={billing.state}
                             name={"state"}
                             placeholder="State / County"
@@ -669,13 +704,13 @@ class ShopPageCheckout extends Component {
                         </div>
 
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-postcode">
-                            Postcode / ZIP
+                          <label htmlFor="billing-postcode">
+                            Postcode / ZIP <small className="text-danger">*</small>
                           </label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-postcode"
+                            id="billing-postcode"
                             value={billing.zipCode}
                             name={"zipCode"}
                             placeholder="Postcode / ZIP"
@@ -687,11 +722,11 @@ class ShopPageCheckout extends Component {
 
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-email">Email address</label>
+                          <label htmlFor="billing-email">Email address <small className="text-danger">*</small></label>
                           <input
                             type="email"
                             className="form-control"
-                            id="checkout-email"
+                            id="billing-email"
                             placeholder="Email address"
                             value={billing.email}
                             name={"email"}
@@ -700,11 +735,11 @@ class ShopPageCheckout extends Component {
                           />
                         </div>
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-phone">Phone</label>
+                          <label htmlFor="billing-phone">Phone</label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-phone"
+                            id="billing-phone"
                             placeholder="Phone"
                             value={billing.phone}
                             name={"phone"}
@@ -714,7 +749,7 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="card-divider" />
+                    <div className="card-divider"/>
                     <div className="card-body">
                       <h3 className="card-title">Shipping Details</h3>
 
@@ -728,8 +763,8 @@ class ShopPageCheckout extends Component {
                                 id="checkout-different-address"
                                 onChange={this.handleAddressToggle}
                               />
-                              <span className="input-check__box" />
-                              <Check9x7Svg className="input-check__icon" />
+                              <span className="input-check__box"/>
+                              <Check9x7Svg className="input-check__icon"/>
                             </span>
                           </span>
                           <label
@@ -743,13 +778,13 @@ class ShopPageCheckout extends Component {
 
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-first-name1">
-                            First Name
+                          <label htmlFor="shipping-first-name">
+                            First Name <small className="text-danger">*</small>
                           </label>
                           <input
                             type="text"
                             className="form-control"
-                            // id="checkout-first-name"
+                            id="shipping-first-name"
                             placeholder="First Name"
                             value={shipping.firstName}
                             name={"shipping-firstName"}
@@ -760,11 +795,11 @@ class ShopPageCheckout extends Component {
                           />
                         </div>
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-last-name">Last Name</label>
+                          <label htmlFor="shipping-last-name">Last Name <small className="text-danger">*</small></label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-last-name"
+                            id="shipping-last-name"
                             placeholder="Last Name"
                             value={shipping.lastName}
                             name={"shipping-lastName"}
@@ -776,14 +811,14 @@ class ShopPageCheckout extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="checkout-company-name">
+                        <label htmlFor="shipping-company-name">
                           Company Name{" "}
-                          <span className="text-muted">(Optional)</span>
+                          <span className="text-muted">(Optional)</span> <small className="text-danger">*</small>
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="checkout-company-name"
+                          id="shipping-company-name"
                           placeholder="Company Name"
                           value={shipping.companyName}
                           name={"shipping-companyName"}
@@ -794,9 +829,9 @@ class ShopPageCheckout extends Component {
                       </div>
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-country">Country</label>
+                          <label htmlFor="shipping-country">Country <small className="text-danger">*</small></label>
                           <select
-                            id="checkout-country"
+                            id="shipping-country"
                             className="form-control"
                             value={shipping.country}
                             name={"shipping-country"}
@@ -807,22 +842,22 @@ class ShopPageCheckout extends Component {
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                              allCountries.map((item) => {
-                                return (
-                                  <option value={item.countryName}>
-                                    {item.countryName}
-                                  </option>
-                                );
-                              })}
+                            allCountries.map((item) => {
+                              return (
+                                <option value={item.countryName}>
+                                  {item.countryName}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-city">Town / City</label>
+                          <label htmlFor="shipping-city">Town / City <small className="text-danger">*</small></label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-city"
+                            id="shipping-city"
                             value={shipping.city}
                             name={"shipping-city"}
                             placeholder="Town / City"
@@ -835,13 +870,13 @@ class ShopPageCheckout extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="checkout-street-address">
-                          Street Address
+                        <label htmlFor="shipping-street-address">
+                          Street Address <small className="text-danger">*</small>
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="checkout-street-address"
+                          id="shipping-street-address"
                           placeholder="Street Address"
                           value={shipping.street}
                           name={"shipping-street"}
@@ -853,11 +888,11 @@ class ShopPageCheckout extends Component {
                       </div>
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-state">State / County</label>
+                          <label htmlFor="shipping-state">State / County</label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-state"
+                            id="shipping-state"
                             value={shipping.state}
                             name={"shipping-state"}
                             placeholder="State / County"
@@ -869,13 +904,13 @@ class ShopPageCheckout extends Component {
                         </div>
 
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-postcode">
-                            Postcode / ZIP
+                          <label htmlFor="shipping-postcode">
+                            Postcode / ZIP <small className="text-danger">*</small>
                           </label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-postcode"
+                            id="shipping-postcode"
                             value={shipping.zipCode}
                             name={"shipping-zipCode"}
                             placeholder="Postcode / ZIP"
@@ -889,11 +924,11 @@ class ShopPageCheckout extends Component {
 
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-email">Email address</label>
+                          <label htmlFor="shipping-email">Email address <small className="text-danger">*</small></label>
                           <input
                             type="email"
                             className="form-control"
-                            id="checkout-email"
+                            id="shipping-email"
                             placeholder="Email address"
                             value={shipping.email}
                             name={"shipping-email"}
@@ -904,11 +939,11 @@ class ShopPageCheckout extends Component {
                           />
                         </div>
                         <div className="form-group col-md-6">
-                          <label htmlFor="checkout-phone">Phone</label>
+                          <label htmlFor="shipping-phone">Phone</label>
                           <input
                             type="text"
                             className="form-control"
-                            id="checkout-phone"
+                            id="shipping-phone"
                             placeholder="Phone"
                             value={shipping.phone}
                             name={"shipping-phone"}
@@ -920,20 +955,20 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
 
-                      <div className="card-divider" />
-                      <br />
+                      <div className="card-divider"/>
+                      <br/>
 
                       <div className="form-group">
-                        <label htmlFor="checkout-comment">
+                        <label htmlFor="shipping-comment">
                           Order notes{" "}
                           <span className="text-muted">(Optional)</span>
                         </label>
                         <textarea
-                          id="checkout-comment"
+                          id="shipping-comment"
                           className="form-control"
                           rows="4"
                           onChange={(e) =>
-                            this.setState({ orderNote: e.target.value })
+                            this.setState({orderNote: e.target.value})
                           }
                         />
                       </div>
@@ -948,7 +983,7 @@ class ShopPageCheckout extends Component {
                       <div className="form-group">
                         <label htmlFor="checkout-country">
                           Delivery Time Options{" "}
-                          <i style={{ color: "red" }}>*</i>
+                          <i style={{color: "red"}}>*</i>
                         </label>
                         <select
                           required
@@ -957,7 +992,7 @@ class ShopPageCheckout extends Component {
                           value={billing.deliveryTime}
                           name={"country"}
                           onChange={(e) => {
-                            this.setState({ deliveryTime: e.target.value });
+                            this.setState({deliveryTime: e.target.value});
                             this.handleShipmentCalculation(e);
                           }}
                         >
@@ -979,8 +1014,8 @@ class ShopPageCheckout extends Component {
                           }}
                           style={
                             !this.state.deliveryTime
-                              ? { pointerEvents: "none", opacity: "0.7" }
-                              : { cursor: "pointer" }
+                              ? {pointerEvents: "none", opacity: "0.7"}
+                              : {cursor: "pointer"}
                           }
                           className="text-center border-bottom mt-3 w-100"
                         >
@@ -1025,17 +1060,17 @@ class ShopPageCheckout extends Component {
                                 }
                                 id="checkout-terms"
                               />
-                              <span className="input-check__box" />
-                              <Check9x7Svg className="input-check__icon" />
+                              <span className="input-check__box"/>
+                              <Check9x7Svg className="input-check__icon"/>
                             </span>
                           </span>
                           <label
-                            style={{ fontSize: "13px", fontWeight: "bold" }}
+                            style={{fontSize: "13px", fontWeight: "bold"}}
                             className="form-check-label"
                             htmlFor="checkout-terms"
                           >
                             I have read and agree to the website{" "}
-                            <Link to="/site/terms">terms and conditions</Link>*
+                            <Link to="/terms-condition">terms and conditions</Link>*
                           </label>
                         </div>
                       </div>
@@ -1052,11 +1087,11 @@ class ShopPageCheckout extends Component {
                       )}
 
                       {this.state.payment === "stripe" &&
-                        (this.state.submitLoading ? (
-                          <div className="text-center my-1">
-                            <CircularLoader />
-                          </div>
-                        ) : null)}
+                      (this.state.submitLoading ? (
+                        <div className="text-center my-1">
+                          <CircularLoader/>
+                        </div>
+                      ) : null)}
 
                       <div
                         className={

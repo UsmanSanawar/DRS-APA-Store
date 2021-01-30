@@ -169,9 +169,7 @@ class ShopPageCart extends Component {
                 option.optionTypeId === 1 || option.optionTypeId === 2
                   ? this.getSeletedOptionValue(option)
                   : option.optionTypeId === 3
-                  ? option.value === undefined || option.value === false
-                    ? false
-                    : true
+                  ? !(option.value === undefined || option.value === false)
                   : option.optionTypeId === 6
                     ? option.value
                       ? option.value

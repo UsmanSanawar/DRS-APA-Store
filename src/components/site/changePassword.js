@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { Card, CardText, CardTitle } from "reactstrap";
+import React, {useEffect, useState} from "react";
+import {toast} from "react-toastify";
+import {Card, CardText, CardTitle} from "reactstrap";
 import RestService from "../../store/restService/restService";
 
-function UnsubscribePage(props) {
+function ChangePassword(props) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [activationCode, setActivationCode] = useState("");
@@ -18,15 +18,18 @@ function UnsubscribePage(props) {
   }, []);
 
   const handlePasswordChange = () => {
-    if (activationCode !== "" && confirmPassword !== newPassword) {
+    if (activationCode !== "" && confirmPassword === newPassword) {
       let data = {
         password: newPassword,
         activationCode: activationCode,
       };
       RestService.changePasswordAfterEmail(data).then((res) => {
+        setSubmitted(false);
         toast[res.data.status](res.data.message);
         if (res.data.status === "success") {
           return props.history.push("/store/login");
+        } else {
+          toast.error('Link is expired')
         }
       });
     } else {
@@ -36,15 +39,15 @@ function UnsubscribePage(props) {
 
   return (
     <div>
-      <Card body style={{ marginTop: "40%", marginBottom: "60%" }}>
+      <Card body style={{marginTop: "35%", marginBottom: "60%"}}>
         <CardTitle tag="h4" className="p-c-heading">
-          <i style={{ color: "#28a745" }} class="fa fa-key" /> Enter New
+          <i style={{color: "#28a745"}} class="fa fa-key"/> Enter New
           Password
         </CardTitle>
 
         <CardText className="p-c-description">
           <div className="form-row justify-content-center col-12">
-            <div style={{ width: "85%" }}>
+            <div style={{width: "85%"}}>
               <div className="mb-3 w-100">
                 <input
                   type="password"
@@ -63,7 +66,7 @@ function UnsubscribePage(props) {
                 />
                 {newPassword && newPassword !== confirmPassword && (
                   <p>
-                    <small>Both passwords don't match</small>
+                    <small className="text-danger text-left">*Both passwords don't match</small>
                   </p>
                 )}
               </div>
@@ -76,7 +79,7 @@ function UnsubscribePage(props) {
                 }}
                 disabled={submitted}
                 type="button"
-                value="Change"
+                value="Click to change Password"
                 className="btn btn-sm btn-success"
               />
             </div>
@@ -86,4 +89,5 @@ function UnsubscribePage(props) {
     </div>
   );
 }
-export default UnsubscribePage;
+
+export default ChangePassword;

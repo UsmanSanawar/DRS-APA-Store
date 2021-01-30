@@ -287,7 +287,7 @@ function Layout(props) {
               {/*
                         // Site
                         */}
-              <Redirect exact from="/site" to="/site/about-us" />
+              <Redirect exact from="/site" to="/site/contact-us" />
 
               {menu &&
                 menu.map((item) => (
@@ -299,7 +299,7 @@ function Layout(props) {
                   />
                 ))}
 
-              <Route exact path="/site/about-us" component={SitePageAboutUs} />
+              <Route exact path="/site/contact-us" component={SitePageAboutUs} />
 
               <Route
                 exact

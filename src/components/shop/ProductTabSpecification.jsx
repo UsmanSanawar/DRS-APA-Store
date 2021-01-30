@@ -18,7 +18,7 @@ function ProductTabSpecification(props) {
         <h4 className="spec__section-title">General</h4>
         <div className="spec__row">
           <div className="spec__name">Weight</div>
-          <div className="spec__value">{`${product.newWeight || product.weight}  Kg`}</div>
+          <div className="spec__value">{`${parseFloat(product.newWeight || product.weight).toFixed(2)}  Kg`}</div>
         </div>
 
         <br />
@@ -28,21 +28,21 @@ function ProductTabSpecification(props) {
         <div className="spec__row">
           <div className="spec__name">Length</div>
           <div className="spec__value">{`${
-            props.product.length ? props.product.length + "cm" : "-"
+            props.product.length ? parseFloat(props.product.length).toFixed(2) + "cm" : "-"
           }`}</div>
         </div>
 
         <div className="spec__row">
           <div className="spec__name">Width</div>
           <div className="spec__value">{`${
-            props.product.width ? props.product.width + "cm" : "-"
+            props.product.width ? parseFloat(props.product.width).toFixed(2) + "cm" : "-"
           }`}</div>
         </div>
 
         <div className="spec__row">
           <div className="spec__name">Height</div>
           <div className="spec__value">{`${
-            props.product.height ? props.product.height + "cm" : "-"
+            props.product.height ? parseFloat(props.product.height).toFixed(2) + "cm" : "-"
           }`}</div>
         </div>
       </div>

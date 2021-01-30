@@ -2,18 +2,18 @@
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React, {Component} from "react";
 // application
-import { Helmet } from "react-helmet";
-import { connect } from "react-redux";
-import { toast } from "react-toastify";
-import { FormGroup, Input, Label } from "reactstrap";
+import {Helmet} from "react-helmet";
+import {connect} from "react-redux";
+import {toast} from "react-toastify";
+import {FormGroup, Input, Label} from "reactstrap";
 import "../../assets/CSS/customStylesForInputs.css";
-import { cartAddItem } from "../../store/cart";
-import { compareAddItem } from "../../store/compare";
+import {cartAddItem} from "../../store/cart";
+import {compareAddItem} from "../../store/compare";
 import RestService from "../../store/restService/restService";
-import { wishlistAddItem } from "../../store/wishlist";
-import { Compare16Svg, Wishlist16Svg } from "../../svg";
+import {wishlistAddItem} from "../../store/wishlist";
+import {Compare16Svg, Wishlist16Svg} from "../../svg";
 import AsyncAction from "./AsyncAction";
 import Currency from "./Currency";
 import InputNumber from "./InputNumber";
@@ -46,9 +46,7 @@ class Product extends Component {
     if (this.props.product.minimumQuantity) {
       this.setState({
         quantity:
-          parseInt(this.props.product.minimumQuantity) > 0
-            ? parseInt(this.props.product.minimumQuantity)
-            : 1,
+          parseInt(this.props.product.minimumQuantity) > 0 ? parseInt(this.props.product.minimumQuantity) : 1,
       });
     }
 
@@ -62,8 +60,6 @@ class Product extends Component {
 
         let array = data && data.productPhotos;
         array.unshift({ name: data.image });
-
-        console.log("sssssawadasD", array);
 
         this.setState({
           productPhotos: array,
@@ -102,9 +98,7 @@ class Product extends Component {
 
   getProductOptionCombination = () => {
     if (this.props.product.productId) {
-      RestService.getProductOptionCombination(
-        this.props.product.productId
-      ).then((res) => {
+      RestService.getProductOptionCombination(this.props.product.productId).then((res) => {
         if (res.data.status === "success") {
           this.setState({
             options: res.data.data !== null ? res.data.data : [],
@@ -124,8 +118,7 @@ class Product extends Component {
             this.state.options.some(
               (option) =>
                 parseInt(option.optionId) === parseInt(combination.optionId) &&
-                (parseInt(option.value) ===
-                  parseInt(combination.optionValueId) ||
+                (parseInt(option.value) === parseInt(combination.optionValueId) ||
                   combination.optionTypeId === 6)
             )
           ) {
@@ -157,9 +150,7 @@ class Product extends Component {
       });
       if (index > -1) {
         this.state.options[index].value =
-          event.target.type === "checkbox"
-            ? event.target.checked
-            : event.target.value;
+          event.target.type === "checkbox" ? event.target.checked : event.target.value;
         this.setState(
           {
             options: this.state.options,
@@ -182,15 +173,11 @@ class Product extends Component {
           break;
 
         case "plus":
-          weight =
-            parseFloat(this.state.slectedPr.optionWeight) +
-            parseFloat(this.props.product.weight);
+          weight = parseFloat(this.state.slectedPr.optionWeight) + parseFloat(this.props.product.weight);
           break;
 
         case "minus":
-          weight =
-            parseFloat(this.state.slectedPr.optionWeight) -
-            parseFloat(this.props.product.weight);
+          weight = parseFloat(this.state.slectedPr.optionWeight) - parseFloat(this.props.product.weight);
           break;
 
         default:
@@ -202,25 +189,13 @@ class Product extends Component {
   };
 
   render() {
-    const {
-      product,
-      layout,
-      wishlistAddItem,
-      compareAddItem,
-      cartAddItem,
-      customer,
-    } = this.props;
-
-    console.log(this.props.product, "this.stateThis.state");
-
+    const { product, layout, wishlistAddItem, compareAddItem, cartAddItem, customer } = this.props;
     const { quantity } = this.state;
 
     const handleOptionValues = (options) => {
       let SelectOptions;
       if (options && options.length) {
-        SelectOptions = options.map((item) => (
-          <option value={item.optionValueId}>{item.name}</option>
-        ));
+        SelectOptions = options.map((item) => <option value={item.optionValueId}>{item.name}</option>);
       }
       return SelectOptions;
     };
@@ -261,7 +236,7 @@ class Product extends Component {
             <Input
               onChange={(e) => this.handleInputChange(e, item.optionId)}
               className="checkbox"
-              style={{ display: "block", marginLeft: "10px" }}
+              style={{ marginLeft: "10px" }}
               type="checkbox"
               name={item.optionName}
             />
@@ -273,22 +248,20 @@ class Product extends Component {
             <FormGroup check required>
               <Label for="exampleSelect">{item.optionName}</Label>
               {item.optionValues &&
-                item.optionValues.map((optValue) => (
-                  <FormGroup check required>
-                    <Label check>
-                      <Input
-                        required
-                        type="radio"
-                        name={item.optionName}
-                        onChange={(e) =>
-                          this.handleInputChange(e, item.optionId)
-                        }
-                        value={optValue.optionValueId}
-                      />{" "}
-                      {optValue.name}
-                    </Label>
-                  </FormGroup>
-                ))}
+              item.optionValues.map((optValue) => (
+                <FormGroup check required>
+                  <Label check>
+                    <Input
+                      required
+                      type="radio"
+                      name={item.optionName}
+                      onChange={(e) => this.handleInputChange(e, item.optionId)}
+                      value={optValue.optionValueId}
+                    />{" "}
+                    {optValue.name}
+                  </Label>
+                </FormGroup>
+              ))}
             </FormGroup>
             {/* <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" /> */}
           </div>
@@ -348,20 +321,8 @@ class Product extends Component {
 
     return (
       <div className={`product product--layout--${layout}`}>
-                <div className="product__content">
-        <Helmet>
-          <title>{`Product — ${product.productName}`}</title>
-        </Helmet>
-
-            <ProductGallery
-              layout={layout}
-              images={
-                this.state.slectedPr.images
-                  ? [{ name: this.state.slectedPr.images }]
-                  : this.state.productPhotos
-              }
-            />
-
+        <div className="product__content">
+          <ProductGallery layout={layout} images={product.images} />
 
           <div className="product__info">
             <div className="product__wishlist-compare">
@@ -406,13 +367,10 @@ class Product extends Component {
                 <Rating value={getRatingCal()} />
               </div>
               <div className="product__rating-legend">
-                <span>{`${
-                  product.totalReviewsCount ? product.totalReviewsCount : 0
-                } Reviews`}</span>
+                <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0} Reviews`}</span>
               </div>
             </div>
-            <div className="product__description">
-            </div>
+            <div className="product__description"></div>
             <ul className="product__features">
               <li>Speed: 750 RPM</li>
               <li>Power Source: Cordless-Electric</li>
@@ -420,15 +378,14 @@ class Product extends Component {
               <li>Voltage: 20 Volts</li>
               <li>Battery Capacity: 2 Ah</li>
             </ul>
+
             <ul className="product__meta">
               <li className="product__meta-availability">
                 Availability:
                 <span className="text-success">{product.stockStatusName}</span>
               </li>
 
-              {product.manufacturerName ? (
-                <li>Brand: {product.manufacturerName}</li>
-              ) : null}
+              {product.manufacturerName ? <li>Brand: {product.manufacturerName}</li> : null}
 
               {this.state.slectedPr.optionModel ? (
                 <li>Model: {this.state.slectedPr.optionModel}</li>
@@ -444,8 +401,7 @@ class Product extends Component {
 
           <div className="product__sidebar">
             <div className="product__availability">
-              Availability:{" "}
-              <span className="text-success">{product.stockStatusName}</span>
+              Availability: <span className="text-success">{product.stockStatusName}</span>
             </div>
 
             <div className="product__prices">
@@ -458,80 +414,83 @@ class Product extends Component {
                 e.preventDefault();
                 handleCartAddItem();
               }}
+
             >
-              <div className="form-group product__option">
-                <h4>Available Options</h4>
-                <div className="input-radio-label" style={{maxHeight: 400, overflowY: "scroll"}}>{renderOptions()}</div>
-              </div>
-              <div className="form-group product__option">
-                <label
-                  htmlFor="product-quantity"
-                  className="product__option-label"
-                >
-                  Quantity{" "}
-                  {product.stockStatusName === "Out Of Stock" ? null : <small style={{ color: "green" }}>
-                    (Avaiable Quantity: {product.quantity})
-                  </small>}
-                </label>
-                <div className="product__actions">
-                  <div className="product__actions-item">
-                    <InputNumber
-                      id="product-quantity"
-                      aria-label="Quantity"
-                      className="product__quantity"
-                      optionQuantity={this.state.slectedPr.optionQuantity}
-                      productQuantity={product.quantity}
-                      stateQuantity={this.state.quantity}
-                      size="lg"
-                      min={
-                        parseInt(product.minimumQuantity) > 0
-                          ? parseInt(product.minimumQuantity)
-                          : 1
-                      }
-                      value={quantity}
-                      onChange={this.handleChangeQuantity}
-                    />
-                  </div>
-                  <div className="product__actions-item product__actions-item--addtocart">
-                    {/* <AsyncAction
+              <div>
+                <div className="form-group product__option">
+                  <h4>Available Options</h4>
+                  <div className="input-radio-label" style={{maxHeight: 400, overflowY: "scroll"}}>{renderOptions()}</div>
+                </div>
+                <div className="form-group product__option">
+                  <label
+                    htmlFor="product-quantity"
+                    className="product__option-label"
+                  >
+                    Quantity{" "}
+                    {product.stockStatusName === "Out Of Stock" ? null : <small style={{color: "green"}}>
+                      (Available Quantity: {product.quantity})
+                    </small>}
+                  </label>
+                  <div className="product__actions">
+                    <div className="product__actions-item">
+                      <InputNumber
+                        id="product-quantity"
+                        aria-label="Quantity"
+                        className="product__quantity"
+                        optionQuantity={this.state.slectedPr.optionQuantity}
+                        productQuantity={product.quantity}
+                        stateQuantity={this.state.quantity}
+                        size="lg"
+                        min={
+                          parseInt(product.minimumQuantity) > 0
+                            ? parseInt(product.minimumQuantity)
+                            : 1
+                        }
+                        value={quantity}
+                        onChange={this.handleChangeQuantity}
+                      />
+                    </div>
+                    <div className="product__actions-item product__actions-item--addtocart">
+                      {/* <AsyncAction
                                             action={() => {
                                                 // prr.productOptions = this.state.productPlusOptions
                                                 return cartAddItem(product, this.state.options, quantity, getNewPrice())
                                             }}
                                             render={({ run, loading }) => ( */}
-                    <button
-                      type="submit"
-                      disabled={
-                        this.state.slectedPr.optionQuantity
-                          ? !(
+                      <button
+                        type="submit"
+                        disabled={
+                          (this.state.slectedPr.optionQuantity
+                            ? !(
                               this.state.slectedPr.optionQuantity >=
                               this.state.quantity
                             )
-                          : !(product.quantity >= this.state.quantity)
-                      }
-                      className={classNames("btn btn-primary btn-lg", {
-                        "btn-loading": "",
-                      })}
-                    >
-                      {this.state.slectedPr.optionQuantity
-                        ? this.state.slectedPr.optionQuantity >=
+                            : !(product.quantity >= this.state.quantity)) || !(product.stockStatusName === "Out Of Stock")
+                        }
+                        className={classNames("btn btn-primary btn-lg", {
+                          "btn-loading": "",
+                        })}
+                      >
+                        {this.state.slectedPr.optionQuantity
+                          ? this.state.slectedPr.optionQuantity >=
                           this.state.quantity
-                          ? "Add to cart"
-                          : product.minimumQuantity < product.quantity ||
+                            ? "Add to cart"
+                            : product.minimumQuantity < product.quantity ||
                             product.minimumQuantity <
-                              this.state.slectedPr.optionQuantity
-                          ? "Less Quantity Avaialable"
-                          : "Out of Stock"
-                        : product.quantity >= this.state.quantity
-                        ? "Add to cart"
-                        : product.minimumQuantity < product.quantity ||
-                          product.minimumQuantity <
                             this.state.slectedPr.optionQuantity
-                        ? "Less Quantity Avaialable"
-                        : "Out of Stock"}
-                    </button>
-                    {/* )}
-                                        /> */}
+                              ? "Less Quantity Avaialable"
+                              : "Out of Stock"
+                          : product.quantity >= this.state.quantity
+                            ? "Add to cart"
+                            : product.minimumQuantity < product.quantity ||
+                            product.minimumQuantity <
+                            this.state.slectedPr.optionQuantity
+                              ? "Less Quantity Avaialable"
+                              : "Out of Stock"}
+                      </button>
+                      {/* )}
+                           /> */}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -542,9 +501,8 @@ class Product extends Component {
             <div className="product__share-links share-links">
               <div
                 className="addthis_inline_share_toolbox"
-                // data-url="https://drsapa.ddns.net:2550/#/store/product/104"
                 data-url="http://77.68.93.42:90/#/store/product/104"
-              ></div>
+              />
             </div>
           </div>
         </div>

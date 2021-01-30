@@ -12,7 +12,6 @@ import theme from '../../data/theme';
 
 export default function Footer(props) {
     const informationLinks = [
-        { title: 'About Us', url: '/about-us' },
         { title: 'Contact Us', url: '/contact-us' },
         { title: 'Privacy Policy', url: '/privacy-policy' },
     ];

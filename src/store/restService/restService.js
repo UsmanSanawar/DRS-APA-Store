@@ -1,11 +1,48 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 import axios from "axios";
-import { BASE_URL } from "../../constant/constants";
+import {BASE_URL} from "../../constant/constants";
+
 const BASE_URL_API = `${BASE_URL}/api/Store`;
 const BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
 
+
+const axiosInterceptor = () => {
+  axios.interceptors.response.use(
+    (response) => {
+
+      console.log(response, 'axiosResponse')
+
+      return response;
+    },
+    (error) => {
+      console.log(error, 'axiosError')
+
+      if (error.message.includes("403")) {
+        localStorage.clear();
+        return window.location.replace("#/login");
+      } else if (error.message.includes("401")) {
+        localStorage.clear();
+        return window.location.replace("#/login");
+      } else if (error.message.includes("500")) {
+        window.alert("Something went wrong");
+        window.location.reload();
+      } else if (error.message.includes("413")) {
+        window.alert("File Size Limit exceeded (5MB)");
+        window.location.reload();
+      } else {
+        throw error;
+      }
+      return {
+        status: error.status,
+        error: error.message,
+      };
+    }
+  );
+};
+
 const RestService = {
+
   getHeader: () => ({
     headers: {
       "Content-Type": "application/json",
@@ -139,12 +176,14 @@ const RestService = {
       RestService.getHeader()
     ),
 
-  postSaleOrder: (formData) =>
-    axios.post(
+  postSaleOrder: (formData) => {
+    axiosInterceptor();
+    return axios.post(
       `${BASE_URL_API}/masterdata/OrderStore`,
       formData,
       RestService.getHeader()
-    ),
+    )
+  },
 
   getOrderById: (orderId) =>
     axios.get(
@@ -231,7 +270,7 @@ const RestService = {
 
   subscribeNewsletter: (FormData) =>
     axios.post(
-      `${BASE_URL_API}/masterdata/Subscribers`,
+      `${BASE_URL_API_Admin}/masterdata/Subscribers`,
       FormData,
       RestService.getHeader()
     ),
@@ -246,7 +285,7 @@ const RestService = {
   changePassword: (formData) => {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPassword`,
-      { password: formData },
+      {password: formData},
       RestService.getHeader()
     );
   },
@@ -254,7 +293,7 @@ const RestService = {
   changePasswordAfterEmail: (formData) => {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPasswordAfterEmail`,
-      { password: formData },
+      {password: formData},
       RestService.getHeader()
     );
   },
