@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 import axios from "axios";
-import {BASE_URL} from "../../constant/constants";
+import { BASE_URL } from "../../constant/constants";
 
 const BASE_URL_API = `${BASE_URL}/api/Store`;
 const BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
@@ -120,9 +120,8 @@ const RestService = {
       }
     }
     return axios.get(
-      `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
-        filters.category
-      }&${manufacturers.join("&")}&searchString=${filters.searchString}`,
+      `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category
+      }&${manufacturers.join("&")}searchString=${filters.searchString}`,
       RestService.getHeader()
     );
   },
@@ -285,7 +284,7 @@ const RestService = {
   changePassword: (formData) => {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPassword`,
-      {password: formData},
+      { password: formData },
       RestService.getHeader()
     );
   },
@@ -293,7 +292,7 @@ const RestService = {
   changePasswordAfterEmail: (formData) => {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPasswordAfterEmail`,
-      {password: formData},
+      { password: formData },
       RestService.getHeader()
     );
   },
@@ -361,5 +360,11 @@ const RestService = {
       RestService.getHeader()
     );
   },
+
+  getProductsBySearch: (string) =>
+    axios.get(
+      `${BASE_URL_API}/masterdata/ProductStore/0/0?searchString=${string}`,
+      RestService.getHeader()
+    ),
 };
 export default RestService;

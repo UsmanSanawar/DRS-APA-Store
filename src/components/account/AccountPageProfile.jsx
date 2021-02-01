@@ -127,7 +127,6 @@ export default function AccountPageProfile(props) {
     setUserFormData({...userFormData, billing: userFormData.billing})
   }
 
-  console.log(userFormData, "Waresssst")
 
   return (
     <div className="card">

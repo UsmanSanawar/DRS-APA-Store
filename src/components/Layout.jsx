@@ -18,6 +18,7 @@ import Header from "./header";
 import MobileHeader from "./mobile/MobileHeader";
 import MobileMenu from "./mobile/MobileMenu";
 import Quickview from "./shared/Quickview";
+import ReciveEmail from './site/willReciveEmail';
 
 
 
@@ -104,7 +105,7 @@ function Layout(props) {
 
       <div className="site">
         <header className="site__header d-lg-none">
-          <MobileHeader layout={headerLayout} />
+          <MobileHeader {...props} layout={headerLayout} />
         </header>
 
         <header className="site__header d-lg-block d-none">
@@ -192,6 +193,12 @@ function Layout(props) {
                 exact
                 path="/payment/error"
                 render={(props) => <PaymentError {...props} />}
+              />
+
+              <Route
+                exact
+                path="/store/email-confirm"
+                render={(props) => <ReciveEmail {...props} />}
               />
 
               <Route

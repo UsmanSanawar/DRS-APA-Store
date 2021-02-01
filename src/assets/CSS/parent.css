@@ -12,11 +12,17 @@ select {
     outline-color: #e5e5e5;
 }
 
-@media screen and (min-width: 600px) {
-.conditionalWidth{
-    width: 100%;
-    max-width: 94vw;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
+.select select {
+    height: 35px;
+    width: 50%;
 }
+
+.select select:focus {
+    outline: auto;
+    outline-color: #fab88f;
+    border: 2px solid #f1630c;
+}
+
+.select select:focus-visible {
+    border: 2px solid #f1630c;
 }

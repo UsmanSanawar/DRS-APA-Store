@@ -1,26 +1,27 @@
 // react
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import classnames from "classnames";
 // third-party
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 // application
 import PageHeader from "../shared/PageHeader";
-import {Check9x7Svg} from "../../svg";
+import { Check9x7Svg } from "../../svg";
 
 // data stubs
 import theme from "../../data/theme";
 import RestService from "../../store/restService/restService";
-import {toast} from "react-toastify";
-import {isTokenValid} from "../../constant/helpers";
-import {Modal, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import { toast } from "react-toastify";
+import { isTokenValid } from "../../constant/helpers";
+import { Modal, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import _ from "lodash";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function AccountPageLogin(props) {
   const breadcrumb = [
-    {title: "Home", url: ""},
-    {title: "My Account", url: ""},
+    { title: "Home", url: "" },
+    { title: "My Account", url: "" },
   ];
   const [customerGroups, setcustomerGroups] = useState([]);
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function AccountPageLogin(props) {
           props.history.push("/store");
           await RestService.getCustomerByToken().then((res) => {
             if (res.data.status === "success") {
-              dispatch({type: "SIGNIN_USER_SUCCESS", payload: res.data.data});
+              dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
             }
           });
 
@@ -70,9 +71,24 @@ export default function AccountPageLogin(props) {
       .catch((error) => error && toast.error("Invalid credentials."));
   };
 
+  const initAddress = {
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    street: "",
+    companyName: "",
+    city: "",
+    state: "",
+    country: "",
+    zipCode: "",
+    latitude: "",
+    longitude: "",
+  }
+
   const [registerFormData, setRegisterFormData] = useState({
-    shipping: {},
-    billing: {},
+    shipping: { ...initAddress },
+    billing: { ...initAddress },
     gender: "",
   });
 
@@ -81,11 +97,11 @@ export default function AccountPageLogin(props) {
     let array = [];
     registerFormData.shipping.addressType = "shipping";
     if (registerFormData.shipping.firstName && registerFormData.shipping.city) {
-      array.push({...registerFormData.shipping});
+      array.push({ ...registerFormData.shipping });
     }
     registerFormData.billing.addressType = "billing";
     if (registerFormData.billing.firstName && registerFormData.billing.city) {
-      array.push({...registerFormData.billing});
+      array.push({ ...registerFormData.billing });
     }
 
     registerFormData.customerAddress = array;
@@ -95,8 +111,10 @@ export default function AccountPageLogin(props) {
 
     RestService.userregistration(registerFormData).then((res) => {
       toast[res.data.status](res.data.message);
-
-      setRegisterFormData({gender: "male", shipping: {}, billing: {}});
+      setRegisterFormData({ ...registerFormData, shipping: { ...initAddress }, billing: { ...initAddress } });
+      if (res.data.status === 'success') {
+        props.history.push("/store/email-confirm")
+      }
     });
   };
 
@@ -108,11 +126,23 @@ export default function AccountPageLogin(props) {
     });
   };
 
+  const handleSameAsShip = () => {
+    let shipping = registerFormData.shipping;
+    let billingAddressId = 0;
+    if (registerFormData.billing.customerAddressId) {
+      billingAddressId = registerFormData.billing.customerAddressId
+    }
+
+    registerFormData.billing = { ...shipping, customerAddressId: billingAddressId, addressType: 'billing' };
+
+    setRegisterFormData({ ...registerFormData, billing: registerFormData.billing })
+  }
+
   return (
     <React.Fragment>
       <Modal isOpen={open} toggle={() => setOpen(!open)} centered size="md">
         <div
-          style={{borderBottom: "1px solid lightgray"}}
+          style={{ borderBottom: "1px solid lightgray" }}
           className="content pt-3 pl-4"
         >
           <h4>Forgot Password</h4>
@@ -139,7 +169,7 @@ export default function AccountPageLogin(props) {
           />
 
           <small>*Enter the email you used to register your account. We’ll email you instructions on how
-            to reset your password.
+          to reset your password.
           </small>
         </div>
       </Modal>
@@ -148,14 +178,14 @@ export default function AccountPageLogin(props) {
         <title>{`Login — ${theme.name}`}</title>
       </Helmet>
 
-      <PageHeader header="My Account" breadcrumb={breadcrumb}/>
+      <PageHeader header="My Account" breadcrumb={breadcrumb} />
 
       <div className="block">
         <div className="container">
           <div className="row">
             <div className="col-md-6 d-flex">
               <div className="card flex-grow-1 mb-md-0">
-                <div className="card-body">
+                <div className="card-body m-0">
                   <h3 className="card-title">Login</h3>
                   <form
                     onSubmit={(e) => {
@@ -213,8 +243,8 @@ export default function AccountPageLogin(props) {
                               type="checkbox"
                               className="input-check__input"
                             />
-                            <span className="input-check__box"/>
-                            <Check9x7Svg className="input-check__icon"/>
+                            <span className="input-check__box" />
+                            <Check9x7Svg className="input-check__icon" />
                           </span>
                         </span>
                         <label
@@ -239,7 +269,7 @@ export default function AccountPageLogin(props) {
             {/* //register */}
             <div className="col-md-6 d-flex mt-4 mt-md-0">
               <div className="card flex-grow-1 mb-0">
-                <div className="card-body">
+                <div className="card-body m-0">
                   <h3 className="card-title">Register</h3>
                   <form
                     onSubmit={(e) => {
@@ -250,7 +280,7 @@ export default function AccountPageLogin(props) {
                     <Nav tabs>
                       <NavItem>
                         <NavLink
-                          className={classnames({active: activeTab === "1"})}
+                          className={classnames({ active: activeTab === "1" })}
                           onClick={() => {
                             toggle("1");
                           }}
@@ -260,7 +290,7 @@ export default function AccountPageLogin(props) {
                       </NavItem>
                       <NavItem>
                         <NavLink
-                          className={classnames({active: activeTab === "2"})}
+                          className={classnames({ active: activeTab === "2" })}
                           onClick={() => {
                             toggle("2");
                           }}
@@ -273,7 +303,7 @@ export default function AccountPageLogin(props) {
                       <TabPane tabId="1">
                         <div className="pt-4">
                           <div className="form-row">
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="name">
                                 First Name<span className="text-danger">*</span>
                               </label>
@@ -294,7 +324,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="name">
                                 Last Name<span className="text-danger">*</span>
                               </label>
@@ -315,7 +345,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="phone">Phone No.</label>
                               <input
                                 id="phone"
@@ -333,7 +363,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="phone">Tax Number</label>
                               <input
                                 id="taxNumber"
@@ -351,7 +381,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            {/*<div className="form-group col-6">*/}
+                            {/*<div className="form-group col-sm-12 col-md-6">*/}
                             {/*  <label htmlFor="phone">Gender</label>*/}
                             {/*  <select*/}
                             {/*    id="gender"*/}
@@ -378,7 +408,7 @@ export default function AccountPageLogin(props) {
                             {/*  </select>*/}
                             {/*</div>*/}
 
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="phone">
                                 Customer Group
                                 <span className="text-danger">*</span>
@@ -402,20 +432,20 @@ export default function AccountPageLogin(props) {
                                 </option>
 
                                 {customerGroups &&
-                                _.filter(
-                                  customerGroups,
-                                  (item) => item.displayOnSite === true
-                                ).map((item) => (
-                                  <option value={item.customerGroupId}>
-                                    {item.customerGroupName}
-                                  </option>
-                                ))}
+                                  _.filter(
+                                    customerGroups,
+                                    (item) => item.displayOnSite === true
+                                  ).map((item) => (
+                                    <option value={item.customerGroupId}>
+                                      {item.customerGroupName}
+                                    </option>
+                                  ))}
                               </select>
                             </div>
 
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="register-email">
-                                Email address
+                                Email
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -434,7 +464,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="form-group col-6">
+                            <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="register-password">
                                 Password<span className="text-danger">*</span>
                               </label>
@@ -455,47 +485,77 @@ export default function AccountPageLogin(props) {
                             </div>
                           </div>
 
-                          <div className="form-group w-100 mb-0 d-inline-flex">
-                            <input
-                              style={{
-                                marginRight: 10,
-                                height: 22,
-                                width: 20,
-                              }}
-                              id="register-newsletter"
-                              type="checkbox"
-                              placeholder="newsletter"
-                              onChange={(event) =>
-                                setRegisterFormData({
-                                  ...registerFormData,
-                                  newsletter: event.target.checked,
-                                })
-                              }
-                              checked={registerFormData.newsletter || false}
-                            />
-                            <p>Subscribe newsletter</p>
+
+                          <div className="form-group">
+                            <div className="form-check">
+                              <span className="form-check-input input-check">
+                                <span className="input-check__body">
+                                  <input
+                                    id="register-newsletter"
+                                    type="checkbox"
+                                    placeholder="newsletter"
+                                    onChange={(event) =>
+                                      setRegisterFormData({
+                                        ...registerFormData,
+                                        newsletter: event.target.checked,
+                                      })
+                                    }
+                                    checked={registerFormData.newsletter || false}
+                                    className="input-check__input"
+                                  />
+                                  <span className="input-check__box" />
+                                  <Check9x7Svg className="input-check__icon" />
+                                </span>
+                              </span>
+                              <label
+                                className="form-check-label"
+                                htmlFor="login-remember"
+                              >
+                                Subscribe newsletter
+                              </label>
+                            </div>
                           </div>
 
-                          <div className="form-group w-100 mb-0 d-inline-flex">
-                            <input
-                              style={{
-                                marginRight: 10,
-                                height: 22,
-                                width: 20,
-                              }}
-                              id="register-termPolicy"
-                              type="checkbox"
-                              placeholder="termPolicy"
-                              onChange={(event) =>
-                                setRegisterFormData({
-                                  ...registerFormData,
-                                  termPolicy: event.target.checked,
-                                })
-                              }
-                              checked={registerFormData.termPolicy || false}
-                            />
-                            <p>Agree to terms & condition and privacy policy</p>
+
+                          <div className="form-group">
+                            <div className="form-check">
+                              <span className="form-check-input input-check">
+                                <span className="input-check__body">
+                                  <input
+                                    id="register-newsletter"
+                                    type="checkbox"
+                                    placeholder="termPolicy"
+                                    onChange={(event) =>
+                                      setRegisterFormData({
+                                        ...registerFormData,
+                                        termPolicy: event.target.checked,
+                                      })
+                                    }
+                                    checked={registerFormData.termPolicy || false}
+                                    className="input-check__input"
+                                  />
+                                  <span className="input-check__box" />
+                                  <Check9x7Svg className="input-check__icon" />
+                                </span>
+                              </span>
+                              <label
+                                className="form-check-label"
+                                htmlFor="login-remember"
+                              >
+                                <span className="text-danger">*</span> Agree to <Link to={"/terms-condition"}>terms & condition</Link> and <Link to={'/privacy-policy'}>privacy policy</Link>
+                              </label>
+                            </div>
                           </div>
+
+                          <button
+                            type="button"
+                            onClick={() => toggle("2")}
+                            disabled={!registerFormData.termPolicy || false}
+                            className="btn btn-primary mt-2 mt-md-3 mt-lg-4"
+                          >
+                            Next
+                           </button>
+
                         </div>
                       </TabPane>
 
@@ -506,7 +566,7 @@ export default function AccountPageLogin(props) {
                           </div>
 
                           <div className="form-row">
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">First Name</label>
                               <input
                                 id="firstName"
@@ -529,7 +589,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Last Name</label>
                               <input
                                 id="lastName"
@@ -550,7 +610,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Phone</label>
                               <input
                                 id="phone"
@@ -571,7 +631,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Email</label>
                               <input
                                 id="email"
@@ -592,13 +652,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Street</label>
                               <input
                                 id="street"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter street"
+                                placeholder="Enter Street"
                                 name="street"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -613,13 +673,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">City</label>
                               <input
                                 id="city"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter city"
+                                placeholder="Enter City"
                                 name="city"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -634,13 +694,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="state">State</label>
                               <input
                                 id="state"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter state"
+                                placeholder="Enter State"
                                 name="state"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -655,13 +715,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="state">Country</label>
                               <input
                                 id="country"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter country"
+                                placeholder="Enter Country"
                                 name="country"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -676,13 +736,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="state">Zip Code</label>
                               <input
                                 id="zipCode"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter zipCode"
+                                placeholder="Enter Zip Code"
                                 name="zipCode"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -698,12 +758,37 @@ export default function AccountPageLogin(props) {
                             </div>
                           </div>
 
+                          <div className="form-row">
+                            <div className="form-group">
+                              <div className="form-check">
+                                <span className="form-check-input input-check">
+                                  <span className="input-check__body">
+                                    <input
+                                      id="same-as-shipping"
+                                      type="checkbox"
+                                      onClick={handleSameAsShip}
+                                      className="input-check__input"
+                                    />
+                                    <span className="input-check__box" />
+                                    <Check9x7Svg className="input-check__icon" />
+                                  </span>
+                                </span>
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="same-as-shipping"
+                                >
+                                  Same as shipping address
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
                           <div className="form-row my-2">
                             <h4>Billing Address</h4>
                           </div>
 
                           <div className="form-row">
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">First Name</label>
                               <input
                                 id="firstName"
@@ -724,7 +809,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Last Name</label>
                               <input
                                 id="lastName"
@@ -745,7 +830,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Phone</label>
                               <input
                                 id="phone"
@@ -766,7 +851,7 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Email</label>
                               <input
                                 id="email"
@@ -787,13 +872,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">Street</label>
                               <input
                                 id="street"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter street"
+                                placeholder="Enter Street"
                                 name="street"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -808,13 +893,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="name">City</label>
                               <input
                                 id="city"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter city"
+                                placeholder="Enter City"
                                 name="city"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -829,13 +914,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="state">State</label>
                               <input
                                 id="state"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter state"
+                                placeholder="Enter State"
                                 name="state"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -850,13 +935,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="state">Country</label>
                               <input
                                 id="country"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter country"
+                                placeholder="Enter Country"
                                 name="country"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -871,13 +956,13 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            <div className="col-6 form-group">
+                            <div className="col-sm-12 col-md-6 form-group">
                               <label htmlFor="state">Zip Code</label>
                               <input
                                 id="zipCode"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter zipCode"
+                                placeholder="Enter zip Code"
                                 name="zipCode"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -892,17 +977,18 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
                           </div>
+
+                          <button
+                            type="submit"
+                            disabled={!registerFormData.termPolicy || false}
+                            className="btn btn-primary mt-2 mt-md-3 mt-lg-4"
+                          >
+                            Register
+                    </button>
                         </div>
                       </TabPane>
                     </TabContent>
 
-                    <button
-                      type="submit"
-                      disabled={!registerFormData.termPolicy || false}
-                      className="btn btn-primary mt-2 mt-md-3 mt-lg-4"
-                    >
-                      Register
-                    </button>
                   </form>
                 </div>
               </div>

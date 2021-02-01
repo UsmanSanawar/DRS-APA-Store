@@ -1,24 +1,25 @@
 // react
+import React, { Component } from "react";
+
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React, {Component} from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 // application
-import {Helmet} from "react-helmet";
-import {connect} from "react-redux";
-import {toast} from "react-toastify";
-import {FormGroup, Input, Label} from "reactstrap";
-import "../../assets/CSS/customStylesForInputs.css";
-import {cartAddItem} from "../../store/cart";
-import {compareAddItem} from "../../store/compare";
-import RestService from "../../store/restService/restService";
-import {wishlistAddItem} from "../../store/wishlist";
-import {Compare16Svg, Wishlist16Svg} from "../../svg";
 import AsyncAction from "./AsyncAction";
 import Currency from "./Currency";
 import InputNumber from "./InputNumber";
 import ProductGallery from "./ProductGallery";
 import Rating from "./Rating";
+import { cartAddItem } from "../../store/cart";
+import { compareAddItem } from "../../store/compare";
+import { Wishlist16Svg, Compare16Svg } from "../../svg";
+import { wishlistAddItem } from "../../store/wishlist";
+import RestService from "../../store/restService/restService";
+import { FormGroup, Input, Label } from "reactstrap";
+import { toast } from "react-toastify";
 
 class Product extends Component {
   constructor(props) {
@@ -46,7 +47,9 @@ class Product extends Component {
     if (this.props.product.minimumQuantity) {
       this.setState({
         quantity:
-          parseInt(this.props.product.minimumQuantity) > 0 ? parseInt(this.props.product.minimumQuantity) : 1,
+          parseInt(this.props.product.minimumQuantity) > 0
+            ? parseInt(this.props.product.minimumQuantity)
+            : 1,
       });
     }
 
@@ -98,7 +101,9 @@ class Product extends Component {
 
   getProductOptionCombination = () => {
     if (this.props.product.productId) {
-      RestService.getProductOptionCombination(this.props.product.productId).then((res) => {
+      RestService.getProductOptionCombination(
+        this.props.product.productId
+      ).then((res) => {
         if (res.data.status === "success") {
           this.setState({
             options: res.data.data !== null ? res.data.data : [],
@@ -118,7 +123,8 @@ class Product extends Component {
             this.state.options.some(
               (option) =>
                 parseInt(option.optionId) === parseInt(combination.optionId) &&
-                (parseInt(option.value) === parseInt(combination.optionValueId) ||
+                (parseInt(option.value) ===
+                  parseInt(combination.optionValueId) ||
                   combination.optionTypeId === 6)
             )
           ) {
@@ -150,7 +156,9 @@ class Product extends Component {
       });
       if (index > -1) {
         this.state.options[index].value =
-          event.target.type === "checkbox" ? event.target.checked : event.target.value;
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value;
         this.setState(
           {
             options: this.state.options,
@@ -173,11 +181,15 @@ class Product extends Component {
           break;
 
         case "plus":
-          weight = parseFloat(this.state.slectedPr.optionWeight) + parseFloat(this.props.product.weight);
+          weight =
+            parseFloat(this.state.slectedPr.optionWeight) +
+            parseFloat(this.props.product.weight);
           break;
 
         case "minus":
-          weight = parseFloat(this.state.slectedPr.optionWeight) - parseFloat(this.props.product.weight);
+          weight =
+            parseFloat(this.state.slectedPr.optionWeight) -
+            parseFloat(this.props.product.weight);
           break;
 
         default:
@@ -187,15 +199,23 @@ class Product extends Component {
     }
     return this.props.handleOptionWeight(weight);
   };
-
   render() {
-    const { product, layout, wishlistAddItem, compareAddItem, cartAddItem, customer } = this.props;
+    const {
+      product,
+      layout,
+      wishlistAddItem,
+      compareAddItem,
+      cartAddItem,
+      customer,
+    } = this.props;
     const { quantity } = this.state;
 
     const handleOptionValues = (options) => {
       let SelectOptions;
       if (options && options.length) {
-        SelectOptions = options.map((item) => <option value={item.optionValueId}>{item.name}</option>);
+        SelectOptions = options.map((item) => (
+          <option value={item.optionValueId}>{item.name}</option>
+        ));
       }
       return SelectOptions;
     };
@@ -248,20 +268,22 @@ class Product extends Component {
             <FormGroup check required>
               <Label for="exampleSelect">{item.optionName}</Label>
               {item.optionValues &&
-              item.optionValues.map((optValue) => (
-                <FormGroup check required>
-                  <Label check>
-                    <Input
-                      required
-                      type="radio"
-                      name={item.optionName}
-                      onChange={(e) => this.handleInputChange(e, item.optionId)}
-                      value={optValue.optionValueId}
-                    />{" "}
-                    {optValue.name}
-                  </Label>
-                </FormGroup>
-              ))}
+                item.optionValues.map((optValue) => (
+                  <FormGroup check required>
+                    <Label check>
+                      <Input
+                        required
+                        type="radio"
+                        name={item.optionName}
+                        onChange={(e) =>
+                          this.handleInputChange(e, item.optionId)
+                        }
+                        value={optValue.optionValueId}
+                      />{" "}
+                      {optValue.name}
+                    </Label>
+                  </FormGroup>
+                ))}
             </FormGroup>
             {/* <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" /> */}
           </div>
@@ -322,7 +344,15 @@ class Product extends Component {
     return (
       <div className={`product product--layout--${layout}`}>
         <div className="product__content">
-          <ProductGallery layout={layout} images={product.images} />
+          <ProductGallery
+            style={{ width: 700 }}
+            layout={layout}
+            images={
+              this.state.slectedPr.images
+                ? [{ name: this.state.slectedPr.images }]
+                : this.state.productPhotos
+            }
+          />
 
           <div className="product__info">
             <div className="product__wishlist-compare">
@@ -367,16 +397,13 @@ class Product extends Component {
                 <Rating value={getRatingCal()} />
               </div>
               <div className="product__rating-legend">
-                <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0} Reviews`}</span>
+                <span>{`${
+                  product.totalReviewsCount ? product.totalReviewsCount : 0
+                } Reviews`}</span>
               </div>
             </div>
             <div className="product__description"></div>
             <ul className="product__features">
-              <li>Speed: 750 RPM</li>
-              <li>Power Source: Cordless-Electric</li>
-              <li>Battery Cell Type: Lithium</li>
-              <li>Voltage: 20 Volts</li>
-              <li>Battery Capacity: 2 Ah</li>
             </ul>
 
             <ul className="product__meta">
@@ -385,7 +412,9 @@ class Product extends Component {
                 <span className="text-success">{product.stockStatusName}</span>
               </li>
 
-              {product.manufacturerName ? <li>Brand: {product.manufacturerName}</li> : null}
+              {product.manufacturerName ? (
+                <li>Brand: {product.manufacturerName}</li>
+              ) : null}
 
               {this.state.slectedPr.optionModel ? (
                 <li>Model: {this.state.slectedPr.optionModel}</li>
@@ -465,7 +494,7 @@ class Product extends Component {
                               this.state.slectedPr.optionQuantity >=
                               this.state.quantity
                             )
-                            : !(product.quantity >= this.state.quantity)) || !(product.stockStatusName === "Out Of Stock")
+                            : !(product.quantity >= this.state.quantity)) && product.stockStatusName === 'Out '
                         }
                         className={classNames("btn btn-primary btn-lg", {
                           "btn-loading": "",
@@ -528,10 +557,4 @@ const mapDispatchToProps = {
   compareAddItem,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    customer: state.auth.profile,
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default connect(() => ({}), mapDispatchToProps)(Product);

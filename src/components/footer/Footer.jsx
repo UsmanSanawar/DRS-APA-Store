@@ -43,7 +43,7 @@ export default function Footer(props) {
 
                 <div className="site-footer__bottom">
                     <div className="site-footer__copyright">
-                       All rights reserved &copy; 2021 APA Ltd Build: 270121
+                       All rights reserved &copy; 2021 APA Ltd Build: 010221
                     </div>
                     {/* <div className="site-footer__payments">
                         <img src="images/payments.png" alt="" />

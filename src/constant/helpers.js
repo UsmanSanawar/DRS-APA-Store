@@ -2,10 +2,10 @@ import { IMAGE_URL } from "./constants";
 import RestService from "../store/restService/restService";
 
 export function productObjectConverter(item) {
+
   let images = [];
   if (item.productPhotos && item.productPhotos.length > 0) {
 
-    console.log(item.productPhotos, "item.productPhotos objcrt");
     item.productPhotos.map((image) => {
       if (image.name.startsWith("catalog")) {
         images.push(`${IMAGE_URL}/${image.name}`);

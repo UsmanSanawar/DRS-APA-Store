@@ -46,11 +46,11 @@ export default function FooterNewsletter(props) {
             url: `//${Org ? Org.instagram : ""}`,
             iconClass: 'fab fa-instagram',
         },
-        {
-            key: 'rss',
-            url: `//${Org ? Org.website : ""}`,
-            iconClass: 'fas fa-rss',
-        },
+        // {
+        //     key: 'rss',
+        //     url: `//${Org ? Org.website : ""}`,
+        //     iconClass: 'fas fa-rss',
+        // },
     ];
 
     const socialLinksList = socialLinks.map((item) => (

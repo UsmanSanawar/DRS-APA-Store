@@ -105,7 +105,6 @@ class ProductsView extends Component {
     const {page, layout: stateLayout, products, pagination, allCategories} = this.state;
     const layout = stateLayout || propsLayout;
 
-    console.log(this.props, this.state, "props & State")
 
     let viewModes = [
       {key: "grid", title: "Grid", icon: <LayoutGrid16x16Svg/>},

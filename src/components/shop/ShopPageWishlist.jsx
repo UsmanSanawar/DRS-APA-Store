@@ -70,7 +70,7 @@ function ShopPageWishlist(props) {
                         </div>
                     </td>
                     <td className="wishlist__column wishlist__column--stock">
-                        <div className="badge badge-success">In Stock</div>
+                        <div className="badge badge-success">{item.stockStatusName}</div>
                     </td>
                     <td className="wishlist__column wishlist__column--price"><Currency value={item.price} /></td>
                     <td className="wishlist__column wishlist__column--tocart">

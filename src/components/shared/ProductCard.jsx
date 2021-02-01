@@ -422,7 +422,7 @@ function ProductCard(props) {
                 <div
                   type="button"
                   onClick={() => {
-                    handleProductWithOptions(product.id, run);
+                      handleProductWithOptions(product.id, run);
                   }}
                   className={"btn btn-primary product-card__addtocart"}
                 >
