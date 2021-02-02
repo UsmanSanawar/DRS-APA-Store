@@ -12,11 +12,14 @@ import {useSelector} from "react-redux";
 
 function DepartmentsLinks(props) {
   // eslint-disable-next-line no-unused-vars
-  const {storeView, menu, categories} = useSelector(({webView}) => webView);
+  let {storeView, menu, categories} = useSelector(({webView}) => webView);
 
-  const linksList =
-    categories &&
-    categories.map((department, index) => {
+  let newCategories = categories.filter(item => item.slug !== "/store/account_logout")
+  console.log(newCategories, 'categories')
+
+  let linksList =
+    newCategories &&
+    newCategories.map((department, index) => {
       let arrow = null;
       let submenu = null;
       let itemClass = "";
@@ -46,6 +49,8 @@ function DepartmentsLinks(props) {
 
     });
 
+
+    
   return <ul className="departments__links">{linksList}</ul>;
 }
 

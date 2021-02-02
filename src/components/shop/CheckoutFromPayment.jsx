@@ -523,8 +523,7 @@ class ShopPageCheckout extends Component {
 
                       <div className="form-group">
                         <label htmlFor="checkout-company-name">
-                          Company Name{" "}
-                          <span className="text-muted">(Optional)</span>
+                          Company Name
                         </label>
                         <input
                           type="text"
@@ -714,8 +713,7 @@ class ShopPageCheckout extends Component {
 
                       <div className="form-group">
                         <label htmlFor="checkout-company-name">
-                          Company Name{" "}
-                          <span className="text-muted">(Optional)</span>
+                          Company Name
                         </label>
                         <input
                           type="text"

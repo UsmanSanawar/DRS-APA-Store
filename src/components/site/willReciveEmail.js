@@ -11,10 +11,10 @@ function ReciveEmail() {
         </div>
 
         <CardTitle tag="h2" className="p-c-heading">
-          An email is sent!
+          Check your email inbox
         </CardTitle>
         <CardText className="p-c-description">
-          Account created successfully and an email with activation link as has been to your provided email address.
+          Your account has been created successfully and an email with activation link has been sent to your email address.
         </CardText>
         <div className="text-center">
           <a href="#/store/login" className="btn btn-success">Go to Login</a>

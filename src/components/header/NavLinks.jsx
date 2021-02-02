@@ -19,6 +19,8 @@ function NavLinks(props) {
     delete menu[index]
   }
 
+  
+
   const onMenuClick = (item) => {
     props.history.replace({
       pathname: props.layout === "compact" ? `/store/products/${item.productCategoryId}` : item.slug,
@@ -44,7 +46,7 @@ function NavLinks(props) {
 
   const linksList = () => {
     let data = props.layout === "compact" ? categories : menu;
-
+    data = data.filter(item => item.slug !== "/store/account_logout")
     return (
       data &&
       data.map((item, index) => {

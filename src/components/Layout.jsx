@@ -289,6 +289,11 @@ function Layout(props) {
                         // Account
                         */}
               <Route exact path="/store/login" component={AccountPageLogin} />
+              <Route exact path="/store/account_logout" render={(props) => {
+                let token = JSON.parse(localStorage.getItem('token'));
+                return <AccountPageLogin accountLogut={token ? true : false} {...props} />
+              }
+              } />
               <Route path="/store" component={AccountLayout} />
 
               {/*

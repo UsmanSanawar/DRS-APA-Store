@@ -38,8 +38,8 @@ function ChangePassword(props) {
   };
 
   return (
-    <div>
-      <Card body style={{marginTop: "35%", marginBottom: "60%"}}>
+    <div style={{height: '100%', width: '100%', overflow: "hidden", display: "grid"}}>
+      <Card body style={{width: "fit-content", margin: "auto"}}>
         <CardTitle tag="h4" className="p-c-heading">
           <i style={{color: "#28a745"}} class="fa fa-key"/> Enter New
           Password
@@ -66,12 +66,12 @@ function ChangePassword(props) {
                 />
                 {newPassword && newPassword !== confirmPassword && (
                   <p>
-                    <small className="text-danger text-left">*Both passwords don't match</small>
+                    <small style={{float: "left"}} className="text-danger">*Both passwords don't match</small>
                   </p>
                 )}
               </div>
             </div>
-            <div>
+            <div className="mt-2">
               <input
                 onClick={() => {
                   handlePasswordChange();

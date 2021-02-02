@@ -13,8 +13,8 @@ function App(props) {
   }, []);
 
   return (
-    <div>
-      <Card body style={{ marginTop: "25%", marginBottom: "25%" }}>
+    <div style={{ height: '100%', width: '100%', overflow: "hidden", display: "grid" }}>
+      <Card body style={{ margin: "auto" }}>
         <div className="p-c-s-icon">
           <i className="fas fa-user" />
         </div>
@@ -24,7 +24,7 @@ function App(props) {
         </CardTitle>
         <CardText className="p-c-description">
           Congrats! Your account is now activated you can now login to your
-          account. 
+          account.
         </CardText>
         <div className="text-center">
           <a href="#/home" className="btn btn-success">Go to Home</a>

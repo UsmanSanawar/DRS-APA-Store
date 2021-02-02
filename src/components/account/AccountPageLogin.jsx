@@ -25,18 +25,23 @@ export default function AccountPageLogin(props) {
   ];
   const [customerGroups, setcustomerGroups] = useState([]);
   useEffect(() => {
-    if (
-      localStorage.getItem("token") &&
-      isTokenValid(localStorage.getItem("token"))
-    ) {
-      return props.history.goBack();
-    }
-
-    RestService.getAllStoreCustomerGroups().then((res) => {
-      if (res.data.status === "success") {
-        setcustomerGroups(res.data.data);
+    if (props.accountLogut) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('identity');
+    } else {
+      if (
+        localStorage.getItem("token") &&
+        isTokenValid(localStorage.getItem("token"))
+      ) {
+        return props.history.goBack();
       }
-    });
+
+      RestService.getAllStoreCustomerGroups().then((res) => {
+        if (res.data.status === "success") {
+          setcustomerGroups(res.data.data);
+        }
+      });
+    }
   }, []);
 
   const [loginFormData, setLoginFormData] = useState({});
@@ -516,7 +521,6 @@ export default function AccountPageLogin(props) {
                             </div>
                           </div>
 
-
                           <div className="form-group">
                             <div className="form-check">
                               <span className="form-check-input input-check">
@@ -607,6 +611,29 @@ export default function AccountPageLogin(props) {
                                   })
                                 }
                                 value={registerFormData.shipping.lastName || ""}
+                              />
+                            </div>
+
+                            <div className="col-sm-12 col-md-6 form-group">
+                              <label htmlFor="billing-company-name">
+                                Company Name
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="billing-company-name"
+                                placeholder="Company Name"
+                                name="billing-companyName"
+                                onChange={(event) =>
+                                  setRegisterFormData({
+                                    ...registerFormData,
+                                    shipping: {
+                                      ...registerFormData.shipping,
+                                      companyName: event.target.value,
+                                    },
+                                  })
+                                }
+                                value={registerFormData.shipping.companyName || ""}
                               />
                             </div>
 
@@ -827,6 +854,29 @@ export default function AccountPageLogin(props) {
                                   })
                                 }
                                 value={registerFormData.billing.lastName || ""}
+                              />
+                            </div>
+
+                            <div className="col-sm-12 col-md-6  form-group">
+                              <label htmlFor="shipping-company-name">
+                                Company Name
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="shipping-company-name"
+                                placeholder="Company Name"
+                                name={"shipping-companyName"}
+                                onChange={(event) =>
+                                  setRegisterFormData({
+                                    ...registerFormData,
+                                    billing: {
+                                      ...registerFormData.billing,
+                                      companyName: event.target.value,
+                                    },
+                                  })
+                                }
+                                value={registerFormData.billing.companyName || ""}
                               />
                             </div>
 

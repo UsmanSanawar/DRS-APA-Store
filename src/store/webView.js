@@ -1,4 +1,4 @@
-import {productObjectConverter} from "../constant/helpers";
+import { productObjectConverter } from "../constant/helpers";
 import RestService from "./restService/restService"
 
 const initialState = {
@@ -33,6 +33,19 @@ export default function quickviewReducer(state = initialState, action) {
                 webPageTitle: "Store Page",
                 webSubMenu: []
             })
+
+
+            dataList.push({
+                hasSubMenu: false,
+                order: 99,
+                slug: "/store/account_logout",
+                webMenuId: null,
+                webMenuTitle: "LOGOUT",
+                webPageId: null,
+                webPageTitle: "LOGOUT",
+                webSubMenu: []
+            })
+
             return {
                 ...state,
                 menu: dataList,
@@ -87,7 +100,7 @@ export default function quickviewReducer(state = initialState, action) {
             let newArr = [];
 
             for (let category of dataList) {
-                
+
                 let obj = createObj(category);
 
                 if (obj.parentCategoryId == null) {
@@ -96,7 +109,8 @@ export default function quickviewReducer(state = initialState, action) {
             }
 
             let newNewArray = newArr;
-            newNewArray.push({code: null,
+            newNewArray.push({
+                code: null,
                 hasSubMenu: false,
                 isActive: true,
                 metaDescription: "",
@@ -114,19 +128,31 @@ export default function quickviewReducer(state = initialState, action) {
                 webMenuId: undefined,
                 webMenuTitle: "Blogs",
                 webSubMenu: [],
-                webSubMenuTitle: "Blogs"})
+                webSubMenuTitle: "Blogs"
+            })
             state.categories = newNewArray
 
-                state.categories.unshift({
-                    hasSubMenu: false,
-                    order: 1,
-                    slug: "/home",
-                    webMenuId: 5,
-                    webMenuTitle: "Home",
-                    webPageId: 2,
-                    webPageTitle: "Homepage",
-                    webSubMenu: []
-                })
+            state.categories.unshift({
+                hasSubMenu: false,
+                order: 1,
+                slug: "/home",
+                webMenuId: 5,
+                webMenuTitle: "Home",
+                webPageId: 2,
+                webPageTitle: "Homepage",
+                webSubMenu: []
+            })
+
+            state.categories.push({
+                hasSubMenu: false,
+                order: 1,
+                slug: "/store/account_logout",
+                webMenuId: 5,
+                webMenuTitle: "Logout",
+                webPageId: 2,
+                webPageTitle: "Logout",
+                webSubMenu: []
+            })
 
             return {
                 ...state,

@@ -1,18 +1,18 @@
 // react
-import React, {Component} from "react";
+import React, { Component } from "react";
 
 // third-party
 import classNames from "classnames";
-import {connect} from "react-redux";
-import {Helmet} from "react-helmet";
-import {Link} from "react-router-dom";
+import { connect } from "react-redux";
+import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 // application
 import AsyncAction from "../shared/AsyncAction";
 import Currency from "../shared/Currency";
 import PageHeader from "../shared/PageHeader";
-import {cartRemoveItem, cartUpdateQuantities} from "../../store/cart";
-import {Cross12Svg} from "../../svg";
+import { cartRemoveItem, cartUpdateQuantities } from "../../store/cart";
+import { Cross12Svg } from "../../svg";
 
 // data stubs
 import theme from "../../data/theme";
@@ -40,7 +40,7 @@ class ShopPageCart extends Component {
   };
 
   getItemQuantity(item) {
-    const {quantities} = this.state;
+    const { quantities } = this.state;
     const quantity = quantities.find((x) => x.itemId === item.id);
 
     return quantity ? quantity.value : item.quantity;
@@ -51,11 +51,11 @@ class ShopPageCart extends Component {
       const stateQuantity = state.quantities.find((x) => x.itemId === item.id);
 
       if (!stateQuantity) {
-        state.quantities.push({itemId: item.id, value: quantity});
-        this.setState({quantity: quantity});
+        state.quantities.push({ itemId: item.id, value: quantity });
+        this.setState({ quantity: quantity });
       } else {
         stateQuantity.value = quantity;
-        this.setState({quantity: quantity});
+        this.setState({ quantity: quantity });
       }
 
       return {
@@ -65,8 +65,8 @@ class ShopPageCart extends Component {
   };
 
   cartNeedUpdate() {
-    const {quantities} = this.state;
-    const {cart} = this.props;
+    const { quantities } = this.state;
+    const { cart } = this.props;
 
     return (
       quantities.filter((x) => {
@@ -83,14 +83,14 @@ class ShopPageCart extends Component {
     let discountThatMayApply = [];
     product.discountProducts.map((p) => {
       p.discount.discountCustomerGroups !== null &&
-      p.discount.discountCustomerGroups.map((discountGroup) => {
-        if (
-          discountGroup.customerGroupId ===
-          this.props.customer.customerGroupId
-        ) {
-          discountThatMayApply.push(p.discount.discountPercentage);
-        }
-      });
+        p.discount.discountCustomerGroups.map((discountGroup) => {
+          if (
+            discountGroup.customerGroupId ===
+            this.props.customer.customerGroupId
+          ) {
+            discountThatMayApply.push(p.discount.discountPercentage);
+          }
+        });
     });
 
     let discountPercentageToBeApplied = !isNaN(
@@ -134,7 +134,7 @@ class ShopPageCart extends Component {
   };
 
   renderItems() {
-    const {cart, cartRemoveItem} = this.props;
+    const { cart, cartRemoveItem } = this.props;
 
     return cart.items.map((item) => {
       let image;
@@ -146,7 +146,7 @@ class ShopPageCart extends Component {
       ) {
         image = (
           <Link to={`/store/product/${item.product.id}`}>
-            <img src={item.product.selectedProductOption.images} alt=""/>
+            <img src={item.product.selectedProductOption.images} alt="" />
           </Link>
         );
       } else if (
@@ -156,7 +156,7 @@ class ShopPageCart extends Component {
       ) {
         image = (
           <Link to={`/store/product/${item.product.id}`}>
-            <img src={item.product.images[0]} alt=""/>
+            <img src={item.product.images[0]} alt="" />
           </Link>
         );
       }
@@ -165,19 +165,18 @@ class ShopPageCart extends Component {
         options = (
           <ul className="cart-table__options">
             {item.options.map((option, index) => (
-              <li key={index}>{`${option.optionName}:  ${
-                option.optionTypeId === 1 || option.optionTypeId === 2
+              <li key={index}>{`${option.optionName}:  ${option.optionTypeId === 1 || option.optionTypeId === 2
                   ? this.getSeletedOptionValue(option)
                   : option.optionTypeId === 3
-                  ? !(option.value === undefined || option.value === false)
-                  : option.optionTypeId === 6
-                    ? option.value
+                    ? !(option.value === undefined || option.value === false)
+                    : option.optionTypeId === 6
                       ? option.value
                         ? option.value
+                          ? option.value
+                          : ""
                         : ""
                       : ""
-                    : ""
-              }`}</li>
+                }`}</li>
             ))}
           </ul>
         );
@@ -186,14 +185,14 @@ class ShopPageCart extends Component {
       const removeButton = (
         <AsyncAction
           action={() => cartRemoveItem(item.id)}
-          render={({run, loading}) => {
+          render={({ run, loading }) => {
             const classes = classNames("btn btn-light btn-sm btn-svg-icon", {
               "btn-loading": loading,
             });
 
             return (
               <button type="button" onClick={run} className={classes}>
-                <Cross12Svg/>
+                <Cross12Svg />
               </button>
             );
           }}
@@ -218,7 +217,7 @@ class ShopPageCart extends Component {
             className="cart-table__column cart-table__column--price"
             data-title="Price"
           >
-            <Currency value={item.price}/>
+            <Currency value={item.price} />
           </td>
           <td
             className="cart-table__column cart-table__column--quantity"
@@ -237,23 +236,23 @@ class ShopPageCart extends Component {
               min={item.product.minimumQuantity}
             /> */}
           </td>
-          <td
+          {/* <td
             className="cart-table__column cart-table__column--price"
             data-title="Discount"
           >
-            - {<Currency value={this.handleDiscount(item)}/>}
+            - {<Currency value={this.handleDiscount(item)} />}
           </td>
           <td
             className="cart-table__column cart-table__column--price"
             data-title="Tax"
           >
-            <Currency value={this.handleTaxCalc(item)}/>
-          </td>
+            <Currency value={this.handleTaxCalc(item)} />
+          </td> */}
           <td
             className="cart-table__column cart-table__column--total"
             data-title="Total"
           >
-            <Currency value={this.handleTotalPerRow(item)}/>
+            <Currency value={this.handleTotalPerRow(item)} />
           </td>
           <td className="cart-table__column cart-table__column--remove">
             {removeButton}
@@ -264,7 +263,7 @@ class ShopPageCart extends Component {
   }
 
   renderTotals() {
-    const {cart} = this.props;
+    const { cart } = this.props;
 
     if (cart.extraLines.length <= 0) {
       return null;
@@ -285,7 +284,7 @@ class ShopPageCart extends Component {
         <tr key={index}>
           <th>{extraLine.title}</th>
           <td>
-            <Currency value={extraLine.price}/>
+            <Currency value={extraLine.price} />
             {calcShippingLink}
           </td>
         </tr>
@@ -295,12 +294,12 @@ class ShopPageCart extends Component {
     return (
       <React.Fragment>
         <thead className="cart__totals-header">
-        <tr>
-          <th>Subtotal</th>
-          <td>
-            <Currency value={cart.total}/>
-          </td>
-        </tr>
+          <tr>
+            <th>Subtotal</th>
+            <td>
+              <Currency value={cart.total} />
+            </td>
+          </tr>
         </thead>
         <tbody className="cart__totals-body">{extraLines}</tbody>
       </React.Fragment>
@@ -308,13 +307,13 @@ class ShopPageCart extends Component {
   }
 
   renderCart() {
-    const {cart, cartUpdateQuantities} = this.props;
-    const {quantities} = this.state;
+    const { cart, cartUpdateQuantities } = this.props;
+    const { quantities } = this.state;
 
     const updateCartButton = (
       <AsyncAction
         action={() => cartUpdateQuantities(quantities)}
-        render={({run, loading}) => {
+        render={({ run, loading }) => {
           const classes = classNames("btn btn-primary cart__update-button", {
             "btn-loading": loading,
           });
@@ -340,33 +339,33 @@ class ShopPageCart extends Component {
         <div className="container">
           <table id="totalCart" className="cart__table cart-table">
             <thead className="cart-table__head">
-            <tr className="cart-table__row">
-              <th className="cart-table__column cart-table__column--image">
-                Image
+              <tr className="cart-table__row">
+                <th className="cart-table__column cart-table__column--image">
+                  Image
               </th>
-              <th className="cart-table__column cart-table__column--product">
-                Product
+                <th className="cart-table__column cart-table__column--product">
+                  Product
               </th>
-              <th className="cart-table__column cart-table__column--price">
-                Price
+                <th className="cart-table__column cart-table__column--price">
+                  Price
               </th>
-              <th className="cart-table__column cart-table__column--quantity">
-                Quantity
+                <th className="cart-table__column cart-table__column--quantity">
+                  Quantity
               </th>
-              <th className="cart-table__column cart-table__column--quantity">
-                Discount
+                {/* <th className="cart-table__column cart-table__column--quantity">
+                  Discount
               </th>
-              <th className="cart-table__column cart-table__column--quantity">
-                Tax
+                <th className="cart-table__column cart-table__column--quantity">
+                  Tax
+              </th> */}
+                <th className="cart-table__column cart-table__column--total">
+                  Total
               </th>
-              <th className="cart-table__column cart-table__column--total">
-                Total
-              </th>
-              <th
-                className="cart-table__column cart-table__column--remove"
-                aria-label="Remove"
-              />
-            </tr>
+                <th
+                  className="cart-table__column cart-table__column--remove"
+                  aria-label="Remove"
+                />
+              </tr>
             </thead>
             <tbody className="cart-table__body">{this.renderItems()}</tbody>
           </table>
@@ -392,38 +391,38 @@ class ShopPageCart extends Component {
                   <table className="cart__totals">
                     {this.renderTotals()}
                     <tfoot className="cart__totals-footer">
-                    {this.props.customer.customerId &&
-                    this.props.customer.customerGroupId ? (
-                      <>
-                        <tr style={{fontSize: "15px"}}>
-                          <th>Total Discount</th>
-                          <td>
-                            -<Currency value={cart.totalDiscounts}/>
-                          </td>
-                        </tr>
-                        <tr style={{fontSize: "15px"}}>
-                          <th>Total Tax</th>
-                          <td>
-                            <Currency value={cart.totalTaxs}/>
-                          </td>
-                        </tr>
-                      </>
-                    ) : (
-                      <p style={{fontSize: 14, width: "100%"}}>
-                        <span className="text-danger">*</span> Login to see
+                      {this.props.customer.customerId &&
+                        this.props.customer.customerGroupId ? (
+                          <>
+                            <tr style={{ fontSize: "15px" }}>
+                              <th>Total Discount</th>
+                              <td>
+                                -<Currency value={cart.totalDiscounts} />
+                              </td>
+                            </tr>
+                            <tr style={{ fontSize: "15px" }}>
+                              <th>Total Tax</th>
+                              <td>
+                                <Currency value={cart.totalTaxs} />
+                              </td>
+                            </tr>
+                          </>
+                        ) : (
+                          <p style={{ fontSize: 14, width: "100%" }}>
+                            <span className="text-danger">*</span> Login to see
                         discount and taxes.
-                      </p>
-                    )}
-                    <tr>
-                      <th>Total <small style={{fontSize: "14px"}}>( without shipping )</small></th>
-                      <td>
-                        <Currency value={cart.total}/>
-                      </td>
-                    </tr>
+                          </p>
+                        )}
+                      <tr>
+                        <th>Total <small style={{ fontSize: "14px" }}>( without shipping )</small></th>
+                        <td>
+                          <Currency value={cart.total} />
+                        </td>
+                      </tr>
                     </tfoot>
                   </table>
                   <Link
-                    style={{fontSize: 19}}
+                    style={{ fontSize: 19 }}
                     to="/store/checkout"
                     className="btn btn-primary btn-xl btn-block cart__checkout-button"
                   >
@@ -439,10 +438,10 @@ class ShopPageCart extends Component {
   }
 
   render() {
-    const {cart} = this.props;
+    const { cart } = this.props;
     const breadcrumb = [
-      {title: "Home", url: ""},
-      {title: "Shopping Cart", url: ""},
+      { title: "Home", url: "" },
+      { title: "Shopping Cart", url: "" },
     ];
 
     let content;
@@ -474,7 +473,7 @@ class ShopPageCart extends Component {
           <title>{`Shopping Cart — ${theme.name}`}</title>
         </Helmet>
 
-        <PageHeader header="Shopping Cart" breadcrumb={breadcrumb}/>
+        <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} />
 
         {content}
       </React.Fragment>

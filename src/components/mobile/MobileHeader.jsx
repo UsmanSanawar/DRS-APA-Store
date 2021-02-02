@@ -31,7 +31,8 @@ class MobileHeader extends Component {
             searchOpen: false,
             loading: false,
             results: [],
-            searchString: ""
+            searchString: "",
+            userLoad: false
         };
     }
 
@@ -91,13 +92,12 @@ class MobileHeader extends Component {
             if (res.data.status === 'success') {
                 this.setState({ results: res.data.data })
             }
-            console.log(res, "propseeee")
         })
     }
 
     render() {
         const { openMobileMenu, wishlist, cart } = this.props;
-        const { searchOpen, searchString, loading, results } = this.state;
+        const { searchOpen, searchString, loading, results, userLoad } = this.state;
         const searchClasses = classNames('mobile-header__search', {
             'mobile-header__search--opened': searchOpen,
         });
@@ -192,8 +192,36 @@ class MobileHeader extends Component {
                                 />
                                 <Indicator
                                     className="indicator--mobile indicator--mobile-search d-sm-none"
-                                    onClick={() => this.props.history.push('/store/login') }
-                                    icon={<i className="fa fa-user" />}
+                                    onClick={async () => {
+                                        let token = JSON.parse(localStorage.getItem('token'));
+                                        if (token) {
+                                            this.setState({ userLoad: true })
+                                            RestService.getCustomerByToken(token).then(res => {
+                                                this.setState({
+                                                    userLoad: false
+                                                })
+                                                if (res.data.status === "success") {
+                                                    return this.props.history.push('/store/dashboard')
+                                                }
+                                            }).catch(err => {
+                                                this.setState({
+                                                    userLoad: false
+                                                })
+                                                if (err) {
+                                                    localStorage.removeItem('token');
+                                                    localStorage.removeItem('identity');
+                                                    return this.props.history.push('/store/login')
+                                                }
+                                            });
+                                        } else {
+                                            localStorage.removeItem('token');
+                                            localStorage.removeItem('identity');
+                                            return this.props.history.push('/store/login')
+                                        }
+                                    }}
+                                    icon={userLoad ?
+                                        <Spinner style={{ height: 20, width: 20, color: "#f6965c" }} />
+                                        : <i className="fa fa-user" />}
                                 />
                                 <Indicator
                                     className="indicator--mobile d-sm-flex d-none"

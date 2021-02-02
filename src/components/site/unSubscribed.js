@@ -4,8 +4,8 @@ function UnsubscribePage(props) {
   useEffect(() => {}, []);
 
   return (
-    <div>
-      <Card body>
+    <div style={{height: '100%', width: '100%', overflow: "hidden", display: "grid"}}>
+      <Card body style={{margin: "auto"}}>
         <div className="p-c-s-icon">
           <i class="fa fa-newspaper"></i>
         </div>

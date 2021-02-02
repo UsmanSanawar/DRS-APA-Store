@@ -6,9 +6,6 @@ import FooterContacts from './FooterContacts';
 import FooterLinks from './FooterLinks';
 import FooterNewsletter from './FooterNewsletter';
 
-// data stubs
-import theme from '../../data/theme';
-
 
 export default function Footer(props) {
     const informationLinks = [

@@ -14,8 +14,8 @@ function App(props) {
   }, []);
 
   return (
-    <div>
-      <Card body>
+    <div style={{ height: "100%", width: "100%", overflow: "hidden", display: "grid" }}>
+      <Card body className="mx-auto my-5" style={{ width: "fit-content" }}>
         <div className="p-c-s-icon">
           <i class="fas fa-check-circle"></i>
         </div>
