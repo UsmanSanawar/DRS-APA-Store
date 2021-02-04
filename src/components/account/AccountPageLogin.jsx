@@ -386,33 +386,6 @@ export default function AccountPageLogin(props) {
                               />
                             </div>
 
-                            {/*<div className="form-group col-sm-12 col-md-6">*/}
-                            {/*  <label htmlFor="phone">Gender</label>*/}
-                            {/*  <select*/}
-                            {/*    id="gender"*/}
-                            {/*    className="form-control border"*/}
-                            {/*    placeholder="Select gender"*/}
-                            {/*    name="gender"*/}
-                            {/*    onChange={(event) =>*/}
-                            {/*      setRegisterFormData({*/}
-                            {/*        ...registerFormData,*/}
-                            {/*        gender: event.target.value,*/}
-                            {/*      })*/}
-                            {/*    }*/}
-                            {/*    value={registerFormData.gender || ""}*/}
-                            {/*  >*/}
-                            {/*    <option value="male" key="male">*/}
-                            {/*      Male*/}
-                            {/*    </option>*/}
-                            {/*    <option value="female" key="female">*/}
-                            {/*      Female*/}
-                            {/*    </option>*/}
-                            {/*    <option value="other" key="other">*/}
-                            {/*      Other*/}
-                            {/*    </option>*/}
-                            {/*  </select>*/}
-                            {/*</div>*/}
-
                             <div className="form-group col-sm-12 col-md-6">
                               <label htmlFor="phone">
                                 Customer Group
@@ -571,13 +544,14 @@ export default function AccountPageLogin(props) {
 
                           <div className="form-row">
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">First Name</label>
+                              <label htmlFor="name">First Name<span className="text-danger">*</span></label>
                               <input
                                 id="firstName"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter First Name"
                                 name="firstName"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -594,12 +568,13 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Last Name</label>
+                              <label htmlFor="name">Last Name<span className="text-danger">*</span></label>
                               <input
                                 id="lastName"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Last Name"
+                                required
                                 name="lastName"
                                 onChange={(event) =>
                                   setRegisterFormData({
@@ -659,13 +634,14 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Email</label>
+                              <label htmlFor="name">Email<span className="text-danger">*</span></label>
                               <input
                                 id="email"
                                 type="email"
                                 className="form-control"
                                 placeholder="Enter Email"
                                 name="email"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -680,13 +656,14 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Street</label>
+                              <label htmlFor="name">Street<span className="text-danger">*</span></label>
                               <input
                                 id="street"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Street"
                                 name="street"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -701,13 +678,14 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">City</label>
+                              <label htmlFor="name">City<span className="text-danger">*</span></label>
                               <input
                                 id="city"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter City"
                                 name="city"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -722,13 +700,14 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">State</label>
+                              <label htmlFor="state">State<span className="text-danger">*</span></label>
                               <input
                                 id="state"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter State"
                                 name="state"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -743,13 +722,14 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Country</label>
+                              <label htmlFor="state">Country<span className="text-danger">*</span></label>
                               <input
                                 id="country"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Country"
                                 name="country"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -764,10 +744,11 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Zip Code</label>
+                              <label htmlFor="state">Zip Code<span className="text-danger">*</span></label>
                               <input
                                 id="zipCode"
                                 type="text"
+                                required
                                 className="form-control"
                                 placeholder="Enter Zip Code"
                                 name="zipCode"
@@ -816,13 +797,14 @@ export default function AccountPageLogin(props) {
 
                           <div className="form-row">
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">First Name</label>
+                              <label htmlFor="name">First Name<span className="text-danger">*</span></label>
                               <input
                                 id="firstName"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter First Name"
                                 name="firstName"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -837,13 +819,14 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Last Name</label>
+                              <label htmlFor="name">Last Name<span className="text-danger">*</span></label>
                               <input
                                 id="lastName"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Last Name"
                                 name="lastName"
+                                required
                                 onChange={(event) =>
                                   setRegisterFormData({
                                     ...registerFormData,
@@ -902,10 +885,11 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Email</label>
+                              <label htmlFor="name">Email<span className="text-danger">*</span></label>
                               <input
                                 id="email"
                                 type="email"
+                                required
                                 className="form-control"
                                 placeholder="Enter Email"
                                 name="email"
@@ -923,10 +907,11 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Street</label>
+                              <label htmlFor="name">Street<span className="text-danger">*</span></label>
                               <input
                                 id="street"
                                 type="text"
+                                required
                                 className="form-control"
                                 placeholder="Enter Street"
                                 name="street"
@@ -944,10 +929,11 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">City</label>
+                              <label htmlFor="name">City<span className="text-danger">*</span></label>
                               <input
                                 id="city"
                                 type="text"
+                                required
                                 className="form-control"
                                 placeholder="Enter City"
                                 name="city"
@@ -965,10 +951,11 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">State</label>
+                              <label htmlFor="state">State<span className="text-danger">*</span></label>
                               <input
                                 id="state"
                                 type="text"
+                                required
                                 className="form-control"
                                 placeholder="Enter State"
                                 name="state"
@@ -986,11 +973,12 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Country</label>
+                              <label htmlFor="state">Country<span className="text-danger">*</span></label>
                               <input
                                 id="country"
                                 type="text"
                                 className="form-control"
+                                required
                                 placeholder="Enter Country"
                                 name="country"
                                 onChange={(event) =>
@@ -1007,12 +995,13 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Zip Code</label>
+                              <label htmlFor="state">Zip Code<span className="text-danger">*</span></label>
                               <input
                                 id="zipCode"
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter zip Code"
+                                required
                                 name="zipCode"
                                 onChange={(event) =>
                                   setRegisterFormData({
