@@ -39,6 +39,7 @@ function Search() {
                             setSearchString(e.target.value);
                             debounceQuery(e.target.value);
                         }}
+                        onBlur={() => setResults([])}
                         value={searchString}
                         placeholder="Search for products"
                         aria-label="Site search"
@@ -55,7 +56,7 @@ function Search() {
                     {results.length > 0 &&
                         <>
                             <div
-                                className="container m-0 col-8"
+                                className="container p-0 m-0 col-8"
                                 style={{
                                     zIndex: 110000,
                                     height: 500,

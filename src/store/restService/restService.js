@@ -121,7 +121,7 @@ const RestService = {
     }
     return axios.get(
       `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category
-      }&${manufacturers.join("&")}searchString=${filters.searchString}`,
+      }&${manufacturers.join("&")}&searchString=${filters.searchString}`,
       RestService.getHeader()
     );
   },
@@ -256,7 +256,7 @@ const RestService = {
 
   userForgotPassword: (FormData) =>
     axios.post(
-      `${BASE_URL_API_Admin}/JWT/User/ForgetPassword/${FormData}`,
+      `${BASE_URL_API_Admin}/masterdata/Customers/ForgetCustomerPassword/${FormData}`,
       RestService.getHeader()
     ),
 
@@ -292,7 +292,7 @@ const RestService = {
   changePasswordAfterEmail: (formData) => {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/ChangeCustomerPasswordAfterEmail`,
-      { password: formData },
+      formData,
       RestService.getHeader()
     );
   },

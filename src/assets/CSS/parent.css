@@ -26,3 +26,7 @@ select {
 .select select:focus-visible {
     border: 2px solid #f1630c;
 }
+
+.pswp__img {
+    height: auto !important;
+}

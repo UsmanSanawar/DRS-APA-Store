@@ -99,8 +99,8 @@ class ShopPageCheckout extends Component {
           })
           this.setState({
             formValues: {
-              billing: billing,
-              shipping: shipping
+              billing: {...initAddr, ...billing},
+              shipping: {...initAddr, ...shipping}
             }
           })
         }
