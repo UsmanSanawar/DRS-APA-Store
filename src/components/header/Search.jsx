@@ -13,6 +13,7 @@ function Search() {
     const [searchString, setSearchString] = useState("");
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [hide, setHide] = useState(false);
 
     const productSearchAPI = (string) => {
         setLoading(true)
@@ -28,6 +29,8 @@ function Search() {
     const sendQuery = query => productSearchAPI(query);
     const debounceQuery = useCallback(debounce(q => sendQuery(q), 400), []);
 
+    console.log(hide, 'hidehidehidehide')
+
     return (
         <>
             <div className="search">
@@ -39,14 +42,15 @@ function Search() {
                             setSearchString(e.target.value);
                             debounceQuery(e.target.value);
                         }}
-                        onBlur={() => setResults([])}
+                        onFocus={() => setHide(false)}
+
                         value={searchString}
                         placeholder="Search for products"
                         aria-label="Site search"
                         autoComplete="off"
                     />
                     <button type="button" className="search__button disabled">
-                        {loading ? <Spinner style={{height: 20, width: 20, color: "#f6965c"}} /> : <Search20Svg />}
+                        {loading ? <Spinner style={{ height: 20, width: 20, color: "#f6965c" }} /> : <Search20Svg />}
                     </button>
                     <div className="search__border" />
                 </form>
@@ -54,12 +58,13 @@ function Search() {
 
                 <div style={{ position: "absolute" }}>
                     {results.length > 0 &&
-                        <>
+                        <div onBlur={() => setHide(true)} className={hide ? "d-none" : ""} >
                             <div
                                 className="container p-0 m-0 col-8"
                                 style={{
                                     zIndex: 110000,
-                                    height: 500,
+                                    maxHeight: 500,
+                                    minHeight: 200,
                                     overflowY: "scroll",
                                     overflowX: "hidden",
                                     backgroundColor: '#929394d9'
@@ -76,7 +81,7 @@ function Search() {
                                             </div>
 
                                             <div className="col-10">
-                                                <Link style={{color: '#f6965c'}} to={`/store/product/${item.productId}`}>
+                                                <Link style={{ color: '#f6965c' }} to={`/store/product/${item.productId}`}>
                                                     <p className="mb-0">
                                                         <b>{item.productName}</b>
                                                     </p>
@@ -87,7 +92,7 @@ function Search() {
                                     </Card>
                                 ))}
                             </div>
-                        </>}
+                        </div>}
                 </div>
             </div>
         </>

@@ -172,9 +172,9 @@ class ProductsView extends Component {
             <div className="view-options__control">
               <div>
                 <span>Store</span>
-                <span> > </span>
+                <span> {">"} </span>
                 <span>Products</span>
-                <span> > </span>
+                <span> {">"} </span>
                 <span><b>{handleCategory() || ""}</b></span>
               </div>
               {/*<label htmlFor="view-options-sort">Sort By</label>*/}

@@ -81,6 +81,9 @@ function addItem(state, product, options, quantity = 0, customer) {
   let taxApply = 0;
 
   for (let tax of taxClass.taxRates) {
+
+    console.log(taxClass, "asdasdsadasdasd", customer)
+
     if (
       tax.taxRatesCustomerGroups.some(
         (row) => row.customerGroupId === customer.customerGroupId

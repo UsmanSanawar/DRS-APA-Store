@@ -208,6 +208,8 @@ class Product extends Component {
       cartAddItem,
       customer,
     } = this.props;
+
+    console.log(customer, 'customercustomer')
     const { quantity } = this.state;
 
     const handleOptionValues = (options) => {
@@ -397,9 +399,8 @@ class Product extends Component {
                 <Rating value={getRatingCal()} />
               </div>
               <div className="product__rating-legend">
-                <span>{`${
-                  product.totalReviewsCount ? product.totalReviewsCount : 0
-                } Reviews`}</span>
+                <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0
+                  } Reviews`}</span>
               </div>
             </div>
             <div className="product__description"></div>
@@ -448,7 +449,7 @@ class Product extends Component {
               <div>
                 <div className="form-group product__option">
                   <h4>Available Options</h4>
-                  <div className="input-radio-label" style={{maxHeight: 400, overflowY: "scroll"}}>{renderOptions()}</div>
+                  <div className="input-radio-label" style={{ maxHeight: 400, overflowY: "scroll" }}>{renderOptions()}</div>
                 </div>
                 <div className="form-group product__option">
                   <label
@@ -456,7 +457,7 @@ class Product extends Component {
                     className="product__option-label"
                   >
                     Quantity{" "}
-                    {product.stockStatusName === "Out Of Stock" ? null : <small style={{color: "green"}}>
+                    {product.stockStatusName === "Out Of Stock" ? null : <small style={{ color: "green" }}>
                       (Available Quantity: {product.quantity})
                     </small>}
                   </label>
@@ -502,18 +503,18 @@ class Product extends Component {
                       >
                         {this.state.slectedPr.optionQuantity
                           ? this.state.slectedPr.optionQuantity >=
-                          this.state.quantity
+                            this.state.quantity
                             ? "Add to cart"
                             : product.minimumQuantity < product.quantity ||
-                            product.minimumQuantity <
-                            this.state.slectedPr.optionQuantity
+                              product.minimumQuantity <
+                              this.state.slectedPr.optionQuantity
                               ? "Less Quantity Avaialable"
                               : "Out of Stock"
                           : product.quantity >= this.state.quantity
                             ? "Add to cart"
                             : product.minimumQuantity < product.quantity ||
-                            product.minimumQuantity <
-                            this.state.slectedPr.optionQuantity
+                              product.minimumQuantity <
+                              this.state.slectedPr.optionQuantity
                               ? "Less Quantity Avaialable"
                               : "Out of Stock"}
                       </button>

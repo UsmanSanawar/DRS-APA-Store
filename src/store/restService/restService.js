@@ -4,7 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "../../constant/constants";
 
 const BASE_URL_API = `${BASE_URL}/api/Store`;
-const BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
+const                                                 BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
 
 
 const axiosInterceptor = () => {
