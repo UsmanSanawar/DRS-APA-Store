@@ -209,7 +209,6 @@ class Product extends Component {
       customer,
     } = this.props;
 
-    console.log(customer, 'customercustomer')
     const { quantity } = this.state;
 
     const handleOptionValues = (options) => {

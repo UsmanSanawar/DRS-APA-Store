@@ -4,45 +4,11 @@ import axios from "axios";
 import { BASE_URL } from "../../constant/constants";
 
 const BASE_URL_API = `${BASE_URL}/api/Store`;
-const                                                 BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
+const BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
 
 
-const axiosInterceptor = () => {
-  axios.interceptors.response.use(
-    (response) => {
-
-      console.log(response, 'axiosResponse')
-
-      return response;
-    },
-    (error) => {
-      console.log(error, 'axiosError')
-
-      if (error.message.includes("403")) {
-        localStorage.clear();
-        return window.location.replace("#/login");
-      } else if (error.message.includes("401")) {
-        localStorage.clear();
-        return window.location.replace("#/login");
-      } else if (error.message.includes("500")) {
-        window.alert("Something went wrong");
-        window.location.reload();
-      } else if (error.message.includes("413")) {
-        window.alert("File Size Limit exceeded (5MB)");
-        window.location.reload();
-      } else {
-        throw error;
-      }
-      return {
-        status: error.status,
-        error: error.message,
-      };
-    }
-  );
-};
 
 const RestService = {
-
   getHeader: () => ({
     headers: {
       "Content-Type": "application/json",
@@ -120,8 +86,9 @@ const RestService = {
       }
     }
     return axios.get(
-      `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${filters.category
-      }&${manufacturers.join("&")}&searchString=${filters.searchString}`,
+      `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
+        filters.category
+      }&${manufacturers.join("&")}`,
       RestService.getHeader()
     );
   },
@@ -176,12 +143,11 @@ const RestService = {
     ),
 
   postSaleOrder: (formData) => {
-    axiosInterceptor();
     return axios.post(
       `${BASE_URL_API}/masterdata/OrderStore`,
       formData,
       RestService.getHeader()
-    )
+    );
   },
 
   getOrderById: (orderId) =>
@@ -311,15 +277,13 @@ const RestService = {
     );
   },
 
-  getCustomerByToken: () => {
-    return axios.get(
+  getCustomerByToken: () => axios.get(
       `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerByTokenDetailed`,
       RestService.getHeader()
-    );
-  },
+    ),
 
   editCustomerProfile: (formData, customerId) => {
-    return axios.put(
+    axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/UpdateCustomerFromStore/${customerId}`,
       formData,
       RestService.getHeader()
@@ -334,12 +298,13 @@ const RestService = {
     );
   },
 
-  postCustomerProfileAddress: (FormData) =>
-    axios.post(
+  postCustomerProfileAddress: (FormData) => {
+    return axios.post(
       `${BASE_URL_API_Admin}/masterdata/Customers/AddCustomerAddressStore`,
       FormData,
       RestService.getHeader()
-    ),
+    );
+  },
 
   getCustomerAddressById: (customerId) =>
     axios.get(

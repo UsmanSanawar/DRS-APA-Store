@@ -15,7 +15,6 @@ function DepartmentsLinks(props) {
   let {storeView, menu, categories} = useSelector(({webView}) => webView);
 
   let newCategories = categories.filter(item => item.slug !== "/store/account_logout")
-  console.log(newCategories, 'categories')
 
   let linksList =
     newCategories &&

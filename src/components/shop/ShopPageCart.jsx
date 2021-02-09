@@ -414,11 +414,15 @@ class ShopPageCart extends Component {
                           </p>
                         )}
                       <tr>
-                        <th>Total <small style={{ fontSize: "14px" }}>( without shipping )</small></th>
+                        <th>Total</th>
                         <td>
                           <Currency value={cart.total} />
                         </td>
                       </tr>
+
+                    <tr>
+                      <small style={{ fontSize: "13px", marginTop: 10 }}>(excluding shipping, tax & discounts )</small>
+                    </tr>
                     </tfoot>
                   </table>
                   <Link

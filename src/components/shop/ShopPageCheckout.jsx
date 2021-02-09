@@ -76,13 +76,15 @@ class ShopPageCheckout extends Component {
 
   componentDidMount() {
 
-    let token = localStorage.getItem("token");
-    RestService.getCustomerByToken(token).then(res => {
+    console.log(this.handleSaleorderObject(), "dsadsadsadsadsadsad")
+
+    RestService.getCustomerByToken().then(res => {
       if (res.data.status === "success") {
         let { customerAddress } = res.data.data;
         if (customerAddress.length > 0) {
           let shipping;
           let billing;
+          // eslint-disable-next-line array-callback-return
           customerAddress.map(address => {
 
             if (address.addressType === "shipping") {
@@ -99,11 +101,16 @@ class ShopPageCheckout extends Component {
           })
           this.setState({
             formValues: {
-              billing: {...initAddr, ...billing},
-              shipping: {...initAddr, ...shipping}
+              billing: { ...initAddr, ...billing },
+              shipping: { ...initAddr, ...shipping }
             }
           })
         }
+      }
+    }).catch(err => {
+      if (err.message.includes('403') || err.message.includes('401')) {
+        localStorage.clear();
+        return window.location.href.replace("#/store/login")
       }
     })
 
@@ -143,6 +150,7 @@ class ShopPageCheckout extends Component {
   };
 
   handleSaleorderObject = () => {
+    debugger;
     let saleOrder = {
       orderId: null,
       orderIdentifier: "",
@@ -533,6 +541,7 @@ class ShopPageCheckout extends Component {
       ? eligiableTrue
       : eligiableFalse;
     const shippingKeys = Object.keys(this.state.calculations);
+    // eslint-disable-next-line array-callback-return
     shippingKeys.map((item) => {
       if (
         condEligible.some((arrItem) => arrItem === item) &&

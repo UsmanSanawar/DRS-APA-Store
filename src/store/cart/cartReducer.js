@@ -80,16 +80,18 @@ function addItem(state, product, options, quantity = 0, customer) {
   let taxClass = product.taxClass ? product.taxClass : [];
   let taxApply = 0;
 
-  for (let tax of taxClass.taxRates) {
-
-    console.log(taxClass, "asdasdsadasdasd", customer)
-
-    if (
-      tax.taxRatesCustomerGroups.some(
-        (row) => row.customerGroupId === customer.customerGroupId
-      )
-    ) {
-      rates.push(tax);
+  if(customer){
+    console.log(taxClass.taxRates, "DAsdasdsadasdsad", product)
+    if(taxClass.taxRates && taxClass.taxRates.length > 0){
+      for (let tax of taxClass.taxRates) {
+        if (
+          tax.taxRatesCustomerGroups.some(
+            (row) => row.customerGroupId === customer.customerGroupId
+          )
+        ) {
+          rates.push(tax);
+        }
+      }
     }
   }
 
@@ -100,14 +102,16 @@ function addItem(state, product, options, quantity = 0, customer) {
     let discountedPrice = 0;
     let discountThatMayApply = [];
 
-    product.discountProducts.map((p) => {
-      p.discount.discountCustomerGroups !== null &&
+    if(customer){
+      product.discountProducts.map((p) => {
+        p.discount.discountCustomerGroups !== null &&
         p.discount.discountCustomerGroups.map((discountGroup) => {
           if (discountGroup.customerGroupId === customer.customerGroupId) {
             discountThatMayApply.push(p.discount.discountPercentage);
           }
         });
-    });
+      });
+    }
 
     let discountPercentageToBeApplied = !isNaN(
       Math.max(...discountThatMayApply)

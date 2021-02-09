@@ -35,6 +35,11 @@ const [customer, setCustomer] = useState({})
             } else {
                 toast.error(res.data.message)
             }
+        }).catch(err => {
+            if (err.message.includes('403') || err.message.includes('401')) {
+                localStorage.clear();
+                return window.location.href.replace("#/store/login")
+            }
         })
     }, [])
 

@@ -15,7 +15,6 @@ const initialState = {
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case "SIGNIN_USER_SUCCESS": {
-      console.log(action.payload, 'action.payload')
       return {
         ...state,
         profile: {

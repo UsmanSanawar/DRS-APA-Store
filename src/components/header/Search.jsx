@@ -23,13 +23,11 @@ function Search() {
             if (res.data.status === 'success') {
                 setResults(res.data.data)
             }
-            console.log(res, "propseeee")
         })
     }
     const sendQuery = query => productSearchAPI(query);
     const debounceQuery = useCallback(debounce(q => sendQuery(q), 400), []);
 
-    console.log(hide, 'hidehidehidehide')
 
     return (
         <>

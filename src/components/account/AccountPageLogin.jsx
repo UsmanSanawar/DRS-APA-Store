@@ -66,6 +66,11 @@ export default function AccountPageLogin(props) {
             if (res.data.status === "success") {
               dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
             }
+          }).catch(err => {
+            if (err.message.includes('403') || err.message.includes('401')) {
+              localStorage.clear();
+              return window.location.href.replace("#/store/login")
+            }
           });
 
           setLoginFormData({});
@@ -73,7 +78,7 @@ export default function AccountPageLogin(props) {
           toast.error("Invald credentials");
         }
       })
-      .catch((error) => error && toast.error("Invalid credentials."));
+      .catch(err => { console.log(err, "asdadsadsadasd"); return toast.error('Invalid credentials') })
   };
 
   const initAddress = {
