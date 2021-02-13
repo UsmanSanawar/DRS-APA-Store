@@ -242,6 +242,10 @@ export default function AccountPageLogin(props) {
                         <a onClick={() => setOpen(true)} href="void:0">
                           Forgotten Password?
                         </a>
+
+                        <a className='float-right' href="http://77.68.93.42:85/#/">
+                          Login as Admin?
+                        </a>
                       </small>
                     </div>
                     <div className="form-group">

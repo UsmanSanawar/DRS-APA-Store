@@ -79,6 +79,8 @@ const RestService = {
     const priceFrom = priceArray[0];
     const priceTo = priceArray[1];
 
+    console.log(filters, "filter in product api")
+
     const manufacturers = [];
     if (filters.manufacturers && filters.manufacturers.length > 0) {
       for (const manufacturerId of filters.manufacturers) {
@@ -88,7 +90,7 @@ const RestService = {
     return axios.get(
       `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
         filters.category
-      }&${manufacturers.join("&")}`,
+      }&${manufacturers.join("&")}&searchString=${filters.searchString}`,
       RestService.getHeader()
     );
   },
@@ -328,7 +330,7 @@ const RestService = {
 
   getProductsBySearch: (string) =>
     axios.get(
-      `${BASE_URL_API}/masterdata/ProductStore/0/0?searchString=${string}`,
+      `${BASE_URL_API}/masterdata/ProductStore/productByName?productName=${string}`,
       RestService.getHeader()
     ),
 };

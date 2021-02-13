@@ -1,21 +1,21 @@
 /* eslint-disable react/no-direct-mutation-state */
 // react
 import _ from "lodash";
-import React, { Component } from "react";
-import { Helmet } from "react-helmet";
+import React, {Component} from "react";
+import {Helmet} from "react-helmet";
 // third-party
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { bindActionCreators } from "redux";
+import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
+import {bindActionCreators} from "redux";
 import CircularLoader from "../../assets/loaders";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
-import { postSaleOrder, resetCartPaid } from "../../store/cart";
+import {postSaleOrder, resetCartPaid} from "../../store/cart";
 import RestService from "../../store/restService/restService";
-import { getAllCountries } from "../../store/webView";
-import { Check9x7Svg } from "../../svg";
+import {getAllCountries} from "../../store/webView";
+import {Check9x7Svg} from "../../svg";
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
@@ -47,8 +47,8 @@ class ShopPageCheckout extends Component {
     this.state = {
       payment: "",
       formValues: {
-        billing: { ...initAddr, addressType: "billing" },
-        shipping: { ...initAddr, addressType: "shipping" },
+        billing: {...initAddr, addressType: "billing"},
+        shipping: {...initAddr, addressType: "shipping"},
       },
       loading: false,
       orderNote: "",
@@ -70,7 +70,7 @@ class ShopPageCheckout extends Component {
 
   showPaypalButtons = () => {
     if (this.state.payment === "paypal") {
-      this.setState({ showPaypal: true });
+      this.setState({showPaypal: true});
     }
   };
 
@@ -80,7 +80,7 @@ class ShopPageCheckout extends Component {
 
     RestService.getCustomerByToken().then(res => {
       if (res.data.status === "success") {
-        let { customerAddress } = res.data.data;
+        let {customerAddress} = res.data.data;
         if (customerAddress.length > 0) {
           let shipping;
           let billing;
@@ -101,8 +101,8 @@ class ShopPageCheckout extends Component {
           })
           this.setState({
             formValues: {
-              billing: { ...initAddr, ...billing },
-              shipping: { ...initAddr, ...shipping }
+              billing: {...initAddr, ...billing},
+              shipping: {...initAddr, ...shipping}
             }
           })
         }
@@ -142,8 +142,8 @@ class ShopPageCheckout extends Component {
     items = items ? items : [];
     items.map(
       (item) =>
-      (orderAmountWithTaxAndDiscountF =
-        orderAmountWithTaxAndDiscountF + (item.ukFreeDeliverPrices || 0))
+        (orderAmountWithTaxAndDiscountF =
+          orderAmountWithTaxAndDiscountF + (item.ukFreeDeliverPrices || 0))
     );
 
     return orderAmountWithTaxAndDiscountF;
@@ -177,11 +177,11 @@ class ShopPageCheckout extends Component {
       orderStatusCode: "",
     };
 
-    let shipping = { ...this.state.formValues.shipping };
+    let shipping = {...this.state.formValues.shipping};
     shipping.addressType = "shipping";
     shipping.orderAddressId = null;
 
-    let billing = { ...this.state.formValues.billing };
+    let billing = {...this.state.formValues.billing};
     billing.orderAddressId = null;
     billing.addressType = "billing";
 
@@ -193,19 +193,19 @@ class ShopPageCheckout extends Component {
       let product = item.product;
       product.discountProducts.map((p) => {
         p.discount.discountCustomerGroups !== undefined &&
-          p.discount.discountCustomerGroups !== null &&
-          p.discount.discountCustomerGroups.map((discountGroup) => {
-            if (
-              discountGroup.customerGroupId ===
-              this.props.customer.customerGroupId
-            ) {
-              discountThatMayApply.push({
-                discountId: p.discount.discountId,
-                discountName: p.discount.name,
-                discountPercentage: p.discount.discountPercentage,
-              });
-            }
-          });
+        p.discount.discountCustomerGroups !== null &&
+        p.discount.discountCustomerGroups.map((discountGroup) => {
+          if (
+            discountGroup.customerGroupId ===
+            this.props.customer.customerGroupId
+          ) {
+            discountThatMayApply.push({
+              discountId: p.discount.discountId,
+              discountName: p.discount.name,
+              discountPercentage: p.discount.discountPercentage,
+            });
+          }
+        });
       });
 
       let appliedDiscount = _.maxBy(
@@ -240,7 +240,7 @@ class ShopPageCheckout extends Component {
         item.product.selectedProductOption &&
         item.product.selectedProductOption.productId
       ) {
-        let SelectedProduct = { ...item.product.selectedProductOption };
+        let SelectedProduct = {...item.product.selectedProductOption};
         SelectedProduct.orderLineProductOptionsId = 0;
         SelectedProduct.orderLineProductOptionCombinations = SelectedProduct.productOptionCombination;
 
@@ -297,7 +297,7 @@ class ShopPageCheckout extends Component {
         RestService.postSaleOrder(saleOrder).then((r) => {
           toast[r.data.status](r.data.message);
           if (r.data.status === "success") {
-            this.setState({ orderState: r.data.data });
+            this.setState({orderState: r.data.data});
           } else {
             this.handleSubmitLoading(false);
           }
@@ -327,18 +327,18 @@ class ShopPageCheckout extends Component {
       // eslint-disable-next-line react/no-direct-mutation-state
       this.state.formValues[addressType][name] = event.target.value;
 
-      this.setState({ formValues: this.state.formValues });
+      this.setState({formValues: this.state.formValues});
     }
   };
 
   handlePaymentChange = (event) => {
     if (event.target.checked) {
-      this.setState({ payment: event.target.value });
+      this.setState({payment: event.target.value});
     }
   };
 
   renderTotals() {
-    const { cart } = this.props;
+    const {cart} = this.props;
 
     if (cart.extraLines.length <= 0) {
       return null;
@@ -348,7 +348,7 @@ class ShopPageCheckout extends Component {
       <tr key={index}>
         <th>{extraLine.title}</th>
         <td>
-          <Currency value={extraLine.price} />
+          <Currency value={extraLine.price}/>
         </td>
       </tr>
     ));
@@ -356,26 +356,26 @@ class ShopPageCheckout extends Component {
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
-          <tr>
-            <th>Subtotal</th>
-            <td>
-              <Currency value={cart.subtotal} />
-            </td>
-          </tr>
-          {extraLines}
+        <tr>
+          <th>Subtotal</th>
+          <td>
+            <Currency value={cart.subtotal}/>
+          </td>
+        </tr>
+        {extraLines}
         </tbody>
       </React.Fragment>
     );
   }
 
   renderCart() {
-    const { cart } = this.props;
+    const {cart} = this.props;
 
     const items = cart.items.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.name} × ${item.quantity}`}</td>
         <td>
-          <Currency value={item.total} />
+          <Currency value={item.total}/>
         </td>
       </tr>
     ));
@@ -383,52 +383,52 @@ class ShopPageCheckout extends Component {
     return (
       <table className="checkout__totals">
         <thead className="checkout__totals-header">
-          <tr>
-            <th>Product</th>
-            <th>Total</th>
-          </tr>
+        <tr>
+          <th>Product</th>
+          <th>Total</th>
+        </tr>
         </thead>
         <tbody className="checkout__totals-products">{items}</tbody>
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Discount</th>
-            <td>
-              -<Currency value={cart.totalDiscounts} />
-            </td>
-          </tr>
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Tax</th>
-            <td>
-              <Currency value={cart.totalTaxs} />
-            </td>
-          </tr>
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Shipping</th>
-            <td>
-              <Currency value={this.state.shippingTotal} />
-            </td>
-          </tr>
-          <tr>
-            <th>Total</th>
-            <td>
-              <Currency value={cart.total + this.state.shippingTotal} />
-            </td>
-          </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Discount</th>
+          <td>
+            -<Currency value={cart.totalDiscounts}/>
+          </td>
+        </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Tax</th>
+          <td>
+            <Currency value={cart.totalTaxs}/>
+          </td>
+        </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Shipping</th>
+          <td>
+            <Currency value={this.state.shippingTotal}/>
+          </td>
+        </tr>
+        <tr>
+          <th>Total</th>
+          <td>
+            <Currency value={cart.total + this.state.shippingTotal}/>
+          </td>
+        </tr>
         </tfoot>
       </table>
     );
   }
 
   handleShipmentCalculation = async (e) => {
-    this.setState({ sloading: true });
+    this.setState({sloading: true});
     let formDataSaleOrders = this.handleSaleorderObject();
-    let data = { ...formDataSaleOrders };
+    let data = {...formDataSaleOrders};
     data.uK_DeliveryDurationId = parseInt(e.target.value);
 
-    await RestService.calculateSaleOrderShipment({ ...data })
+    await RestService.calculateSaleOrderShipment({...data})
       .then((res) => {
-        this.setState({ sloading: false });
+        this.setState({sloading: false});
         if (res.data.error === "") {
           this.setState({
             calculations: res.data.order,
@@ -441,10 +441,10 @@ class ShopPageCheckout extends Component {
   };
 
   renderPaymentsList() {
-    const { payment: currentPayment } = this.state;
+    const {payment: currentPayment} = this.state;
 
     const payments = this.payments.map((payment) => {
-      const renderPayment = ({ setItemRef, setContentRef }) => (
+      const renderPayment = ({setItemRef, setContentRef}) => (
         <li className="payment-methods__item" ref={setItemRef}>
           <label className="payment-methods__item-header">
             <span className="payment-methods__item-radio input-radio">
@@ -457,7 +457,7 @@ class ShopPageCheckout extends Component {
                   checked={currentPayment === payment.key}
                   onChange={this.handlePaymentChange}
                 />
-                <span className="input-radio__circle" />
+                <span className="input-radio__circle"/>
               </span>
             </span>
             <span className="payment-methods__item-title">{payment.title}</span>
@@ -561,8 +561,8 @@ class ShopPageCheckout extends Component {
   };
 
   render() {
-    const { cart, allCountries } = this.props;
-    const { billing, shipping } = this.state.formValues;
+    const {cart, allCountries} = this.props;
+    const {billing, shipping} = this.state.formValues;
     const {
       showPaypal,
       payment,
@@ -572,9 +572,9 @@ class ShopPageCheckout extends Component {
     } = this.state;
 
     const breadcrumb = [
-      { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/store/cart" },
-      { title: "Checkout", url: "" },
+      {title: "Home", url: ""},
+      {title: "Shopping Cart", url: "/store/cart"},
+      {title: "Checkout", url: ""},
     ];
 
     return (
@@ -583,7 +583,7 @@ class ShopPageCheckout extends Component {
           <title>{`Checkout — ${theme.name}`}</title>
         </Helmet>
 
-        <PageHeader header="Checkout" breadcrumb={breadcrumb} />
+        <PageHeader header="Checkout" breadcrumb={breadcrumb}/>
 
         <div className="checkout block">
           <div className="container">
@@ -655,13 +655,13 @@ class ShopPageCheckout extends Component {
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                              allCountries.map((item) => {
-                                return (
-                                  <option value={item.countryName}>
-                                    {item.countryName}
-                                  </option>
-                                );
-                              })}
+                            allCountries.map((item) => {
+                              return (
+                                <option value={item.countryName}>
+                                  {item.countryName}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
@@ -757,7 +757,7 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="card-divider" />
+                    <div className="card-divider"/>
                     <div className="card-body">
                       <h3 className="card-title">Shipping Details</h3>
 
@@ -771,8 +771,8 @@ class ShopPageCheckout extends Component {
                                 id="checkout-different-address"
                                 onChange={this.handleAddressToggle}
                               />
-                              <span className="input-check__box" />
-                              <Check9x7Svg className="input-check__icon" />
+                              <span className="input-check__box"/>
+                              <Check9x7Svg className="input-check__icon"/>
                             </span>
                           </span>
                           <label
@@ -849,13 +849,13 @@ class ShopPageCheckout extends Component {
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                              allCountries.map((item) => {
-                                return (
-                                  <option value={item.countryName}>
-                                    {item.countryName}
-                                  </option>
-                                );
-                              })}
+                            allCountries.map((item) => {
+                              return (
+                                <option value={item.countryName}>
+                                  {item.countryName}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
@@ -962,8 +962,8 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
 
-                      <div className="card-divider" />
-                      <br />
+                      <div className="card-divider"/>
+                      <br/>
 
                       <div className="form-group">
                         <label htmlFor="shipping-comment">
@@ -975,7 +975,7 @@ class ShopPageCheckout extends Component {
                           className="form-control"
                           rows="4"
                           onChange={(e) =>
-                            this.setState({ orderNote: e.target.value })
+                            this.setState({orderNote: e.target.value})
                           }
                         />
                       </div>
@@ -990,7 +990,7 @@ class ShopPageCheckout extends Component {
                       <div className="form-group">
                         <label htmlFor="checkout-country">
                           Delivery Time Options{" "}
-                          <i style={{ color: "red" }}>*</i>
+                          <i style={{color: "red"}}>*</i>
                         </label>
                         <select
                           required
@@ -999,7 +999,7 @@ class ShopPageCheckout extends Component {
                           value={billing.deliveryTime}
                           name={"country"}
                           onChange={(e) => {
-                            this.setState({ deliveryTime: e.target.value });
+                            this.setState({deliveryTime: e.target.value});
                             this.handleShipmentCalculation(e);
                           }}
                         >
@@ -1021,8 +1021,8 @@ class ShopPageCheckout extends Component {
                           }}
                           style={
                             !this.state.deliveryTime
-                              ? { pointerEvents: "none", opacity: "0.7" }
-                              : { cursor: "pointer" }
+                              ? {pointerEvents: "none", opacity: "0.7"}
+                              : {cursor: "pointer"}
                           }
                           className="text-center border-bottom mt-3 w-100"
                         >
@@ -1067,12 +1067,12 @@ class ShopPageCheckout extends Component {
                                 }
                                 id="checkout-terms"
                               />
-                              <span className="input-check__box" />
-                              <Check9x7Svg className="input-check__icon" />
+                              <span className="input-check__box"/>
+                              <Check9x7Svg className="input-check__icon"/>
                             </span>
                           </span>
                           <label
-                            style={{ fontSize: "13px", fontWeight: "bold" }}
+                            style={{fontSize: "13px", fontWeight: "bold"}}
                             className="form-check-label"
                             htmlFor="checkout-terms"
                           >
@@ -1094,11 +1094,11 @@ class ShopPageCheckout extends Component {
                       )}
 
                       {this.state.payment === "stripe" &&
-                        (this.state.submitLoading ? (
-                          <div className="text-center my-1">
-                            <CircularLoader />
-                          </div>
-                        ) : null)}
+                      (this.state.submitLoading ? (
+                        <div className="text-center my-1">
+                          <CircularLoader/>
+                        </div>
+                      ) : null)}
 
                       <div
                         className={

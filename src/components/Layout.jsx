@@ -171,6 +171,20 @@ function Layout(props) {
                   <ShopPageCategory {...props} columns={5} viewMode="grid" />
                 )}
               />
+
+              <Route
+                exact
+                path="/store/products/search"
+                render={(props) => (
+                  <ShopPageCategory
+                    {...props}
+                    columns={3}
+                    viewMode="grid"
+                    sidebarPosition="start"
+                  />
+                )}
+              />
+
               <Route
                 exact
                 path="/store/products/:id"

@@ -280,7 +280,7 @@ class Product extends Component {
                           this.handleInputChange(e, item.optionId)
                         }
                         value={optValue.optionValueId}
-                      />{" "}
+                      />
                       {optValue.name}
                     </Label>
                   </FormGroup>
@@ -409,7 +409,7 @@ class Product extends Component {
             <ul className="product__meta">
               <li className="product__meta-availability">
                 Availability:
-                <span className="text-success">{product.stockStatusName}</span>
+                <span className="text-success">{product.quantity < 0 ? "Out Of Stock" : product.stockStatusName}</span>
               </li>
 
               {product.manufacturerName ? (
@@ -494,7 +494,7 @@ class Product extends Component {
                               this.state.slectedPr.optionQuantity >=
                               this.state.quantity
                             )
-                            : !(product.quantity >= this.state.quantity)) && product.stockStatusName === 'Out '
+                            : !(product.quantity >= this.state.quantity)) && product.stockStatusName !== 'Out Of Stock'
                         }
                         className={classNames("btn btn-primary btn-lg", {
                           "btn-loading": "",
@@ -507,14 +507,14 @@ class Product extends Component {
                             : product.minimumQuantity < product.quantity ||
                               product.minimumQuantity <
                               this.state.slectedPr.optionQuantity
-                              ? "Less Quantity Avaialable"
+                              ? "Less Quantity Available"
                               : "Out of Stock"
                           : product.quantity >= this.state.quantity
                             ? "Add to cart"
                             : product.minimumQuantity < product.quantity ||
                               product.minimumQuantity <
                               this.state.slectedPr.optionQuantity
-                              ? "Less Quantity Avaialable"
+                              ? "Less Quantity Available"
                               : "Out of Stock"}
                       </button>
                       {/* )}

@@ -140,6 +140,7 @@ function CommonComp(props) {
     return (
       <div className="row">
         {dataList.map((item) => {
+          console.log(item, "itemsGroqenc");
           return (
             <div className={`col-lg-${getWith(item.photoSize, true)}`}>
               <div

@@ -1,6 +1,7 @@
 // react
 // third-party
 import classNames from "classnames";
+import { filter } from "lodash";
 import PropTypes from "prop-types";
 import React, {Component} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -37,7 +38,9 @@ class ProductsView extends Component {
         })
       }
     })
+
     let filters = {...this.props.sideFilters, category: this.props.match.params.id}
+    console.log(filters, 'filtersfiltersfilters');
     this.handleGetProducts(1, 10, filters);
   }
 
