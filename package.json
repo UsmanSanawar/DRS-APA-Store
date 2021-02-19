@@ -11,7 +11,6 @@
     "bootstrap": "^4.3.1",
     "ckeditor5-build-full": "^2.0.0",
     "classnames": "^2.2.6",
-    "loadash": "^1.0.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "node-sass": "^4.12.0",
