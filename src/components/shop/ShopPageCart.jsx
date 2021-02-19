@@ -81,7 +81,7 @@ class ShopPageCart extends Component {
     let product = item.product;
     let discountedPrice = 0;
     let discountThatMayApply = [];
-    product.discountProducts.map((p) => {
+    product.discountProducts.length > 0 && product.discountProducts.map((p) => {
       p.discount.discountCustomerGroups !== null &&
         p.discount.discountCustomerGroups.map((discountGroup) => {
           if (
@@ -108,17 +108,17 @@ class ShopPageCart extends Component {
     let taxClass = item.product.taxClass;
     let taxApply = 0;
     let rates = [];
-
-    for (let tax of taxClass.taxRates) {
-      if (
-        tax.taxRatesCustomerGroups.some(
-          (row) => row.customerGroupId === this.props.customer.customerGroupId
-        )
-      ) {
-        rates.push(tax.rate);
+    if(taxClass && taxClass.taxRates.length > 0){
+      for (let tax of taxClass.taxRates) {
+        if (
+          tax.taxRatesCustomerGroups.some(
+            (row) => row.customerGroupId === this.props.customer.customerGroupId
+          )
+        ) {
+          rates.push(tax.rate);
+        }
       }
     }
-
     let sum = rates.reduce(function (a, b) {
       return a + b;
     }, 0);

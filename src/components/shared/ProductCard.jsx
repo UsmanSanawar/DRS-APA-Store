@@ -112,7 +112,7 @@ function ProductCard(props) {
   const handleProductWithOptions = async (id, run) => {
     await RestService.getProductOptionCombination(id).then((res) => {
       if (res.data.status === "success") {
-        if (res.data.data.length > 0) {
+        if (res.data.data && res.data.data.length > 0) {
           setOptions(res.data.data || []);
           setOpen(true);
         } else {
@@ -220,7 +220,7 @@ function ProductCard(props) {
           <Input
             onChange={(e) => handleInputChange(e, item.optionId)}
             className="checkbox"
-            style={{ display: "block", marginLeft: "10px" }}
+            style={{ display: "block", marginLeft: 10 }}
             type="checkbox"
             name={item.optionName}
           />
@@ -290,17 +290,17 @@ function ProductCard(props) {
   };
 
   const handleCartItem = () => {
-    if (product.minimumQuantity > 0) {
-      cartAddItem(
-        { ...product, selectedProductOption: slectedPr },
-        options,
-        product.minimumQuantity > 0 ? product.minimumQuantity : 1,
-        getNewPrice(),
-        customer
-      );
-    } else {
-      toast.error("Minimum quantity cannot be less than 0");
-    }
+    // if (product.minimumQuantity > 0) {
+    //   cartAddItem(
+    //     { ...product, selectedProductOption: slectedPr },
+    //     options,
+    //     product.minimumQuantity > 0 ? product.minimumQuantity : 1,
+    //     getNewPrice(),
+    //     customer
+    //   );
+    // } else {
+    //   toast.error("Minimum quantity cannot be less than 0");
+    // }
   };
 
   return (
@@ -422,15 +422,15 @@ function ProductCard(props) {
                 <div
                   type="button"
                   onClick={() => {
-                      handleProductWithOptions(product.id, run);
+                    handleProductWithOptions(product.id, run);
                   }}
                   className={"btn btn-primary product-card__addtocart"}
                 >
                   Add to cart
                 </div>
                 <Link
-                  // type="button"
-                  // onClick={run}
+                  type="button"
+                  onClick={run}
                   to={`/store/product/${product.id}`}
                   className={classNames(
                     "btn btn-secondary product-card__addtocart product-card__addtocart--list"

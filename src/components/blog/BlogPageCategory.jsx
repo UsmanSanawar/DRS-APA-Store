@@ -16,27 +16,46 @@ import BlogSidebar from "./BlogSidebar";
 import theme from "../../data/theme";
 import RestService from "../../store/restService/restService";
 import { IMAGE_URL } from "../../constant/constants";
+import { debounce } from "lodash";
+import CircularLoader from "../../assets/loaders";
+import CreateBlogForm from "./CreateBlogForm";
 
 export default class BlogPageCategory extends Component {
   constructor(props) {
     super(props);
-
+    this.sendQuery = (query) => this.getBlogPosts(query);
+    this.debounceQuery = debounce((q) => this.sendQuery(q), 400);
     this.state = {
       page: 1,
       posts: [],
       categoryId: "",
       headers: {},
       allCategories: [],
+      allComments: [],
       selectedCat: null,
-      searchString: ""
+      searchString: "",
+      loading: false,
+      showForm: false,
     };
   }
+
+  getBlogPosts = (string) => {
+    this.getBlogsApi();
+  };
 
   componentDidMount() {
     RestService.getBlogCategories().then((r) => {
       if (r.data.status === "success") {
         this.setState({
           allCategories: r.data.data,
+        });
+      }
+    });
+
+    RestService.getAllBlogPostComments().then((res) => {
+      if (res.data.status === "success") {
+        this.setState({
+          allComments: res.data.data,
         });
       }
     });
@@ -59,15 +78,28 @@ export default class BlogPageCategory extends Component {
 
   setSearch = (e) => {
     this.setState({
-      searchString: e
-    })
-  }
+      searchString: e,
+    });
 
-  getBlogsApi = (pg, filter = "") => {
+    this.debounceQuery(e);
+  };
+
+  getBlogsApi = async (pg, filter = "") => {
+    this.setState({
+      loading: true,
+    });
     filter =
       (this.state.selectedCat && `CategoryId=${this.state.selectedCat}`) || "";
 
-    RestService.getBlogPosts(pg, filter).then((r) => {
+    // eslint-disable-next-line no-mixed-operators
+    filter =
+      (filter + this.state.searchString &&
+        `&searchString=${this.state.searchString}`) ||
+      "";
+
+    console.log(filter, "filterfilter");
+
+    await RestService.getBlogPosts(pg, filter).then((r) => {
       if (r.data.status === "success") {
         this.setState({ headers: JSON.parse(r.headers["x-pagination"]) });
 
@@ -93,6 +125,10 @@ export default class BlogPageCategory extends Component {
         });
       }
     });
+
+    this.setState({
+      loading: false,
+    });
   };
 
   handlePageChange = (page) => {
@@ -100,10 +136,15 @@ export default class BlogPageCategory extends Component {
     this.setState(() => ({ page }));
   };
 
-  render() {
+  handleForm = (e) => {
+    this.setState({
+      showForm: e,
+    });
+  };
 
+  render() {
     const { layout, sidebarPosition } = this.props;
-    const { page, posts } = this.state;
+    const { page, posts, allComments } = this.state;
 
     const breadcrumb = [
       { title: "Home", url: "" },
@@ -117,11 +158,14 @@ export default class BlogPageCategory extends Component {
     const sidebar = (
       <BlogSidebar
         setSelectedCat={this.setSelectedCat}
+        posts={posts}
         selectedCat={this.state.selectedCat}
         categories={this.state.allCategories}
         searchString={this.state.searchString}
         setSearch={this.setSearch}
         position={sidebarPosition}
+        comments={allComments}
+        handleForm={this.handleForm}
       />
     );
 
@@ -161,19 +205,44 @@ export default class BlogPageCategory extends Component {
             <div className="col-12 col-lg-8">
               <div className="block">
                 <div className="posts-view">
+                  <h2 className="w-100 pb-3 mb-5 border-bottom">Blogs</h2>
+
                   <div
                     className={`posts-view__list posts-list posts-list--layout--${layout}`}
                   >
-                    <div className="posts-list__body">{postsList}</div>
+                    {this.state.showForm ? (
+                      <CreateBlogForm handleForm={this.handleForm} />
+                    ) : (
+                      <div>
+                        {this.state.loading ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              height: "100vh",
+                              width: "100%",
+                            }}
+                            className="row justify-content-center align-items-center m-auto"
+                          >
+                            <CircularLoader />
+                          </div>
+                        ) : (
+                          <div className="posts-list__body">{postsList}</div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="posts-view__pagination">
-                    <Pagination
-                      current={page}
-                      siblings={2}
-                      total={this.state.headers.totalPages}
-                      onPageChange={this.handlePageChange}
-                    />
-                  </div>
+                  {!this.state.showForm && (
+                    <div className="posts-view__pagination">
+                      {this.state.headers && (
+                        <Pagination
+                          current={page}
+                          siblings={2}
+                          total={this.state.headers.totalPages}
+                          onPageChange={this.handlePageChange}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

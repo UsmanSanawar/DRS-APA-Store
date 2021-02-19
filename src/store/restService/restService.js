@@ -6,8 +6,6 @@ import { BASE_URL } from "../../constant/constants";
 const BASE_URL_API = `${BASE_URL}/api/Store`;
 const BASE_URL_API_Admin = `${BASE_URL}/api/DRS.APA`;
 
-
-
 const RestService = {
   getHeader: () => ({
     headers: {
@@ -79,8 +77,6 @@ const RestService = {
     const priceFrom = priceArray[0];
     const priceTo = priceArray[1];
 
-    console.log(filters, "filter in product api")
-
     const manufacturers = [];
     if (filters.manufacturers && filters.manufacturers.length > 0) {
       for (const manufacturerId of filters.manufacturers) {
@@ -90,7 +86,9 @@ const RestService = {
     return axios.get(
       `${BASE_URL_API}/masterdata/ProductStore/${pageNumber}/${pageSize}?fromPrice=${priceFrom}&ToPrice=${priceTo}&categoryId=${
         filters.category
-      }&${manufacturers.join("&")}&searchString=${filters.searchString}`,
+      }&${
+        manufacturers.length > 1 ? manufacturers.join("&") : manufacturers
+      }&searchString=${filters.searchString}`,
       RestService.getHeader()
     );
   },
@@ -197,6 +195,11 @@ const RestService = {
   getBlogPostById: (id) =>
     axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${id}`),
 
+  getAllBlogPostComments: () =>
+  axios.get(
+    `${BASE_URL}/api/DRS.APA/website/StoreBlogComment/1/10`
+  ),
+
   getBlogPostCommentsByBlogId: (blogId) =>
     axios.get(
       `${BASE_URL}/api/DRS.APA/website/StoreBlogComment/0/0?BlogId=${blogId}`
@@ -205,6 +208,13 @@ const RestService = {
   postBlogComment: (FormData) =>
     axios.post(
       `${BASE_URL}/api/DRS.APA/website/StoreBlogComment`,
+      FormData,
+      RestService.getHeader()
+    ),
+
+    postBlog: (FormData) =>
+    axios.post(
+      `${BASE_URL}/api/DRS.APA/website/StoreBlog`,
       FormData,
       RestService.getHeader()
     ),
@@ -279,7 +289,8 @@ const RestService = {
     );
   },
 
-  getCustomerByToken: () => axios.get(
+  getCustomerByToken: () =>
+    axios.get(
       `${BASE_URL_API_Admin}/masterdata/Customers/GetCustomerByTokenDetailed`,
       RestService.getHeader()
     ),

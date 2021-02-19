@@ -141,6 +141,7 @@ class Departments extends Component {
       <div className="departments" ref={this.setWrapperRef}>
         <div className="departments__body">
           <div
+          style={{height: '410.017px'}}
             className="departments__links-wrapper"
             onTransitionEnd={this.handleTransitionEnd}
           >

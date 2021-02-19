@@ -16,7 +16,7 @@ export default function AccountPageProfile(props) {
   const [userFormData, setUserFormData] = useState({
     shipping: {},
     billing: {},
-    gender: "male",
+    gender: "n/a",
   });
   const [activeTab, setActiveTab] = useState("1");
   const [customerGroups, setcustomerGroups] = useState([]);
@@ -106,7 +106,7 @@ export default function AccountPageProfile(props) {
     }
 
     userFormData.customerAddress = [];
-
+    userFormData.customerGroupId = 6;
     RestService.editCustomerProfile(userFormData, userFormData.customerId).then(
       (res) => {
         toast[res.data.status](res.data.message);
@@ -266,63 +266,6 @@ export default function AccountPageProfile(props) {
                         />
                       </div>
 
-                      <div className="form-group col-6">
-                        <label htmlFor="phone">Gender</label>
-                        <select
-                          id="gender"
-                          className="form-control border"
-                          placeholder="Select gender"
-                          name="gender"
-                          onChange={(event) =>
-                            setUserFormData({
-                              ...userFormData,
-                              gender: event.target.value,
-                            })
-                          }
-                          value={userFormData.gender || ""}
-                        >
-                          <option value="male" key="male">
-                            Male
-                          </option>
-                          <option value="female" key="female">
-                            Female
-                          </option>
-                          <option value="other" key="other">
-                            Other
-                          </option>
-                        </select>
-                      </div>
-
-                      <div className="form-group col-6">
-                        <label htmlFor="phone">Customer Group</label>
-                        <select
-                          id="customerGroupId"
-                          className="form-control border"
-                          placeholder="Select customer group"
-                          name="customerGroupId"
-                          onChange={(event) =>
-                            setUserFormData({
-                              ...userFormData,
-                              customerGroupId: event.target.value,
-                            })
-                          }
-                          value={userFormData.customerGroupId || ""}
-                        >
-                          <option value="" key="">
-                            N/A
-                          </option>
-
-                          {customerGroups &&
-                          _.filter(
-                            customerGroups,
-                            (item) => item.displayOnSite === true
-                          ).map((item) => (
-                            <option value={item.customerGroupId}>
-                              {item.customerGroupName}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
                     </div>
                     <div className="form-group w-100 mb-0 d-inline-flex">
                       <input

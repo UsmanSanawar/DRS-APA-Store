@@ -11,21 +11,14 @@ import WidgetComments from '../widgets/WidgetComments';
 import WidgetNewsletter from '../widgets/WidgetNewsletter';
 import WidgetPosts from '../widgets/WidgetPosts';
 import WidgetSearch from '../widgets/WidgetSearch';
-import WidgetTags from '../widgets/WidgetTags';
-
-// data stubs
-import categories from '../../data/blogWidgetCategories';
-import comments from '../../data/blogWidgetLatestComments';
-import posts from '../../data/blogPosts';
-
 
 export default function BlogSidebar(props) {
-    const { position } = props;
+    const { position, posts, comments } = props;
 
     return (
         <div className={`block block-sidebar block-sidebar--position--${position}`}>
             <div className="block-sidebar__item">
-                <WidgetSearch searchString={props.searchString} setSearch={props.setSearch} />
+                <WidgetSearch handleForm={props.handleForm} searchString={props.searchString} setSearch={props.setSearch} />
             </div>
             <div className="block-sidebar__item">
                 <WidgetAboutus />
@@ -34,16 +27,13 @@ export default function BlogSidebar(props) {
                 <WidgetCategories setSelectedCat={props.setSelectedCat} selectedCat={props.selectedCat} categories={props.categories} />
             </div>
             <div className="block-sidebar__item">
-                <WidgetPosts posts={posts.slice(0, 3)} />
+                <WidgetPosts posts={posts.sort((a,b) => (a.approvedDate > b.approvedDate) ? 1 : ((b.approvedDate > a.approvedDate) ? -1 : 0)).slice(0, 3)} />
             </div>
             <div className="block-sidebar__item">
                 <WidgetNewsletter />
             </div>
             <div className="block-sidebar__item">
-                <WidgetComments comments={comments.slice(0, 3)} />
-            </div>
-            <div className="block-sidebar__item">
-                <WidgetTags />
+                <WidgetComments comments={comments.slice(0, 5)} />
             </div>
         </div>
     );

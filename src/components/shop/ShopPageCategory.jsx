@@ -30,11 +30,11 @@ function ShopPageCategory(props) {
   useEffect(() => {
     if (
       window.location.href.split("?").length > 1 &&
-      window.location.href.split("?")[1] !== ""
+      window.location.href.split("?")[1]
     ) {
       setFilters({
         ...Filters,
-        searchString: window.location.href.split("?")[1],
+        searchString: window.location.href.split("?")[1] || "",
       });
     }
   }, []);
@@ -42,11 +42,11 @@ function ShopPageCategory(props) {
   useEffect(() => {
     if (
       window.location.href.split("?").length > 1 &&
-      window.location.href.split("?")[1] !== ""
+      window.location.href.split("?")[1]
     ) {
       setFilters({
         ...Filters,
-        searchString: window.location.href.split("?")[1],
+        searchString: window.location.href.split("?")[1] || "",
       });
     }
   }, [window.location.href]);

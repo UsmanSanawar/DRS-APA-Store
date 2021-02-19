@@ -7,7 +7,6 @@ import { Link, Redirect } from "react-router-dom";
 // application
 import Menu from "./Menu";
 import { ArrowRoundedRight6x9Svg } from "../../svg";
-
 import { useSelector } from "react-redux";
 
 function DepartmentsLinks(props) {
@@ -46,7 +45,6 @@ function DepartmentsLinks(props) {
           // onMouseLeave={() => props.handleButtonClick("no")}
           className={`departments__item ${itemClass}`}
         >
-          {console.log(department, "sssssssssssssss")}
           <Link to={"/store/products/" + department.productCategoryId}>
             {department.name}
             {arrow}

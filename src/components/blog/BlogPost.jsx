@@ -101,32 +101,7 @@ export default function BlogPost(props) {
       />
 
       <div className="post__footer">
-        <div className="post__tags-share-links">
-          <div className="post__tags tags">
-            <div className="tags__list">
-              <Link to="/">Promotion</Link>
-              <Link to="/">Power Tool</Link>
-              <Link to="/">Wrench</Link>
-              <Link to="/">Electrodes</Link>
-            </div>
-          </div>
-          <div className="post__share-links share-links">
-            <ul className="share-links__list">
-              <li className="share-links__item share-links__item--type--like">
-                <Link to="/">Like</Link>
-              </li>
-              <li className="share-links__item share-links__item--type--tweet">
-                <Link to="/">Tweet</Link>
-              </li>
-              <li className="share-links__item share-links__item--type--pin">
-                <Link to="/">Pin It</Link>
-              </li>
-              <li className="share-links__item share-links__item--type--counter">
-                <Link to="/">4K</Link>
-              </li>
-            </ul>
-          </div>
-        </div>
+     
         <div className="post-author">
           <div className="post-author__avatar">
             <Link to="/">

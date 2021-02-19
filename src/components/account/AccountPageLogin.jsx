@@ -23,7 +23,6 @@ export default function AccountPageLogin(props) {
     { title: "Home", url: "" },
     { title: "My Account", url: "" },
   ];
-  const [customerGroups, setcustomerGroups] = useState([]);
   useEffect(() => {
     if (props.accountLogut) {
       localStorage.removeItem('token');
@@ -35,12 +34,6 @@ export default function AccountPageLogin(props) {
       ) {
         return props.history.goBack();
       }
-
-      RestService.getAllStoreCustomerGroups().then((res) => {
-        if (res.data.status === "success") {
-          setcustomerGroups(res.data.data);
-        }
-      });
     }
   }, []);
 
@@ -119,6 +112,8 @@ export default function AccountPageLogin(props) {
     delete registerFormData.billing;
     delete registerFormData.shipping;
 
+    registerFormData.customerGroupId = 6;
+
     RestService.userregistration(registerFormData).then((res) => {
       toast[res.data.status](res.data.message);
       setRegisterFormData({ ...registerFormData, shipping: { ...initAddress }, billing: { ...initAddress } });
@@ -178,7 +173,7 @@ export default function AccountPageLogin(props) {
             className="btn btn-sm btn-primary float-right"
           />
 
-          <small>*Enter the email you used to register your account. We’ll email you instructions on how
+          <small><span className="text-danger">*</span>Enter the email you used to register your account. We’ll email you instructions on how
           to reset your password.
           </small>
         </div>
@@ -203,6 +198,9 @@ export default function AccountPageLogin(props) {
                       handleSubmitLogin();
                     }}
                   >
+                    <div className="form-group">
+                      <p className="text-danger">*We have changed our system for security reasons please <span onClick={() => setOpen(true)} style={{cursor: "pointer", color: 'blue'}}>click here</span> to reset your password and resume service, Thank you.</p>
+                    </div>
                     <div className="form-group">
                       <label htmlFor="login-email">Email</label>
                       <input
@@ -393,41 +391,6 @@ export default function AccountPageLogin(props) {
                                 }
                                 value={registerFormData.taxNumber || ""}
                               />
-                            </div>
-
-                            <div className="form-group col-sm-12 col-md-6">
-                              <label htmlFor="phone">
-                                Customer Group
-                                <span className="text-danger">*</span>
-                              </label>
-                              <select
-                                required
-                                id="customerGroupId"
-                                className="form-control border"
-                                placeholder="Select customer group"
-                                name="customerGroupId"
-                                onChange={(event) =>
-                                  setRegisterFormData({
-                                    ...registerFormData,
-                                    customerGroupId: event.target.value,
-                                  })
-                                }
-                                value={registerFormData.customerGroupId || ""}
-                              >
-                                <option value="" key="">
-                                  N/A
-                                </option>
-
-                                {customerGroups &&
-                                  _.filter(
-                                    customerGroups,
-                                    (item) => item.displayOnSite === true
-                                  ).map((item) => (
-                                    <option value={item.customerGroupId}>
-                                      {item.customerGroupName}
-                                    </option>
-                                  ))}
-                              </select>
                             </div>
 
                             <div className="form-group col-sm-12 col-md-6">

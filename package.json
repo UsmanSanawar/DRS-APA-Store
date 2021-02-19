@@ -3,11 +3,13 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^3.0.1",
     "@fortawesome/fontawesome-free": "^5.10.1",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.3.1",
+    "ckeditor5-build-full": "^2.0.0",
     "classnames": "^2.2.6",
     "loadash": "^1.0.0",
     "lodash": "^4.17.20",
@@ -37,7 +39,7 @@
     "webpack": "4.39.1"
   },
   "scripts": {
-    "start": "set PORT=2500 && react-scripts start",
+    "start": "set PORT=3000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

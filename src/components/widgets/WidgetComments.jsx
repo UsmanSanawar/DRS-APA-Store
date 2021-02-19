@@ -11,14 +11,13 @@ function WidgetComments(props) {
     const commentsList = comments.map((comment) => (
         <li key={comment.id} className="widget-comments__item">
             <div className="widget-comments__author">
-                <Link to="/">{comment.author}</Link>
+                <Link to="/">{comment.customerName}</Link>
             </div>
-            <div className="widget-comments__content">{comment.text}</div>
+            <div className="widget-comments__content">{comment.comment}</div>
             <div className="widget-comments__meta">
                 <div className="widget-comments__date">{comment.date}</div>
                 <div className="widget-comments__name">
-                    On
-                    <Link to="/" title={comment.postTitle}>{comment.postTitle}</Link>
+                    <Link to="/" title={comment.blogTitle}>{comment.blogTitle}</Link>
                 </div>
             </div>
         </li>

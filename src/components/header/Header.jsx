@@ -29,7 +29,7 @@ function Header(props) {
                                   alt="react-logo" className="light-logo"/></Link>
             </div>
             <div className="site-header__search">
-                <Search/>
+                <Search {...props}/>
             </div>
             <div className="site-header__phone">
                 <div className="site-header__phone-title">

@@ -20,30 +20,36 @@ function ChangePassword(props) {
 
   const handlePasswordChange = () => {
     if (activationCode !== "" && confirmPassword === newPassword) {
-
       let data = {
         password: newPassword,
         activationCode: activationCode,
       };
-      setLoading(true)
+      setLoading(true);
       RestService.changePasswordAfterEmail(data).then((res) => {
         toast[res.data.status](res.data.message);
-        setLoading(false)
-        setSubmitted(false);
-        
+        setLoading(false);
+
         if (res.data.status === "success") {
+          RestService.activateUserByCode(activationCode).then(res => setSubmitted(false));
           return props.history.push("/store/login");
         } else {
-          toast.error('Link is expired')
+          toast.error("Link is expired");
         }
       });
     } else {
-      toast.error("Activaation code not valid or password do not match.");
+      toast.error("Activation code not valid or password do not match.");
     }
   };
 
   return (
-    <div style={{ height: '100%', width: '100%', overflow: "hidden", display: "grid" }}>
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        overflow: "hidden",
+        display: "grid",
+      }}
+    >
       <Card body style={{ width: "fit-content", margin: "auto" }}>
         <CardTitle tag="h4" className="p-c-heading">
           <i style={{ color: "#28a745" }} class="fa fa-key" /> Enter New
@@ -71,24 +77,38 @@ function ChangePassword(props) {
                 />
                 {newPassword && newPassword !== confirmPassword && (
                   <p>
-                    <small style={{ float: "left" }} className="text-danger">*Both passwords don't match</small>
+                    <small style={{ float: "left" }} className="text-danger">
+                      *Both passwords don't match
+                    </small>
                   </p>
                 )}
               </div>
             </div>
             <div className="row">
               <div className="col-md-12">
-                {loading ? <div className="col-12 text-center"><Spinner /></div> : <button
-                  className="btn btn-success"
-                  onClick={() => {
-                    if (newPassword !== "" && newPassword === confirmPassword) {
-                      handlePasswordChange();
-                      setSubmitted(true);
-                    } else if (newPassword === '') {
-                      toast.error('Please enter password.')
-                    }
-                  }}
-                  disabled={submitted}>Change Password</button>}
+                {loading ? (
+                  <div className="col-12 text-center">
+                    <Spinner />
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-success"
+                    onClick={() => {
+                      if (
+                        newPassword !== "" &&
+                        newPassword === confirmPassword
+                      ) {
+                        handlePasswordChange();
+                        setSubmitted(true);
+                      } else if (newPassword === "") {
+                        toast.error("Please enter password.");
+                      }
+                    }}
+                    disabled={submitted}
+                  >
+                    {'Change Password'}
+                  </button>
+                )}
               </div>
             </div>
           </div>

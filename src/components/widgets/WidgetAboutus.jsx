@@ -1,61 +1,70 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // data stubs
 import theme from '../../data/theme';
+import RestService from '../../store/restService/restService';
 
 
 function WidgetAboutus() {
+
+    const [state, setState] = useState({
+        organization: {}
+    })
+
+    useEffect(() => {
+        RestService.getOrganizationsByCode('ORG').then(res => {
+            if (res.data.status === 'success') {
+                setState({
+                    organization: res.data.data
+                })
+            }
+        })
+    }, [])
+
     const links = [
         {
-            key: 'rss',
-            url: theme.author.profile_url,
-            iconClass: 'fas fa-rss',
-        },
-        {
-            key: 'youtube',
-            url: theme.author.profile_url,
-            iconClass: 'fab fa-youtube',
-        },
-        {
             key: 'facebook',
-            url: theme.author.profile_url,
+            url: `${state.organization ? state.organization.facebook : ""}`,
             iconClass: 'fab fa-facebook-f',
         },
         {
             key: 'twitter',
-            url: theme.author.profile_url,
+            url: `${state.organization ? state.organization.twitter : ""}`,
             iconClass: 'fab fa-twitter',
         },
         {
+            key: 'youtube',
+            url: `${state.organization ? state.organization.youtube : ""}`,
+            iconClass: 'fab fa-youtube',
+        },
+        {
             key: 'instagram',
-            url: theme.author.profile_url,
+            url: `${state.organization ? state.organization.instagram : ""}`,
             iconClass: 'fab fa-instagram',
         },
     ].map((item) => {
         const itemClasses = `widget-aboutus__link widget-aboutus__link--${item.key}`;
         const iconClasses = `widget-social__icon ${item.iconClass}`;
 
-        return (
+        if(item.url !== ""){return (
             <li key={item.key}>
-                <a className={itemClasses} href={theme.author.profile_url} target=" _blank">
+                <a className={itemClasses} href={item.url} target=" _blank">
                     <i className={iconClasses} />
                 </a>
             </li>
-        );
+        );}
     });
 
     return (
         <div className="widget-aboutus widget">
             <h4 className="widget__title">About Blog</h4>
             <div className="widget-aboutus__text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt, erat in
-                malesuada aliquam, est erat faucibus purus, eget viverra nulla sem vitae neque.
-                Quisque id sodales libero.
+                APA Blog a place to view all that is new in automatic door parts and equipments. 
             </div>
             <div className="widget-aboutus__socials">
                 <ul>
-                    {links}
+                    {state.organization.organizationId && links}
                 </ul>
             </div>
         </div>

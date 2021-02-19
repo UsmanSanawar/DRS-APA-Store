@@ -30,6 +30,10 @@ class ProductsView extends Component {
     this.setState(() => ({layout}));
   };
 
+
+  
+
+  
   componentDidMount() {
     RestService.getAllCategories().then(res => {
       if(res.data.status === "success") {
@@ -40,8 +44,10 @@ class ProductsView extends Component {
     })
 
     let filters = {...this.props.sideFilters, category: this.props.match.params.id}
-    console.log(filters, 'filtersfiltersfilters');
+    
     this.handleGetProducts(1, 10, filters);
+
+
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -81,6 +87,12 @@ class ProductsView extends Component {
   };
 
   handleGetProducts = (pageNumber, itemLength, filter, didUpdate) => {
+
+    let searchString = (window.location.href.split("?").length > 1 &&
+    window.location.href.split("?")[1]) || "";
+
+    filter = {...filter, searchString: searchString}
+
     if (didUpdate) {
       this.setState({
         products: [],

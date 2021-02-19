@@ -13,31 +13,31 @@ import _ from "lodash";
  * @param {array} options
  * @return {number}
  */
-function findItemIndex(items, product, options) {
-  return items.findIndex((item) => {
-    if (
-      item.product.id !== product.id ||
-      item.options.length !== options.length
-    ) {
-      return false;
-    }
+// function findItemIndex(items, product, options) {
+//   return items.findIndex((item) => {
+//     if (
+//       item.product.id !== product.id ||
+//       item.options.length !== options.length
+//     ) {
+//       return false;
+//     }
 
-    for (let i = 0; i < options.length; i += 1) {
-      const option = options[i];
-      const itemOption = item.options.find(
-        (itemOption) =>
-          itemOption.optionId === option.optionId &&
-          itemOption.valueId === option.valueId
-      );
+//     for (let i = 0; i < options.length; i += 1) {
+//       const option = options[i];
+//       const itemOption = item.options.find(
+//         (itemOption) =>
+//           itemOption.optionId === option.optionId &&
+//           itemOption.valueId === option.valueId
+//       );
 
-      if (!itemOption) {
-        return false;
-      }
-    }
+//       if (!itemOption) {
+//         return false;
+//       }
+//     }
 
-    return true;
-  });
-}
+//     return true;
+//   });
+// }
 
 function calcUkFreeDeliverPrices(items) {
   return items.reduce(
@@ -81,7 +81,6 @@ function addItem(state, product, options, quantity = 0, customer) {
   let taxApply = 0;
 
   if(customer){
-    console.log(taxClass.taxRates, "DAsdasdsadasdsad", product)
     if(taxClass.taxRates && taxClass.taxRates.length > 0){
       for (let tax of taxClass.taxRates) {
         if (

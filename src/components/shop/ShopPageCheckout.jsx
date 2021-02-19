@@ -76,7 +76,6 @@ class ShopPageCheckout extends Component {
 
   componentDidMount() {
 
-    console.log(this.handleSaleorderObject(), "dsadsadsadsadsadsad")
 
     RestService.getCustomerByToken().then(res => {
       if (res.data.status === "success") {

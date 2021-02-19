@@ -74,16 +74,13 @@ export function cartAddItem(
   price = 0,
   customer
 ) {
-  // sending request to server, timeout is used as a stub
   if (quantity > 0) {
     return (dispatch) =>
       new Promise((resolve) => {
-        setTimeout(() => {
           dispatch(
             cartAddItemSuccess(product, options, quantity, price, customer)
           );
           resolve();
-        }, 100);
       });
   } else {
     toast.error("Quantity cannot be less than 1")
@@ -91,7 +88,6 @@ export function cartAddItem(
 }
 
 export function cartRemoveItem(itemId) {
-  // sending request to server, timeout is used as a stub
   return (dispatch) =>
     new Promise((resolve) => {
       setTimeout(() => {
@@ -102,7 +98,6 @@ export function cartRemoveItem(itemId) {
 }
 
 export function cartUpdateQuantities(quantities) {
-  // sending request to server, timeout is used as a stub
   return (dispatch) =>
     new Promise((resolve) => {
       setTimeout(() => {

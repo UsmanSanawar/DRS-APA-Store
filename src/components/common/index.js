@@ -15,6 +15,7 @@ import {
   FiTag48Svg,
 } from "../../svg";
 import { IMAGE_URL } from "../../constant/constants";
+import "./styleCKContent.css";
 
 function CommonComp(props) {
   const [data, setData] = useState([]);
@@ -92,7 +93,7 @@ function CommonComp(props) {
                   >
                     <div className="text-center">
                       <div style={{ textAlign: "-webkit-center" }}>
-                        {getIcon(item.icon)}
+                        <img src={`${IMAGE_URL}/images/${item.icon}`}/>
                       </div>
                       <h3 className="mb-0">{item.mainHeading}</h3>
                       <p>{item.subHeading}</p>
@@ -140,7 +141,6 @@ function CommonComp(props) {
     return (
       <div className="row">
         {dataList.map((item) => {
-          console.log(item, "itemsGroqenc");
           return (
             <div className={`col-lg-${getWith(item.photoSize, true)}`}>
               <div
@@ -250,7 +250,7 @@ function CommonComp(props) {
         <title>{data.length > 0 ? data[0].webPageTitle : ""} </title>
       </Helmet>
 
-      <div className="container p-4">
+      <div className="ck-content container p-4">
         {!loading ? (
           getPreviewHTML()
         ) : (
