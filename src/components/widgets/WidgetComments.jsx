@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 function WidgetComments(props) {
     const { comments } = props;
-    const commentsList = comments.map((comment) => (
+    const commentsList = comments.length > 0 ? comments.map((comment) => (
         <li key={comment.id} className="widget-comments__item">
             <div className="widget-comments__author">
                 <Link to="/">{comment.customerName}</Link>
@@ -21,7 +21,7 @@ function WidgetComments(props) {
                 </div>
             </div>
         </li>
-    ));
+    )) : <li className="widget-comments__item">No comments yet.</li>;
 
     return (
         <div className="widget-comments widget">

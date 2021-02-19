@@ -13,7 +13,6 @@ export default function quickviewReducer(state = initialState, action) {
 
     switch (action.type) {
         case 'STORE_VIEW': {
-
             return {
                 ...state,
                 storeView: action.storeView,
@@ -45,6 +44,28 @@ export default function quickviewReducer(state = initialState, action) {
                 webPageTitle: "LOGOUT",
                 webSubMenu: []
             })
+
+            dataList.push({
+                code: null,
+                hasSubMenu: false,
+                isActive: true,
+                metaDescription: "",
+                metaKeywords: "",
+                metaTitle: "",
+                name: "BLOG",
+                parentCategoryId: null,
+                parentCategoryName: null,
+                productCategoryId: undefined,
+                slug: "/store/products/undefined",
+                subCategories: [],
+                thumbPath: "",
+                urlSeo: "",
+                visibleOnMainMenu: true,
+                webMenuId: undefined,
+                webMenuTitle: "BLOG",
+                webSubMenu: [],
+                webSubMenuTitle: "BLOG"
+              });
 
             return {
                 ...state,
@@ -116,19 +137,19 @@ export default function quickviewReducer(state = initialState, action) {
                 metaDescription: "",
                 metaKeywords: "",
                 metaTitle: "",
-                name: "Blogs",
+                name: "Trainings",
                 parentCategoryId: null,
                 parentCategoryName: null,
                 productCategoryId: undefined,
-                slug: "/store/products/undefined",
+                slug: "/trainings",
                 subCategories: [],
                 thumbPath: "",
                 urlSeo: "",
                 visibleOnMainMenu: true,
                 webMenuId: undefined,
-                webMenuTitle: "Blogs",
+                webMenuTitle: "Trainings",
                 webSubMenu: [],
-                webSubMenuTitle: "Blogs"
+                webSubMenuTitle: "Trainings"
             })
             state.categories = newNewArray
 

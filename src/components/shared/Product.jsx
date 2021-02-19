@@ -1,11 +1,11 @@
 // react
-import React, {Component} from "react";
+import React, { Component } from "react";
 
 // third-party
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {Link} from "react-router-dom";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 // application
 import AsyncAction from "./AsyncAction";
@@ -13,13 +13,13 @@ import Currency from "./Currency";
 import InputNumber from "./InputNumber";
 import ProductGallery from "./ProductGallery";
 import Rating from "./Rating";
-import {cartAddItem} from "../../store/cart";
-import {compareAddItem} from "../../store/compare";
-import {Wishlist16Svg, Compare16Svg} from "../../svg";
-import {wishlistAddItem} from "../../store/wishlist";
+import { cartAddItem } from "../../store/cart";
+import { compareAddItem } from "../../store/compare";
+import { Wishlist16Svg, Compare16Svg } from "../../svg";
+import { wishlistAddItem } from "../../store/wishlist";
 import RestService from "../../store/restService/restService";
-import {FormGroup, Input, Label} from "reactstrap";
-import {toast} from "react-toastify";
+import { FormGroup, Input, Label } from "reactstrap";
+import { toast } from "react-toastify";
 
 class Product extends Component {
   constructor(props) {
@@ -59,10 +59,10 @@ class Product extends Component {
   handleProductById = (id) => {
     RestService.getProductById(id).then((res) => {
       if (res.data.status === "success") {
-        let {data} = res.data;
+        let { data } = res.data;
 
         let array = data && data.productPhotos;
-        array.unshift({name: data.image});
+        array.unshift({ name: data.image });
 
         this.setState({
           productPhotos: array,
@@ -72,13 +72,13 @@ class Product extends Component {
   };
 
   handleChangeQuantity = (quantity) => {
-    this.setState({quantity});
+    this.setState({ quantity });
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.product !== prevProps.product) {
-      const {product} = this.props;
-      const {prForShar} = this.state;
+      const { product } = this.props;
+      const { prForShar } = this.state;
 
       this.getProductOptionCombination();
       this.setState({
@@ -210,7 +210,7 @@ class Product extends Component {
       customer,
     } = this.props;
 
-    const {quantity} = this.state;
+    const { quantity } = this.state;
 
     const handleOptionValues = (options) => {
       let SelectOptions;
@@ -245,7 +245,7 @@ class Product extends Component {
             <Label for="exampleSelect">{item.optionName}</Label>
             <Input
               onChange={(e) => this.handleInputChange(e, item.optionId)}
-              style={{width: "55%"}}
+              style={{ width: "55%" }}
               name={item.optionName}
               id="exampleText"
             />
@@ -258,7 +258,7 @@ class Product extends Component {
             <Input
               onChange={(e) => this.handleInputChange(e, item.optionId)}
               className="checkbox"
-              style={{marginLeft: "10px"}}
+              style={{ marginLeft: "10px" }}
               type="checkbox"
               name={item.optionName}
             />
@@ -270,22 +270,22 @@ class Product extends Component {
             <FormGroup check required>
               <Label for="exampleSelect">{item.optionName}</Label>
               {item.optionValues &&
-              item.optionValues.map((optValue) => (
-                <FormGroup check required>
-                  <Label check>
-                    <Input
-                      required
-                      type="radio"
-                      name={item.optionName}
-                      onChange={(e) =>
-                        this.handleInputChange(e, item.optionId)
-                      }
-                      value={optValue.optionValueId}
-                    />
-                    {optValue.name}
-                  </Label>
-                </FormGroup>
-              ))}
+                item.optionValues.map((optValue) => (
+                  <FormGroup check required>
+                    <Label check>
+                      <Input
+                        required
+                        type="radio"
+                        name={item.optionName}
+                        onChange={(e) =>
+                          this.handleInputChange(e, item.optionId)
+                        }
+                        value={optValue.optionValueId}
+                      />
+                      {optValue.name}
+                    </Label>
+                  </FormGroup>
+                ))}
             </FormGroup>
             {/* <Input onChange={e => this.handleInputChange(e, item.optionId)} name={item.optionName} style={{ display: "block", marginLeft: "0.5rem" }} type="radio" /> */}
           </div>
@@ -332,7 +332,7 @@ class Product extends Component {
     const handleCartAddItem = () => {
       if (quantity > 0) {
         cartAddItem(
-          {...product, selectedProductOption: this.state.slectedPr},
+          { ...product, selectedProductOption: this.state.slectedPr },
           this.state.options,
           quantity,
           getNewPrice(),
@@ -347,11 +347,11 @@ class Product extends Component {
       <div className={`product product--layout--${layout}`}>
         <div className="product__content">
           <ProductGallery
-            style={{width: 700}}
+            style={{ width: 700 }}
             layout={layout}
             images={
               this.state.slectedPr.images
-                ? [{name: this.state.slectedPr.images}]
+                ? [{ name: this.state.slectedPr.images }]
                 : this.state.productPhotos
             }
           />
@@ -360,7 +360,7 @@ class Product extends Component {
             <div className="product__wishlist-compare">
               <AsyncAction
                 action={() => wishlistAddItem(product)}
-                render={({run, loading}) => (
+                render={({ run, loading }) => (
                   <button
                     type="button"
                     data-toggle="tooltip"
@@ -371,13 +371,13 @@ class Product extends Component {
                       "btn-loading": loading,
                     })}
                   >
-                    <Wishlist16Svg/>
+                    <Wishlist16Svg />
                   </button>
                 )}
               />
               <AsyncAction
                 action={() => compareAddItem(product)}
-                render={({run, loading}) => (
+                render={({ run, loading }) => (
                   <button
                     type="button"
                     data-toggle="tooltip"
@@ -388,7 +388,7 @@ class Product extends Component {
                       "btn-loading": loading,
                     })}
                   >
-                    <Compare16Svg/>
+                    <Compare16Svg />
                   </button>
                 )}
               />
@@ -396,21 +396,25 @@ class Product extends Component {
             <h1 className="product__name">{product.productName}</h1>
             <div className="product__rating">
               <div className="product__rating-stars">
-                <Rating value={getRatingCal()}/>
+                <Rating value={getRatingCal()} />
               </div>
               <div className="product__rating-legend">
-                <span>{`${product.totalReviewsCount ? product.totalReviewsCount : 0
+                <span>{`${
+                  product.totalReviewsCount ? product.totalReviewsCount : 0
                 } Reviews`}</span>
               </div>
             </div>
             <div className="product__description"></div>
-            <ul className="product__features">
-            </ul>
+            <ul className="product__features"></ul>
 
             <ul className="product__meta">
               <li className="product__meta-availability">
                 Availability:
-                <span className="text-success">{product.quantity < 0 ? "Out Of Stock" : product.stockStatusName}</span>
+                <span className="text-success">
+                  {product.quantity < 0
+                    ? "Out Of Stock"
+                    : product.stockStatusName}
+                </span>
               </li>
 
               {product.manufacturerName ? (
@@ -431,11 +435,16 @@ class Product extends Component {
 
           <div className="product__sidebar">
             <div className="product__availability">
-              Availability: <span className="text-success">{product.quantity < 0 ? "Out Of Stock" : product.stockStatusName}</span>
+              Availability:{" "}
+              <span className="text-success">
+                {product.quantity < 0
+                  ? "Out Of Stock"
+                  : product.stockStatusName}
+              </span>
             </div>
 
             <div className="product__prices">
-              <Currency value={getNewPrice()}/>
+              <Currency value={getNewPrice()} />
             </div>
 
             <form
@@ -444,13 +453,16 @@ class Product extends Component {
                 e.preventDefault();
                 handleCartAddItem();
               }}
-
             >
               <div>
                 <div className="form-group product__option">
                   <h4>Available Options</h4>
-                  <div className="input-radio-label"
-                       style={{maxHeight: 400, overflowY: "scroll"}}>{renderOptions()}</div>
+                  <div
+                    className="input-radio-label"
+                    style={{ maxHeight: 400, overflowY: "scroll" }}
+                  >
+                    {renderOptions()}
+                  </div>
                 </div>
                 <div className="form-group product__option">
                   <label
@@ -458,9 +470,11 @@ class Product extends Component {
                     className="product__option-label"
                   >
                     Quantity{" "}
-                    {product.stockStatusName === "Out Of Stock" ? null : <small style={{color: "green"}}>
-                      (Available Quantity: {product.quantity})
-                    </small>}
+                    {product.stockStatusName === "Out Of Stock" ? null : (
+                      <small style={{ color: "green" }}>
+                        (Available Quantity: {product.quantity})
+                      </small>
+                    )}
                   </label>
                   <div className="product__actions">
                     <div className="product__actions-item">
@@ -493,10 +507,11 @@ class Product extends Component {
                         disabled={
                           (this.state.slectedPr.optionQuantity
                             ? !(
-                              this.state.slectedPr.optionQuantity >=
-                              this.state.quantity
-                            )
-                            : !(product.quantity >= this.state.quantity)) && product.stockStatusName !== 'Out Of Stock'
+                                this.state.slectedPr.optionQuantity >=
+                                this.state.quantity
+                              )
+                            : !(product.quantity >= this.state.quantity)) &&
+                          product.stockStatusName !== "Out Of Stock"
                         }
                         className={classNames("btn btn-primary btn-lg", {
                           "btn-loading": "",
@@ -504,20 +519,20 @@ class Product extends Component {
                       >
                         {this.state.slectedPr.optionQuantity
                           ? this.state.slectedPr.optionQuantity >=
-                          this.state.quantity
+                            this.state.quantity
                             ? "Add to cart"
                             : product.minimumQuantity < product.quantity ||
-                            product.minimumQuantity <
-                            this.state.slectedPr.optionQuantity
-                              ? "Less Quantity Available"
-                              : "Out of Stock"
+                              product.minimumQuantity <
+                                this.state.slectedPr.optionQuantity
+                            ? "Less Quantity Available"
+                            : "Out of Stock"
                           : product.quantity >= this.state.quantity
-                            ? "Add to cart"
-                            : product.minimumQuantity < product.quantity ||
+                          ? "Add to cart"
+                          : product.minimumQuantity < product.quantity ||
                             product.minimumQuantity <
-                            this.state.slectedPr.optionQuantity
-                              ? "Less Quantity Available"
-                              : "Out of Stock"}
+                              this.state.slectedPr.optionQuantity
+                          ? "Less Quantity Available"
+                          : "Out of Stock"}
                       </button>
                       {/* )}
                            /> */}

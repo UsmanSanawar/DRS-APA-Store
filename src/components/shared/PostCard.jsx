@@ -20,7 +20,6 @@ function PostCard(props) {
       {category}
     </Link>
   ));
-
   return (
     <div className={cardClasses}>
       <div className="post-card__image">
@@ -33,15 +32,7 @@ function PostCard(props) {
         <div className="post-card__name">
           <Link to={`/store/blog/single-post/${post.id}`}>{post.title}</Link>
         </div>
-        <div className="post-card__date">{post.date}</div>
-        <div className="post-card__content">
-          {post.content ? <div dangerouslySetInnerHTML={{__html: post.content.substring(0, 200)+`...` }} /> : ""}
-        </div>
-        <div className="post-card__read-more">
-          <Link to={`/store/blog/single-post/${post.id}`} className="btn btn-secondary btn-sm">
-            Read More
-          </Link>
-        </div>
+        <div className="post-card__date">Author: {post.author},  {post.date}</div>
       </div>
     </div>
   );

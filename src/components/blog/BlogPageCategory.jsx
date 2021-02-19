@@ -106,12 +106,18 @@ export default class BlogPageCategory extends Component {
         let blogPosts = r.data.data;
         let newData = [];
         blogPosts.map((post) => {
+
+          console.log(post.customerName || post.createdBy, "ssssssssssssss")
+
           newData.push({
             id: post.blogId,
             title: post.blogTitle,
-            image: `${IMAGE_URL}/blogs/${post.image}`,
+            image: post.image
+              ? `${IMAGE_URL}/blogs/${post.image}`
+              : "https://lh3.googleusercontent.com/proxy/do0aplhOwlDEoaRMHU8irunbLWOJf7oznkuB62TsFMZhzCTtEz9QEiOkVlWaoTb2v0uYeBs7W0PfJ79IpZUzfk8DWcDh2glkog_56FMID09deRuO41jPtYHQxpC6KvmN",
             categories: [`${post.blogCategoryName}`],
-            date: new Date(post.approvedDate).toLocaleDateString("en-US", {
+            author: post.customerName || post.createdBy,
+            date: new Date(post.createdOn).toLocaleDateString("en-US", {
               day: "numeric",
               month: "short",
               year: "numeric",

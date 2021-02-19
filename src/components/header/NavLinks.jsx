@@ -23,7 +23,7 @@ function NavLinks(props) {
 
   const onMenuClick = (item) => {
     props.history.replace({
-      pathname: props.layout === "compact" ? `/store/products/${item.productCategoryId}` : item.slug,
+      pathname: props.layout === "compact" && item.slug !== "/trainings" ? `/store/products/${item.productCategoryId}` : item.slug,
     });
   };
 

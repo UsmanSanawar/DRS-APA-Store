@@ -3,6 +3,7 @@ import RestService from "../../store/restService/restService";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import FullEditor from "ckeditor5-build-full";
 import { toast } from "react-toastify";
+import FileUpload from "../../components/uploaders/filepond";
 
 export default class CreateBlogForm extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export default class CreateBlogForm extends Component {
         blogId: 0,
         blogTitle: "",
         content: "",
-        isApproved: true,
+        isApproved: false,
         approvedDate: null,
         seoH1: "",
         seoH2: "",
@@ -51,24 +52,23 @@ export default class CreateBlogForm extends Component {
   };
 
   handleSubmit = () => {
-		let {formData} = this.state;
-		RestService.postBlog(formData).then(res => {
-			toast[res.data.status](res.data.message)
-			if (res.data.status === 'success') {
-				window.location.reload()
-			}
-		})
-	};
+    let { formData } = this.state;
+    RestService.postBlog(formData).then((res) => {
+      toast[res.data.status](res.data.message);
+      if (res.data.status === "success") {
+        window.location.reload();
+      }
+    });
+  };
 
-
-	handleCancel = () => {
-		this.props.handleForm(false);
-		this.setState({
-			formData: {
+  handleCancel = () => {
+    this.props.handleForm(false);
+    this.setState({
+      formData: {
         blogId: 0,
         blogTitle: "",
         content: "",
-        isApproved: true,
+        isApproved: false,
         approvedDate: null,
         seoH1: "",
         seoH2: "",
@@ -80,9 +80,9 @@ export default class CreateBlogForm extends Component {
         customerId: parseInt(localStorage.getItem("identity")),
         image: "",
         isActive: true,
-      }
-		})
-	}
+      },
+    });
+  };
   render() {
     const { formData, allCategories } = this.state;
 
@@ -188,28 +188,42 @@ export default class CreateBlogForm extends Component {
               </div>
 
               <div className="form-group col-6">
-                <label htmlFor="phone">Meta Keywords</label>
-                <input
-                  id="metaTagKeywords"
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter Meta Title"
-                  name="metaTagKeywords"
-                  onChange={(event) => this.handleChange(event)}
-                  value={formData.metaTagKeywords || ""}
-                />
+                <div className="row">
+                  <div className="form-group col-12">
+                    <label htmlFor="phone">Meta Keywords</label>
+                    <input
+                      id="metaTagKeywords"
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Meta Title"
+                      name="metaTagKeywords"
+                      onChange={(event) => this.handleChange(event)}
+                      value={formData.metaTagKeywords || ""}
+                    />
+                  </div>
+
+                  <div className="form-group col-12">
+                    <label htmlFor="phone">Meta Description</label>
+                    <input
+                      id="metaTagDescription"
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Meta Description"
+                      name="metaTagDescription"
+                      onChange={(event) => this.handleChange(event)}
+                      value={formData.metaTagDescription || ""}
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div className="form-group col-12">
-                <label htmlFor="phone">Meta Description</label>
-                <input
-                  id="metaTagDescription"
-                  type="text"
+              <div className="form-group col-6">
+                <FileUpload
+                  onChange={this.handleChange}
+                  multiple={false}
                   className="form-control"
-                  placeholder="Enter Meta Description"
-                  name="metaTagDescription"
-                  onChange={(event) => this.handleChange(event)}
-                  value={formData.metaTagDescription || ""}
+                  initFiles={formData.image}
+                  name="image"
                 />
               </div>
             </div>

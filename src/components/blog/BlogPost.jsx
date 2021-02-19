@@ -18,6 +18,9 @@ import { IMAGE_URL } from "../../constant/constants";
 
 export default function BlogPost(props) {
   const { layout, blogPost, blogPostComments } = props;
+
+  console.log(blogPost, "blogPostblogPost");
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -103,29 +106,18 @@ export default function BlogPost(props) {
       <div className="post__footer">
      
         <div className="post-author">
-          <div className="post-author__avatar">
-            <Link to="/">
-              <img src="images/avatars/avatar-1.jpg" alt="" />
-            </Link>
+          <div className="post-author__avatar mr-1">
+            Author:
           </div>
           <div className="post-author__info">
             <div className="post-author__name">
-              <Link to="/">Jessica Moore</Link>
+              <Link to="/">{blogPost.customerName || blogPost.createdBy}</Link>
             </div>
             <div className="post-author__about">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              suscipit suscipit mi, non tempor nulla finibus eget. Lorem ipsum
-              dolor sit amet, consectetur adipiscing elit.
             </div>
           </div>
         </div>
       </div>
-      <section className="post__section">
-        <h4 className="post__section-title">Related Posts</h4>
-        <div className="related-posts">
-          <div className="related-posts__list">{relatedPostsList}</div>
-        </div>
-      </section>
 
       <section className="post__section">
         <h4 className="post__section-title">{`Comments (${blogPostComments.length})`}</h4>
