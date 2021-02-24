@@ -19,7 +19,7 @@ function WidgetPosts(props) {
             </div>
             <div className="widget-posts__info">
                 <div className="widget-posts__name">
-                    <Link to={`/store/blog/single-post/${post.id}`}>{post.title}</Link>
+                    <Link to={`/blog/single-post/${post.id}`}>{post.title}</Link>
                 </div>
                 <div className="widget-posts__date">{post.date}</div>
             </div>

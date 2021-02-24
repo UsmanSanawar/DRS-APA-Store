@@ -19,7 +19,6 @@ import { IMAGE_URL } from "../../constant/constants";
 export default function BlogPost(props) {
   const { layout, blogPost, blogPostComments } = props;
 
-  console.log(blogPost, "blogPostblogPost");
 
   const [formData, setFormData] = useState({
     firstName: "",

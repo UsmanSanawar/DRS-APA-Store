@@ -2,22 +2,24 @@ import { IMAGE_URL } from "./constants";
 import RestService from "../store/restService/restService";
 
 export function productObjectConverter(item) {
-
   let images = [];
   if (item.productPhotos && item.productPhotos.length > 0) {
-
     item.productPhotos.map((image) => {
-      if (image.name.startsWith("catalog")) {
-        images.push(`${IMAGE_URL}/${image.name}`);
+      if (image.name === "" || image.name === null) {
+        images.push(
+          `${IMAGE_URL}/default/defaultproductpng_22Feb21033359PM.png`
+        );
       } else {
-        images.push(`${IMAGE_URL}/images/${image.name}`);
+        if (image.name.startsWith("catalog")) {
+          images.push(`${IMAGE_URL}/${image.name}`);
+        } else {
+          images.push(`${IMAGE_URL}/images/${image.name}`);
+        }
       }
     });
-
   }
 
-
-  images.push(`${IMAGE_URL}/${item.image}`)
+  images.push(`${IMAGE_URL}/${item.image}`);
 
   item.id = item.productId;
   item.name = item.productName;
@@ -34,15 +36,14 @@ export function productObjectConverter(item) {
   item.length = item.length;
   item.lengthUnit = item.lengthUnitName;
   item.features = [
-    { name: "Length", value: item.length + " " + item.lengthUnitName },
-    { name: "Width", value: item.width + " " + item.lengthUnitName },
-    { name: "Height", value: item.height + " " + item.lengthUnitName },
+    { name: "Length", value: parseFloat(item.length).toFixed(2) + " cm" },
+    { name: "Width", value: parseFloat(item.width).toFixed(2) + " cm" },
+    { name: "Height", value: parseFloat(item.height).toFixed(2) + " cm" },
     {
       name: "Weight",
       value:
-        item.weight +
-        " " +
-        (item.weightUnitName != null ? item.weightUnitName : ""),
+        parseFloat(item.weight).toFixed(2) +
+        " Kg"
     },
   ];
   item.options = item.productOptions;

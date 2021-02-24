@@ -57,7 +57,7 @@ export default function AccountPageProfile(props) {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  const handleRegistration = () => {
+  const handleRegistration = async () => {
     userFormData.isActive = true;
     let array = [];
 
@@ -107,11 +107,12 @@ export default function AccountPageProfile(props) {
 
     userFormData.customerAddress = [];
     userFormData.customerGroupId = 6;
-    RestService.editCustomerProfile(userFormData, userFormData.customerId).then(
+    try {RestService.editCustomerProfile(userFormData, userFormData.customerId).then(
       (res) => {
         toast[res.data.status](res.data.message);
       }
-    );
+    );} catch(err) {
+    }
   };
 
 

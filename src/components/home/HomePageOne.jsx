@@ -18,6 +18,7 @@ function HomePageOne() {
   useEffect(() => {
     RestService.getAllHomePageCollection().then((res) => {
       if (res.data.status === "success") {
+
         const {data} = res.data;
         setProductList(data);
       }

@@ -18,6 +18,7 @@ import PageHeader from '../shared/PageHeader';
 import AccountPageAddresses from './AccountPageAddresses';
 import AccountPageDashboard from './AccountPageDashboard';
 import AccountPageOrders from './AccountPageOrders';
+import AccountPageBlogs from './AccountBlogs';
 import AccountPagePassword from './AccountPagePassword';
 import AccountPageProfile from './AccountPageProfile';
 import { ProtectedRoutes } from '../../protectedRoutes';
@@ -52,7 +53,7 @@ const [customer, setCustomer] = useState({})
         { title: 'Dashboard', url: 'dashboard' },
         { title: 'Edit Profile', url: 'profile' },
         { title: 'Your Orders', url: 'orders' },
-        // { title: 'Addresses', url: 'addresses' },
+        { title: 'My Blogs', url: 'my-blogs' },
         { title: 'Password', url: 'password' },
     ].map((link) => {
         const url = `${match.url}/${link.url}`;
@@ -88,6 +89,7 @@ const [customer, setCustomer] = useState({})
                                     <ProtectedRoutes exact path={`${match.path}/dashboard`} customer={customer} component={AccountPageDashboard} />
                                     <ProtectedRoutes exact path={`${match.path}/profile`} customer={customer} component={AccountPageProfile} />
                                     <ProtectedRoutes exact path={`${match.path}/orders`} customer={customer} component={AccountPageOrders} />
+                                    <ProtectedRoutes exact path={`${match.path}/my-blogs`} customer={customer} component={AccountPageBlogs} />
                                     <ProtectedRoutes exact path={`${match.path}/addresses`} customer={customer} component={AccountPageAddresses} />
                                     <ProtectedRoutes exact path={`${match.path}/password`} customer={customer} component={AccountPagePassword} />
 

@@ -14,6 +14,7 @@ import {Filters16Svg, LayoutGrid16x16Svg, LayoutGridWithDetails16x16Svg, LayoutL
 // application
 import ProductCard from "../shared/ProductCard";
 
+
 class ProductsView extends Component {
   constructor(props) {
     super(props);
@@ -66,6 +67,14 @@ class ProductsView extends Component {
     RestService.getProductsByPageAndFilter(pageNumber, itemLength, filter).then(
       (res) => {
         if (res.data.status === "success") {
+
+          res.data.data.length > 0 &&
+          res.data.data.map((item) => {
+            if (item.image === '' || item.image === null) {
+              item.image = "default/defaultproductpng_22Feb21033359PM.png";
+            }
+          });
+
           let data = res.data.data;
           let array = [];
           data.map((item) => {
@@ -192,17 +201,6 @@ class ProductsView extends Component {
                 <span> {">"} </span>
                 <span><b>{handleCategory() || ""}</b></span>
               </div>
-              {/*<label htmlFor="view-options-sort">Sort By</label>*/}
-              {/*<div>*/}
-              {/*  <select*/}
-              {/*    className="form-control form-control-sm"*/}
-              {/*    name=""*/}
-              {/*    id="view-options-sort"*/}
-              {/*  >*/}
-              {/*    <option value="">Default</option>*/}
-              {/*    <option value="">Name (A-Z)</option>*/}
-              {/*  </select>*/}
-              {/*</div>*/}
             </div>
           </div>
         </div>

@@ -95,7 +95,12 @@ export default function ShippingCollapse({
     let one = replaceKey.replace("Price", "Shipment");
     let two = one.replace("Not Eligible", " ");
     let three = two.replace("Total ", "");
-    return three;
+    let four = null;
+
+    if (three.includes("Rack") && three.includes("Shipment")) {
+      four = three.replace("Shipment", "Cost");
+    }
+    return four || three;
   };
 
   const renderData = (cond) => {
@@ -109,6 +114,8 @@ export default function ShippingCollapse({
           let string = handleKeyReplacer(key);
 
           if (string.includes("Shipment")) {
+
+            
             total = parseFloat(total) + parseFloat(object[key]);
           }
 
@@ -123,7 +130,7 @@ export default function ShippingCollapse({
           <tr>
             <td>{item}</td>
             <td>
-              {item.includes("Shipment") && "£"}
+              {(item.includes("Shipment") || item.includes("Cost")) && "£"}
               {item.includes("Weight")
                 ? `${parseFloat(sortedCrtObject[item]).toFixed(2)} Kg`
                 : sortedCrtObject[item]}
@@ -151,7 +158,7 @@ export default function ShippingCollapse({
                 {renderData("data")}
                 <tr style={{ fontWeight: "bold" }} className="border-top">
                   <td>Total Shipping</td>
-                  <td>£{parseFloat(total).toFixed(2)}</td>
+                  <td>£{parseFloat(total)}</td>
                 </tr>
               </tbody>
             </table>

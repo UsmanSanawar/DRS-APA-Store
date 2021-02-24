@@ -11,7 +11,7 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { BASE_URL } from "../../constant/constants";
+import { BASE_URL, IMAGE_URL } from "../../constant/constants";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -24,10 +24,23 @@ export default class PondUpload extends React.Component {
     this.state = {
       // Set initial files, type 'local' means this is a file
       // that has already been uploaded to the server (see docs)
-      files: [
-    
-      ],
+      files: [],
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.initFiles !== this.props.initFiles) {
+      this.setState({
+        files: [
+          {
+            source: `${IMAGE_URL}/blogs/${this.props.initFiles}`,
+            options: {
+              type: "local",
+            },
+          },
+        ],
+      });
+    }
   }
 
   handleInit() {
@@ -44,12 +57,7 @@ export default class PondUpload extends React.Component {
           files={this.state.files}
           allowMultiple={multiple || false}
           allowReorder={false}
-          maxFiles={1}
-          server={`${BASE_URL}/api/DRS.APA/common/Uploads?type=blogs`}
-          name="files"
-          oninit={() => this.handleInit()}
           onprocessfile={(error, file) => {
-            console.log("server id", JSON.parse(file.serverId).data);
             let data = JSON.parse(file.serverId);
             if (Object.entries(data).length > 0) {
               onChange({
@@ -60,9 +68,31 @@ export default class PondUpload extends React.Component {
               });
             }
           }}
+          maxFiles={1}
+          // server={`${BASE_URL}/api/DRS.APA/common/Uploads?type=blogs`}
+          server={{
+            url: `${BASE_URL}/api/DRS.APA/common/Uploads?type=blogs`,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            load: (source, load, error, progress, abort, headers) => {
+              var myRequest = new Request("https://cors-anywhere.herokuapp.com/"+source);
+
+              fetch(myRequest, {
+                mode:'cors',
+                headers: new Headers({
+                  "Access-Control-Allow-Origin": "*",
+                  "Content-Type": "*",
+                }),
+              }).then(function (response) {
+                response.blob().then(function (myBlob) {
+                  load(myBlob);
+                });
+              });
+            }
+          }}
+          name="files"
+          oninit={() => this.handleInit()}
           onupdatefiles={(fileItems) => {
             // Set currently active file objects to this.state
-            console.log(fileItems, "dsadasdsadsadsad");
             this.setState({
               files: fileItems.map((fileItem) => fileItem.file),
             });

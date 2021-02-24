@@ -23,14 +23,14 @@ function PostCard(props) {
   return (
     <div className={cardClasses}>
       <div className="post-card__image">
-        <Link to={`/store/blog/single-post/${post.id}`}   >
+        <Link to={`/blog/single-post/${post.id}`}   >
           <img src={post.image} alt="" />
         </Link>
       </div>
       <div className="post-card__info">
         <div className="post-card__category">{categories}</div>
         <div className="post-card__name">
-          <Link to={`/store/blog/single-post/${post.id}`}>{post.title}</Link>
+          <Link to={`/blog/single-post/${post.id}`}>{post.title}</Link>
         </div>
         <div className="post-card__date">Author: {post.author},  {post.date}</div>
       </div>

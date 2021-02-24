@@ -1,9 +1,9 @@
 export default {
-    name: 'DRS APA Store',
-    fullName: 'DRS Automatic Products Association',
+    name: 'APA Store',
+    fullName: 'Automatic Products Association',
     url: 'void:0',
     author: {
-        name: 'Xerobit',
+        name: 'Codexters',
         profile_url: '#',
     },
     contacts: {

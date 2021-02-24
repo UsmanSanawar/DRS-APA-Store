@@ -138,7 +138,7 @@ function Layout(props) {
               <Redirect
                 exact
                 from="/store/products/undefined"
-                to="/store/blog/posts"
+                to="/blog/posts"
               />
               <Redirect
                 exact
@@ -279,10 +279,10 @@ function Layout(props) {
               />
 
               {/* Blog */}
-              {/* <Redirect exact from="/store/blog" to="/store/blog/posts" /> */}
+              {/* <Redirect exact from="/blog" to="/blog/posts" /> */}
               <Route
                 exact
-                path="/store/blog/posts"
+                path="/blog/posts"
                 key="postsListings"
                 render={(props) => (
                   <BlogPageCategory
@@ -294,7 +294,7 @@ function Layout(props) {
               />
               <Route
                 exact
-                path="/store/blog/single-post/:id"
+                path="/blog/single-post/:id"
                 key="singlePost"
                 render={(props) => <BlogPagePost {...props} layout="full" />}
               />

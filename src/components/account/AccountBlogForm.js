@@ -3,7 +3,7 @@ import RestService from "../../store/restService/restService";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import FullEditor from "ckeditor5-build-full";
 import { toast } from "react-toastify";
-import FileUpload from "../../components/uploaders/filepond";
+import FileUpload from "../uploaders/filepond";
 
 export default class CreateBlogForm extends Component {
   constructor(props) {
@@ -39,11 +39,24 @@ export default class CreateBlogForm extends Component {
         });
       }
     });
+
+    let { blogId } = this.props;
+
+    if (blogId !== null) {
+      RestService.getBlogPostById(blogId).then((res) => {
+        if (res.data.status === "success") {
+          let { data } = res.data;
+          this.setState({
+            formData: data,
+          });
+        }
+      });
+    }
   }
 
   handleChange = (event) => {
     const { formData } = this.state;
-    if (event.target.type == "checkbox") {
+    if (event.target.type === "checkbox") {
       formData[event.target.name] = event.target.checked;
     } else {
       formData[event.target.name] = event.target.value;
@@ -53,12 +66,21 @@ export default class CreateBlogForm extends Component {
 
   handleSubmit = () => {
     let { formData } = this.state;
-    RestService.postBlog(formData).then((res) => {
-      toast[res.data.status](res.data.message);
-      if (res.data.status === "success") {
-        window.location.reload();
-      }
-    });
+    if (formData.blogId) {
+      RestService.editBlogPost(formData, formData.blogId).then((res) => {
+        toast[res.data.status](res.data.message);
+        if (res.data.status === "success") {
+          this.props.handleForm(false);
+        }
+      });
+    } else {
+      RestService.postBlog(formData).then((res) => {
+        toast[res.data.status](res.data.message);
+        if (res.data.status === "success") {
+          this.props.handleForm(false);
+        }
+      });
+    }
   };
 
   handleCancel = () => {
@@ -87,8 +109,10 @@ export default class CreateBlogForm extends Component {
     const { formData, allCategories } = this.state;
 
     return (
-      <div>
-        <h2 className="mb-2">Create Blog Post</h2>
+      <div className="p-5">
+        <h2 className="mb-2">
+          {this.props.blogId ? "Edit" : "Create"} Blog Post
+        </h2>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -236,7 +260,7 @@ export default class CreateBlogForm extends Component {
                     // ...Ckeditor config
                   }
                 }
-                data={this.state.content}
+                data={this.state.formData.content}
                 onChange={(event, editor) => {
                   const data = editor.getData();
                   this.handleChange({
@@ -252,7 +276,7 @@ export default class CreateBlogForm extends Component {
               Submit
             </button>
             <button
-              onClick={this.handleCancel}
+              onClick={() => this.props.handleForm(false)}
               type="button"
               className="btn btn-danger"
             >

@@ -8,6 +8,7 @@ import { debounce } from "lodash";
 import { Card, Spinner } from "reactstrap";
 import { IMAGE_URL } from "../../constant/constants";
 import { Link, Redirect } from "react-router-dom";
+import defaultProductPhoto from "../../assets/imgs/blog.jpg";
 
 function Search(props) {
   const [searchString, setSearchString] = useState("");
@@ -21,7 +22,15 @@ function Search(props) {
     RestService.getProductsBySearch(string).then((res) => {
       setLoading(false);
       if (res.data.status === "success") {
+        res.data.data.length > 0 &&
+          res.data.data.map((item) => {
+            if (!item.image) {
+              item.image = defaultProductPhoto;
+            }
+          });
+
         setResults(res.data.data);
+        setHide(false)
       }
     });
   };

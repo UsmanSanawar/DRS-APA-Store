@@ -19,6 +19,7 @@ import { IMAGE_URL } from "../../constant/constants";
 import { debounce } from "lodash";
 import CircularLoader from "../../assets/loaders";
 import CreateBlogForm from "./CreateBlogForm";
+import BlogImg from "../../assets/imgs/blog.jpg";
 
 export default class BlogPageCategory extends Component {
   constructor(props) {
@@ -97,7 +98,6 @@ export default class BlogPageCategory extends Component {
         `&searchString=${this.state.searchString}`) ||
       "";
 
-    console.log(filter, "filterfilter");
 
     await RestService.getBlogPosts(pg, filter).then((r) => {
       if (r.data.status === "success") {
@@ -107,14 +107,13 @@ export default class BlogPageCategory extends Component {
         let newData = [];
         blogPosts.map((post) => {
 
-          console.log(post.customerName || post.createdBy, "ssssssssssssss")
 
           newData.push({
             id: post.blogId,
             title: post.blogTitle,
             image: post.image
               ? `${IMAGE_URL}/blogs/${post.image}`
-              : "https://lh3.googleusercontent.com/proxy/do0aplhOwlDEoaRMHU8irunbLWOJf7oznkuB62TsFMZhzCTtEz9QEiOkVlWaoTb2v0uYeBs7W0PfJ79IpZUzfk8DWcDh2glkog_56FMID09deRuO41jPtYHQxpC6KvmN",
+              : BlogImg,
             categories: [`${post.blogCategoryName}`],
             author: post.customerName || post.createdBy,
             date: new Date(post.createdOn).toLocaleDateString("en-US", {

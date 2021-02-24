@@ -102,9 +102,12 @@ function ProductCard(props) {
   if (product.features && product.features.length) {
     features = (
       <ul className="product-card__features-list">
-        {product.features.map((feature, index) => (
-          <li key={index}>{`${feature.name}: ${feature.value}`}</li>
-        ))}
+        {product.features.map((feature, index) => {
+
+          console.log(feature, "dadasdsadsadasdsadsadsa")
+
+         return <li key={index}>{`${feature.name}: ${feature.value}`}</li>
+        })}
       </ul>
     );
   }
@@ -389,14 +392,13 @@ function ProductCard(props) {
       <div className="product-card__actions">
         <div className="product-card__availability">
           Availability:
-          <span className="text-success"> {product.availability}</span>
+          <span className="text-success"> {console.log(product.availability)}</span>
         </div>
 
         <div className="product-card__availability">
           Manufacturer:
           <span style={{ fontWeight: "bold", color: "black" }}>
-            {" "}
-            {product.model}
+            {console.log(product.model)}
           </span>
         </div>
 

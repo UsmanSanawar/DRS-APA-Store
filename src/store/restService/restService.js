@@ -196,9 +196,7 @@ const RestService = {
     axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${id}`),
 
   getAllBlogPostComments: () =>
-  axios.get(
-    `${BASE_URL}/api/DRS.APA/website/StoreBlogComment/1/10`
-  ),
+    axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlogComment/1/10`),
 
   getBlogPostCommentsByBlogId: (blogId) =>
     axios.get(
@@ -212,7 +210,7 @@ const RestService = {
       RestService.getHeader()
     ),
 
-    postBlog: (FormData) =>
+  postBlog: (FormData) =>
     axios.post(
       `${BASE_URL}/api/DRS.APA/website/StoreBlog`,
       FormData,
@@ -307,6 +305,20 @@ const RestService = {
     return axios.put(
       `${BASE_URL_API_Admin}/masterdata/Customers/UpdateCustomerAddressStore/${customerAddId}`,
       formData,
+      RestService.getHeader()
+    );
+  },
+
+  editBlogPost: (formData, blogId) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/website/StoreBlog/${blogId}`,
+      formData,
+      RestService.getHeader()
+    );
+  },
+  deleteBlogPost: (blogId) => {
+    return axios.put(
+      `${BASE_URL_API_Admin}/website/StoreBlog/${blogId}`,
       RestService.getHeader()
     );
   },

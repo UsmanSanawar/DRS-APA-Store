@@ -15,9 +15,9 @@ export default [
     //     title: 'Cash on delivery',
     //     description: 'Pay with cash upon delivery.',
     // },
-    {
-        key: 'paypal',
-        title: 'PayPal',
-        description: 'Pay via PayPal, you can pay with your credit card if you don’t have a PayPal account.',
-    },
+    // {
+    //     key: 'paypal',
+    //     title: 'PayPal',
+    //     description: 'Pay via PayPal, you can pay with your credit card if you don’t have a PayPal account.',
+    // },
 ];

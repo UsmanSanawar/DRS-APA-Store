@@ -424,7 +424,7 @@ class Product extends Component {
               {this.state.slectedPr.optionModel ? (
                 <li>Model: {this.state.slectedPr.optionModel}</li>
               ) : null}
-              {product.sku ? <li>SKU: {product.sku}</li> : null}
+              {product.sku ? <li>Product Code: {product.sku}</li> : null}
               {product.upc ? <li>UPC: {product.upc}</li> : null}
               {product.ean ? <li>EAN: {product.ean}</li> : null}
               {product.jan ? <li>JAN: {product.jan}</li> : null}
@@ -471,6 +471,7 @@ class Product extends Component {
                   >
                     Quantity{" "}
                     {product.stockStatusName === "Out Of Stock" ? null : (
+                      product.stockStatusName === 'In Stock' &&
                       <small style={{ color: "green" }}>
                         (Available Quantity: {product.quantity})
                       </small>

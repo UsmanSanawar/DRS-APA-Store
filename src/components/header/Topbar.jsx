@@ -47,7 +47,7 @@ function Topbar(props) {
     { title: "Dashboard", url: "/store/dashboard" },
     { title: "Edit Profile", url: "/store/profile" },
     { title: "Your Orders", url: "/store/orders" },
-    // { title: "Addresses", url: "/store/addresses" },
+    { title: "My Blogs", url: "/store/my-blogs" },
     { title: "Password", url: "/store/password" },
     { title: "Logout", url: "/store/login" },
   ];

@@ -77,11 +77,13 @@ function addItem(state, product, options, quantity = 0, customer) {
   let { lastItemId } = state;
   let rates = [];
 
+  console.log(product.taxClass, "===ProductCustomer=====", customer);
+
   let taxClass = product.taxClass ? product.taxClass : [];
   let taxApply = 0;
 
-  if(customer){
-    if(taxClass.taxRates && taxClass.taxRates.length > 0){
+  if (customer) {
+    if (taxClass.taxRates && taxClass.taxRates.length > 0) {
       for (let tax of taxClass.taxRates) {
         if (
           tax.taxRatesCustomerGroups.some(
@@ -101,14 +103,14 @@ function addItem(state, product, options, quantity = 0, customer) {
     let discountedPrice = 0;
     let discountThatMayApply = [];
 
-    if(customer){
+    if (customer) {
       product.discountProducts.map((p) => {
         p.discount.discountCustomerGroups !== null &&
-        p.discount.discountCustomerGroups.map((discountGroup) => {
-          if (discountGroup.customerGroupId === customer.customerGroupId) {
-            discountThatMayApply.push(p.discount.discountPercentage);
-          }
-        });
+          p.discount.discountCustomerGroups.map((discountGroup) => {
+            if (discountGroup.customerGroupId === customer.customerGroupId) {
+              discountThatMayApply.push(p.discount.discountPercentage);
+            }
+          });
       });
     }
 
@@ -264,25 +266,6 @@ function updateQuantities(state, quantities) {
   return state;
 }
 
-/*
- * item example:
- * {
- *   id: 1,
- *   product: {...}
- *   options: [
- *     {optionId: 1, optionTitle: 'Color', valueId: 1, valueTitle: 'Red'}
- *   ],
- *   price: 250,
- *   quantity: 2,
- *   total: 500
- * }
- * extraLine example:
- * {
- *   type: 'shipping',
- *   title: 'Shipping',
- *   price: 25
- * }
- */
 const initialState = {
   lastItemId: 0,
   quantity: 0,

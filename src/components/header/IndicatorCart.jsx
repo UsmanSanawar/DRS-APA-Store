@@ -18,7 +18,6 @@ function IndicatorCart(props) {
   let dropdown;
   let totals;
 
-
   if (cart && cart.extraLines.length > 0) {
     const extraLines = cart.extraLines.map((extraLine, index) => (
       <tr key={index}>
@@ -43,9 +42,9 @@ function IndicatorCart(props) {
   }
 
   const getSeletedOptionValue = (option) => {
-    let index = option.optionValues.findIndex(
-      (item) => item.optionValueId === option.value
-    );
+    let index = option.optionValues.findIndex((item) => {
+      return parseInt(item.optionValueId) === parseInt(option.value);
+    });
 
     if (index > -1) {
       return option.optionValues[index].name;
@@ -53,84 +52,98 @@ function IndicatorCart(props) {
     return "";
   };
 
-  const items = cart && cart.items.map((item) => {
-    let options;
-    let image;
+  const items =
+    cart &&
+    cart.items.map((item) => {
+      let options;
+      let image;
 
-    if (item.options) {
-      options = (
-        <ul className="dropcart__product-options">
-          {item.options.map((option, index) => (
-            <li key={index}>{`${option.optionName}:  ${
-              option.optionTypeId === 1 || option.optionTypeId === 2
-                ? getSeletedOptionValue(option)
-                : option.optionTypeId === 3
-                ? option.value === undefined || option.value === false
-                  ? false
-                  : true
-                : option.optionTypeId === 6
-                ? option.value
-                  ? option.value
-                  : ""
-                : ""
-            }`}</li>
-          ))}
-        </ul>
-      );
-    }
+      console.log(item, "===item")
 
-    if (item.product && item.product.images && item.product.images.length > 0) {
-      image = (
-        <div className="dropcart__product-image">
-          <Link to={`/store/product/${item.product.id}`}>
-            <img src={item.product.images[0]} alt="" />
-          </Link>
-        </div>
-      );
-    }
+      if (item.options) {
+        options = (
+          <ul className="dropcart__product-options">
+            {item.options.map((option, index) => {
 
-    const removeButton = (
-      <AsyncAction
-        action={() => cartRemoveItem(item.id)}
-        render={({ run, loading }) => {
-          const classes = classNames(
-            "dropcart__product-remove btn btn-light btn-sm btn-svg-icon",
-            {
-              "btn-loading": loading,
-            }
-          );
+              return (
+                <li key={index}>{`${option.optionName}:  ${
+                  option.optionTypeId === 1 || option.optionTypeId === 2
+                    ? getSeletedOptionValue(option)
+                    : option.optionTypeId === 3
+                    ? option.value === undefined || option.value === false
+                      ? false
+                      : true
+                    : option.optionTypeId === 6
+                    ? option.value
+                      ? option.value
+                      : ""
+                    : ""
+                }`}</li>
+              );
+            })}
+          </ul>
+        );
+      }
 
-          return (
-            <button type="button" onClick={run} className={classes}>
-              <Cross10Svg />
-            </button>
-          );
-        }}
-      />
-    );
 
-    return (
-      <div key={item.id} className="dropcart__product">
-        {image}
-        <div className="dropcart__product-info">
-          <div className="dropcart__product-name">
+      if (
+        item.product &&
+        item.product.images &&
+        item.product.images.length > 0
+      ) {
+        image = (
+          <div className="dropcart__product-image">
             <Link to={`/store/product/${item.product.id}`}>
-              {item.product.name}
+              <img src={item.product.images[0]} alt="" />
             </Link>
           </div>
-          {options}
-          <div className="dropcart__product-meta">
-            <span className="dropcart__product-quantity">{item.quantity}</span>
-            {" x "}
-            <span className="dropcart__product-price">
-              <Currency value={item.price} />
-            </span>
+        );
+      }
+
+      const removeButton = (
+        <AsyncAction
+          action={() => cartRemoveItem(item.id)}
+          render={({ run, loading }) => {
+            const classes = classNames(
+              "dropcart__product-remove btn btn-light btn-sm btn-svg-icon",
+              {
+                "btn-loading": loading,
+              }
+            );
+
+            return (
+              <button type="button" onClick={run} className={classes}>
+                <Cross10Svg />
+              </button>
+            );
+          }}
+        />
+      );
+
+      return (
+        <div key={item.id} className="dropcart__product">
+          {image}
+          <div className="dropcart__product-info">
+            <div className="dropcart__product-name">
+              <Link to={`/store/product/${item.product.id}`}>
+                {item.product.name}
+              </Link>
+            </div>
+            {options}
+            <div className="dropcart__product-meta">
+              <span className="dropcart__product-quantity">
+                {item.quantity}
+              </span>
+              {" x "}
+              <span className="dropcart__product-price">
+                <Currency value={item.price} />
+              </span>
+            </div>
           </div>
+          {removeButton}
         </div>
-        {removeButton}
-      </div>
-    );
-  });
+      );
+    });
 
   if (cart.quantity) {
     dropdown = (
