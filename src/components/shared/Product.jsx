@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { sortBy } from "lodash";
 
 // application
 import AsyncAction from "./AsyncAction";
@@ -210,11 +210,15 @@ class Product extends Component {
       customer,
     } = this.props;
 
+    console.log(product, "asdasdasdsadsad");
+
     const { quantity } = this.state;
 
     const handleOptionValues = (options) => {
       let SelectOptions;
       if (options && options.length) {
+        options = sortBy(options, (option) => option.name);
+
         SelectOptions = options.map((item) => (
           <option value={item.optionValueId}>{item.name}</option>
         ));
@@ -346,6 +350,8 @@ class Product extends Component {
     return (
       <div className={`product product--layout--${layout}`}>
         <div className="product__content">
+          {console.log(this.state.productPhotos, "this.state.productPhotos")}
+
           <ProductGallery
             style={{ width: 700 }}
             layout={layout}
@@ -422,7 +428,9 @@ class Product extends Component {
               ) : null}
 
               {this.state.slectedPr.optionModel ? (
-                <li>Model: {this.state.slectedPr.optionModel}</li>
+                <li>
+                  Variant Product Code: {this.state.slectedPr.optionModel}
+                </li>
               ) : null}
               {product.sku ? <li>Product Code: {product.sku}</li> : null}
               {product.upc ? <li>UPC: {product.upc}</li> : null}
@@ -470,12 +478,13 @@ class Product extends Component {
                     className="product__option-label"
                   >
                     Quantity{" "}
-                    {product.stockStatusName === "Out Of Stock" ? null : (
-                      product.stockStatusName === 'In Stock' &&
-                      <small style={{ color: "green" }}>
-                        (Available Quantity: {product.quantity})
-                      </small>
-                    )}
+                    {product.stockStatusName === "Out Of Stock"
+                      ? null
+                      : product.stockStatusName === "In Stock" && (
+                          <small style={{ color: "green" }}>
+                            (Available Quantity: {product.quantity})
+                          </small>
+                        )}
                   </label>
                   <div className="product__actions">
                     <div className="product__actions-item">
@@ -511,8 +520,8 @@ class Product extends Component {
                                 this.state.slectedPr.optionQuantity >=
                                 this.state.quantity
                               )
-                            : !(product.quantity >= this.state.quantity)) &&
-                          product.stockStatusName !== "Out Of Stock"
+                            : !(product.quantity >= this.state.quantity)) ||
+                          product.stockStatusId === 5
                         }
                         className={classNames("btn btn-primary btn-lg", {
                           "btn-loading": "",

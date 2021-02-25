@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import ProductTabSpecification from "./ProductTabSpecification";
 import ProductTabReviews from "./ProductTabReviews";
 import ProductTabAttachments from "./ProductTabAttachments";
+import Parser from "html-react-parser";
 
 class ProductTabs extends Component {
   constructor(props) {
@@ -21,6 +22,18 @@ class ProductTabs extends Component {
 
   setTab = (newTab) => {
     this.setState(() => ({ currentTab: newTab }));
+  };
+
+  handeHTML = (desc) => {
+    if (desc) {
+      if (desc.startsWith("&lt;")) {
+        return Parser(desc);
+      } else {
+        return desc;
+      }
+    } else {
+      return "";
+    }
   };
 
   render() {
@@ -38,7 +51,7 @@ class ProductTabs extends Component {
         content: (
           <div
             dangerouslySetInnerHTML={{
-              __html: product ? product.description : "",
+              __html: this.handeHTML(product.description),
             }}
           />
         ),
@@ -54,7 +67,7 @@ class ProductTabs extends Component {
         content: (
           <div
             dangerouslySetInnerHTML={{
-              __html: product ? product.newTabContent : "",
+              __html: this.handeHTML(product.newTabContent),
             }}
           />
         ),

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { startCase } from "lodash";
 import React from "react";
 import { Collapse } from "reactstrap";
@@ -8,6 +9,7 @@ export default function ShippingCollapse({
   toggle,
   isLoading,
   calculations,
+  totalShip
 }) {
   let total = 0;
 
@@ -68,21 +70,23 @@ export default function ShippingCollapse({
       "totalRetrofitPrices",
     ];
 
+
     let condEligible = shipping.isOrderEligibleForFreeDelivery
       ? eligiableTrue
       : eligiableFalse;
 
     let shippingKeys = Object.keys(shipping);
 
+    // eslint-disable-next-line array-callback-return
     shippingKeys.map((item) => {
       if (
         condEligible.some((arrItem) => arrItem === item) &&
-        parseInt(shipping[item]) !== 0
+        parseFloat(shipping[item]) > 0
       ) {
         object = {
           ...object,
           [item]: item.includes("Price")
-            ? parseFloat(shipping[item]).toFixed(2)
+            ? parseFloat(shipping[item])
             : shipping[item],
         };
       }
@@ -132,7 +136,7 @@ export default function ShippingCollapse({
             <td>
               {(item.includes("Shipment") || item.includes("Cost")) && "£"}
               {item.includes("Weight")
-                ? `${parseFloat(sortedCrtObject[item]).toFixed(2)} Kg`
+                ? `${parseFloat(sortedCrtObject[item])} Kg`
                 : sortedCrtObject[item]}
             </td>
           </tr>
@@ -158,7 +162,7 @@ export default function ShippingCollapse({
                 {renderData("data")}
                 <tr style={{ fontWeight: "bold" }} className="border-top">
                   <td>Total Shipping</td>
-                  <td>£{parseFloat(total)}</td>
+                  <td>£{parseFloat(totalShip).toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>

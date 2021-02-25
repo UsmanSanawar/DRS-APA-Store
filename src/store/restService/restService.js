@@ -192,6 +192,11 @@ const RestService = {
       `${BASE_URL}/api/DRS.APA/website/StoreBlog/${pg}/${10}?${filter}`
     ),
 
+    getBlogPostsByCustomerId: (pg = 1, pgsize = 10, customerId) =>
+    axios.get(
+      `${BASE_URL}/api/DRS.APA/website/StoreBlog/${pg}/${pgsize}?CustomerId=${customerId}`
+    ),
+
   getBlogPostById: (id) =>
     axios.get(`${BASE_URL}/api/DRS.APA/website/StoreBlog/${id}`),
 

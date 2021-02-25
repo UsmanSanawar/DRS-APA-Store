@@ -1,21 +1,21 @@
 /* eslint-disable react/no-direct-mutation-state */
 // react
 import _ from "lodash";
-import React, { Component } from "react";
-import { Helmet } from "react-helmet";
+import React, {Component} from "react";
+import {Helmet} from "react-helmet";
 // third-party
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { bindActionCreators } from "redux";
+import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
+import {bindActionCreators} from "redux";
 import CircularLoader from "../../assets/loaders";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
-import { postSaleOrder, resetCartPaid } from "../../store/cart";
+import {postSaleOrder, resetCartPaid} from "../../store/cart";
 import RestService from "../../store/restService/restService";
-import { getAllCountries } from "../../store/webView";
-import { Check9x7Svg } from "../../svg";
+import {getAllCountries} from "../../store/webView";
+import {Check9x7Svg} from "../../svg";
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
@@ -47,8 +47,8 @@ class ShopPageCheckout extends Component {
     this.state = {
       payment: "",
       formValues: {
-        billing: { ...initAddr, addressType: "billing" },
-        shipping: { ...initAddr, addressType: "shipping" },
+        billing: {...initAddr, addressType: "billing"},
+        shipping: {...initAddr, addressType: "shipping"},
       },
       loading: false,
       orderNote: "",
@@ -67,81 +67,20 @@ class ShopPageCheckout extends Component {
       shippingTotal: 0,
       taxRates: [],
       discount: {},
+      totalOrderAmount: 0,
+      totalTaxes: 0,
+      totalDiscounts: 0,
+      totalUnitPrice: 0,
+      perLineTotal: []
     };
   }
 
-  showPaypalButtons = () => {
-    if (this.state.payment === "paypal") {
-      this.setState({ showPaypal: true });
-    }
-  };
-
-  async componentDidMount() {
-    let { items } = JSON.parse(localStorage.getItem("state")).cart;
-    let customerGroup = await RestService.getCustomerByToken(
-      JSON.parse(localStorage.getItem("token"))
-    ).then((res) => {
-      if (res.data.status === "success") {
-        return res.data.data.customerGroupId;
-      } else {
-        return null;
-      }
-    });
-
-    let taxRateArray = [];
-    if (items.length > 0) {
-      for (let index = 0; index < items.length; index++) {
-        let { taxClass } = items[index].product;
-        if (taxClass && taxClass.taxRates.length > 0) {
-          let { taxRates } = taxClass;
-          for (const taxRate of taxRates) {
-            let { taxRatesCustomerGroups } = taxRate;
-            if (
-              taxRatesCustomerGroups &&
-              taxRatesCustomerGroups.some(
-                (row) => row.customerGroupId === customerGroup
-              )
-            ) {
-              taxRateArray.push(taxRate);
-            }
-          }
-        }
-      }
-    }
-
-    let discountThatMayApply = [];
-
-    for (const item of items) {
-      let product = item.product;
-      product.discountProducts.map((p) => {
-        p.discount.discountCustomerGroups !== undefined &&
-          p.discount.discountCustomerGroups !== null &&
-          p.discount.discountCustomerGroups.map((discountGroup) => {
-            if (discountGroup.customerGroupId === customerGroup) {
-              discountThatMayApply.push({
-                discountId: p.discount.discountId,
-                discountName: p.discount.name,
-                discountPercentage: p.discount.discountPercentage,
-              });
-            }
-          });
-      });
-    }
-
-    let appliedDiscount = _.maxBy(
-      discountThatMayApply,
-      (obj) => obj.discountPercentage
-    );
-
-    this.setState({
-      taxRates: taxRateArray,
-      discounts: appliedDiscount || 0,
-    });
-
+  componentDidMount() {
+    this.handleOrdereCalculations();
     RestService.getCustomerByToken()
       .then((res) => {
         if (res.data.status === "success") {
-          let { customerAddress } = res.data.data;
+          let {customerAddress} = res.data.data;
           if (customerAddress.length > 0) {
             let shipping;
             let billing;
@@ -163,8 +102,8 @@ class ShopPageCheckout extends Component {
             });
             this.setState({
               formValues: {
-                billing: { ...initAddr, ...billing },
-                shipping: { ...initAddr, ...shipping },
+                billing: {...initAddr, ...billing},
+                shipping: {...initAddr, ...shipping},
               },
             });
           }
@@ -190,6 +129,144 @@ class ShopPageCheckout extends Component {
     });
   }
 
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.cart.items !== this.props.cart.items) {
+      if(this.props.cart.items.length > 0){
+      this.state.deliveryTime && this.handleShipmentCalculation(this.state.deliveryTime);}
+      this.handleOrdereCalculations();
+    }
+  }
+  
+
+  handleOrdereCalculations = async () => {
+    let {items} = JSON.parse(localStorage.getItem("state")).cart;
+    //customerGroupId
+    let customerGroup = await RestService.getCustomerByToken(
+      JSON.parse(localStorage.getItem("token"))
+    ).then((res) => {
+      if (res.data.status === "success") {
+        return res.data.data.customerGroupId;
+      } else {
+        return null;
+      }
+    });
+
+    //variables
+    let taxRateArray = [];
+    let unitPriceTotal = 0;
+    let discountThatMayApply = [];
+    let perProductDiscountAndTax = [];
+    let perLineTotal = [];
+    if (items.length > 0) {
+      for (let index = 0; index < items.length; index++) {
+        let totalPerLine = 0;
+debugger;
+        let aTax = 0;
+        let discount = 0;
+        let innerTotal = 0;
+        let lineTotal = items[index].product.price * items[index].quantity;
+        let innerTaxRates = [];
+
+        unitPriceTotal = unitPriceTotal + lineTotal;
+        innerTotal = lineTotal;
+        let {taxClass} = items[index].product;
+
+        let discountPercentage = 0;
+        items[index].product.discountProducts.map((p) => {
+          p.discount.discountCustomerGroups !== undefined &&
+          p.discount.discountCustomerGroups !== null &&
+          p.discount.discountCustomerGroups.map((discountGroup) => {
+            if (discountGroup.customerGroupId === customerGroup) {
+              discountPercentage = p.discount.discountPercentage || 0;
+              discountThatMayApply.push({
+                discountId: p.discount.discountId,
+                discountName: p.discount.name,
+                discountPercentage: p.discount.discountPercentage,
+              });
+            }
+          });
+        });
+
+        discount = (innerTotal * discountPercentage) / 100;
+        innerTotal = innerTotal - discount;
+
+        let taxPerRateLine = 0;
+        if (taxClass && taxClass.taxRates.length > 0) {
+          let {taxRates} = taxClass;
+          for (const taxRate of taxRates) {
+            let {taxRatesCustomerGroups} = taxRate;
+            if (
+              taxRatesCustomerGroups &&
+              taxRatesCustomerGroups.some(
+                (row) => row.customerGroupId === customerGroup
+              )
+            ) {
+              taxPerRateLine = taxRate.rate;
+              innerTaxRates.push(taxRate);
+            }
+          }
+
+          taxRateArray.push({
+            taxRates: innerTaxRates,
+            productId: items[index].product.productId,
+          });
+        }
+        aTax = (taxPerRateLine * innerTotal) / 100;
+
+
+        totalPerLine = innerTotal + aTax
+        perLineTotal.push({
+          total: totalPerLine,
+          productId: items[index].product.productId
+        })
+        perProductDiscountAndTax.push({
+          aTax,
+          discount,
+          productId: items[index].product.productId,
+        });
+      }
+    } else {
+      this.setState({
+        calculations: {},
+        shippingTotal: 0
+      })
+    }
+
+
+    let totalDiscounts = 0;
+    let totalTaxes = 0;
+
+    console.log(taxRateArray, "perProductDiscountAndTax");
+
+    for (const itm of perProductDiscountAndTax) {
+      totalDiscounts = totalDiscounts + itm.discount;
+      totalTaxes = totalTaxes + parseFloat(itm.aTax);
+    }
+
+    console.log(totalDiscounts, "aaaaaaaaa", totalTaxes);
+
+    let appliedDiscount = _.maxBy(
+      discountThatMayApply,
+      (obj) => obj.discountPercentage
+    );
+
+    let totalTaxRates = 0;
+    for (let index = 0; index < taxRateArray.length; index++) {
+      totalTaxRates = totalTaxRates + taxRateArray[index].rate;
+    }
+
+    this.setState({
+      taxRates: taxRateArray,
+      discounts: appliedDiscount || 0,
+      totalDiscounts,
+      totalTaxes,
+      perLineTotal,
+      totalUnitPrice: unitPriceTotal,
+    });
+  }
+
+
   getAllDeliveryTimeOptions = () => {
     RestService.getAllParcelDeliveries().then((r) => {
       if (r.data.status === "success") {
@@ -212,6 +289,26 @@ class ShopPageCheckout extends Component {
     return orderAmountWithTaxAndDiscountF;
   };
 
+  handleOrderTotalAmount = () => {
+    let TotalAmount = _.sumBy(this.state.perLineTotal, 'total') || 0;
+    return TotalAmount + this.state.shippingTotal;
+
+  }
+
+  hanldePerOrderLinePrice = (productId) => {
+    let lineTotals = this.state.perLineTotal;
+    let index = lineTotals.findIndex(item => item.productId === productId);
+    if (index > -1) {
+      console.log(lineTotals[index].total, "sdsadasdasdsad")
+
+      return lineTotals[index].total
+    } else {
+      return 0
+    }
+
+
+  }
+
   handleSaleorderObject = () => {
     let saleOrder = {
       orderId: null,
@@ -224,8 +321,7 @@ class ShopPageCheckout extends Component {
       orderDueDate: null,
       isCancelled: false,
       cancelReason: "",
-      orderAmountWithTaxAndDiscount:
-        this.props.cart.total + this.state.shippingTotal,
+      orderAmountWithTaxAndDiscount: this.handleOrderTotalAmount(),
       orderAmountWithTaxAndDiscountFreeEligible: this.handleOrderAmountWithTaxAndDiscountFreeEligible(
         this.props.cart.items
       ),
@@ -239,19 +335,20 @@ class ShopPageCheckout extends Component {
       orderStatusCode: "",
     };
 
-    let shipping = { ...this.state.formValues.shipping };
+    let shipping = {...this.state.formValues.shipping};
     shipping.addressType = "shipping";
     shipping.orderAddressId = null;
 
-    let billing = { ...this.state.formValues.billing };
+    let billing = {...this.state.formValues.billing};
     billing.orderAddressId = null;
     billing.addressType = "billing";
 
     saleOrder.orderAddress.push(shipping);
     saleOrder.orderAddress.push(billing);
 
+
+
     for (let item of this.props.cart.items) {
-   
       let line = {
         orderId: 0,
         orderLinesId: null,
@@ -271,14 +368,14 @@ class ShopPageCheckout extends Component {
         unitPrice: item.price,
         orderLineTaxRates: [],
 
-        lineTotal: parseFloat(item.productTotal.toFixed(2)),
+        lineTotal: this.hanldePerOrderLinePrice(item.product.productId),
       };
 
       if (
         item.product.selectedProductOption &&
         item.product.selectedProductOption.productId
       ) {
-        let SelectedProduct = { ...item.product.selectedProductOption };
+        let SelectedProduct = {...item.product.selectedProductOption};
         SelectedProduct.orderLineProductOptionsId = 0;
         SelectedProduct.orderLineProductOptionCombinations =
           SelectedProduct.productOptionCombination;
@@ -291,19 +388,31 @@ class ShopPageCheckout extends Component {
         line.orderLineProductOptions = [SelectedProduct];
       }
 
-      if (item.rates && item.rates.length > 0) {
+      if (this.state.taxRates && this.state.taxRates.length > 0) {
         let taxratesArray = [];
 
+        let taxrates = this.state.taxRates;
+        (taxrates && taxrates.length > 0) && taxrates.map(rate => {
+          let {taxRates} = rate;
+          if (rate.productId === item.product.productId) {
+            for (const rate of taxRates) {
 
-        for (const rate of this.state.taxRates) {
-          taxratesArray.push({
-            orderLineTaxRateId: 0,
-            orderLineTaxRateName: rate.taxRateName,
-            orderTaxRate: rate.rate,
-            orderLineTaxRateCode: rate.taxRateCode,
-            orderLinesId: null,
-          });
-        }
+              console.log(rate, "finaleRate")
+
+              taxratesArray.push({
+                orderLineTaxRateId: 0,
+                orderLineTaxRateName: rate.taxRateName,
+                orderTaxRate: rate.rate,
+                orderLineTaxRateCode: rate.taxRateCode,
+                orderLinesId: null,
+              });
+
+            }
+
+          }
+        })
+
+        console.log(taxrates, taxratesArray, "dasdasdasdasdasdsadsad")
 
         line.orderLineTaxRates = taxratesArray;
         line.taxPercentage = _.sumBy(taxratesArray, "orderTaxRate");
@@ -337,7 +446,7 @@ class ShopPageCheckout extends Component {
         RestService.postSaleOrder(saleOrder).then((r) => {
           toast[r.data.status](r.data.message);
           if (r.data.status === "success") {
-            this.setState({ orderState: r.data.data });
+            this.setState({orderState: r.data.data});
           } else {
             this.handleSubmitLoading(false);
           }
@@ -367,19 +476,18 @@ class ShopPageCheckout extends Component {
       // eslint-disable-next-line react/no-direct-mutation-state
       this.state.formValues[addressType][name] = event.target.value;
 
-      this.setState({ formValues: this.state.formValues });
+      this.setState({formValues: this.state.formValues});
     }
   };
 
   handlePaymentChange = (event) => {
     if (event.target.checked) {
-      this.setState({ payment: event.target.value });
+      this.setState({payment: event.target.value});
     }
   };
 
   renderTotals() {
-    const { cart } = this.props;
-
+    const {cart} = this.props;
     if (cart.extraLines.length <= 0) {
       return null;
     }
@@ -388,7 +496,7 @@ class ShopPageCheckout extends Component {
       <tr key={index}>
         <th>{extraLine.title}</th>
         <td>
-          <Currency value={extraLine.price} />
+          <Currency value={extraLine.price}/>
         </td>
       </tr>
     ));
@@ -396,26 +504,26 @@ class ShopPageCheckout extends Component {
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
-          <tr>
-            <th>Subtotal</th>
-            <td>
-              <Currency value={cart.subtotal} />
-            </td>
-          </tr>
-          {extraLines}
+        <tr>
+          <th>Subtotal</th>
+          <td>
+            <Currency value={cart.subtotal}/>
+          </td>
+        </tr>
+        {extraLines}
         </tbody>
       </React.Fragment>
     );
   }
 
   renderCart() {
-    const { cart } = this.props;
+    const {cart} = this.props;
 
     const items = cart.items.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.name} × ${item.quantity}`}</td>
         <td>
-          <Currency value={item.total} />
+          <Currency value={item.total}/>
         </td>
       </tr>
     ));
@@ -423,52 +531,59 @@ class ShopPageCheckout extends Component {
     return (
       <table className="checkout__totals">
         <thead className="checkout__totals-header">
-          <tr>
-            <th>Product</th>
-            <th>Total</th>
-          </tr>
+        <tr>
+          <th>Product</th>
+          <th>Total</th>
+        </tr>
         </thead>
         <tbody className="checkout__totals-products">{items}</tbody>
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Discount</th>
-            <td>
-              -<Currency value={cart.totalDiscounts} />
-            </td>
-          </tr>
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Tax</th>
-            <td>
-              <Currency value={cart.totalTaxs} />
-            </td>
-          </tr>
-          <tr style={{ fontSize: 15 }}>
-            <th>Total Shipping</th>
-            <td>
-              <Currency value={this.state.shippingTotal} />
-            </td>
-          </tr>
-          <tr>
-            <th>Total</th>
-            <td>
-              <Currency value={cart.total + this.state.shippingTotal} />
-            </td>
-          </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Discount</th>
+          <td>
+            -<Currency value={this.state.totalDiscounts}/>
+          </td>
+        </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Tax</th>
+          <td>
+            <Currency value={this.state.totalTaxes}/>
+          </td>
+        </tr>
+        <tr style={{fontSize: 15}}>
+          <th>Total Shipping</th>
+          <td>
+            <Currency value={this.state.shippingTotal}/>
+          </td>
+        </tr>
+        <tr>
+          <th>Total</th>
+          <td>
+            <Currency
+              value={
+                this.state.totalUnitPrice -
+                this.state.totalDiscounts +
+                this.state.totalTaxes +
+                this.state.shippingTotal
+              }
+            />
+          </td>
+        </tr>
         </tfoot>
       </table>
     );
   }
 
   handleShipmentCalculation = async (e) => {
-    this.setState({ sloading: true });
+    this.setState({sloading: true});
     let formDataSaleOrders = this.handleSaleorderObject();
-    let data = { ...formDataSaleOrders };
-    data.uK_DeliveryDurationId = parseInt(e.target.value);
+    let data = {...formDataSaleOrders};
+    data.uK_DeliveryDurationId = parseInt(e.target ? e.target.value : this.state.deliveryTime);
 
-    await RestService.calculateSaleOrderShipment({ ...data })
+    await RestService.calculateSaleOrderShipment({...data})
       .then((res) => {
-        this.setState({ sloading: false });
+        this.setState({sloading: false});
         if (res.data.error === "") {
           this.setState({
             calculations: res.data.order,
@@ -481,10 +596,10 @@ class ShopPageCheckout extends Component {
   };
 
   renderPaymentsList() {
-    const { payment: currentPayment } = this.state;
+    const {payment: currentPayment} = this.state;
 
     const payments = this.payments.map((payment) => {
-      const renderPayment = ({ setItemRef, setContentRef }) => (
+      const renderPayment = ({setItemRef, setContentRef}) => (
         <li className="payment-methods__item" ref={setItemRef}>
           <label className="payment-methods__item-header">
             <span className="payment-methods__item-radio input-radio">
@@ -497,7 +612,7 @@ class ShopPageCheckout extends Component {
                   checked={currentPayment === payment.key}
                   onChange={this.handlePaymentChange}
                 />
-                <span className="input-radio__circle" />
+                <span className="input-radio__circle"/>
               </span>
             </span>
             <span className="payment-methods__item-title">{payment.title}</span>
@@ -600,8 +715,8 @@ class ShopPageCheckout extends Component {
   };
 
   render() {
-    const { cart, allCountries } = this.props;
-    const { billing, shipping } = this.state.formValues;
+    const {cart, allCountries} = this.props;
+    const {billing, shipping} = this.state.formValues;
     const {
       showPaypal,
       payment,
@@ -611,10 +726,12 @@ class ShopPageCheckout extends Component {
     } = this.state;
 
     const breadcrumb = [
-      { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/store/cart" },
-      { title: "Checkout", url: "" },
+      {title: "Home", url: ""},
+      {title: "Shopping Cart", url: "/store/cart"},
+      {title: "Checkout", url: ""},
     ];
+
+    console.log(this.state.ta, "taxRatestaxRatestaxRates");
 
     return (
       <React.Fragment>
@@ -622,7 +739,7 @@ class ShopPageCheckout extends Component {
           <title>{`Checkout — ${theme.name}`}</title>
         </Helmet>
 
-        <PageHeader header="Checkout" breadcrumb={breadcrumb} />
+        <PageHeader header="Checkout" breadcrumb={breadcrumb}/>
 
         <div className="checkout block">
           <div className="container">
@@ -698,13 +815,13 @@ class ShopPageCheckout extends Component {
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                              allCountries.map((item) => {
-                                return (
-                                  <option value={item.countryName}>
-                                    {item.countryName}
-                                  </option>
-                                );
-                              })}
+                            allCountries.map((item) => {
+                              return (
+                                <option value={item.countryName}>
+                                  {item.countryName}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
@@ -810,7 +927,7 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="card-divider" />
+                    <div className="card-divider"/>
                     <div className="card-body">
                       <h3 className="card-title">Shipping Details</h3>
 
@@ -824,8 +941,8 @@ class ShopPageCheckout extends Component {
                                 id="checkout-different-address"
                                 onChange={this.handleAddressToggle}
                               />
-                              <span className="input-check__box" />
-                              <Check9x7Svg className="input-check__icon" />
+                              <span className="input-check__box"/>
+                              <Check9x7Svg className="input-check__icon"/>
                             </span>
                           </span>
                           <label
@@ -906,13 +1023,13 @@ class ShopPageCheckout extends Component {
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                              allCountries.map((item) => {
-                                return (
-                                  <option value={item.countryName}>
-                                    {item.countryName}
-                                  </option>
-                                );
-                              })}
+                            allCountries.map((item) => {
+                              return (
+                                <option value={item.countryName}>
+                                  {item.countryName}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
@@ -1026,8 +1143,8 @@ class ShopPageCheckout extends Component {
                         </div>
                       </div>
 
-                      <div className="card-divider" />
-                      <br />
+                      <div className="card-divider"/>
+                      <br/>
 
                       <div className="form-group">
                         <label htmlFor="shipping-comment">
@@ -1039,7 +1156,7 @@ class ShopPageCheckout extends Component {
                           className="form-control"
                           rows="4"
                           onChange={(e) =>
-                            this.setState({ orderNote: e.target.value })
+                            this.setState({orderNote: e.target.value})
                           }
                         />
                       </div>
@@ -1054,7 +1171,7 @@ class ShopPageCheckout extends Component {
                       <div className="form-group">
                         <label htmlFor="checkout-country">
                           Delivery Time Options{" "}
-                          <i style={{ color: "red" }}>*</i>
+                          <i style={{color: "red"}}>*</i>
                         </label>
                         <select
                           required
@@ -1063,7 +1180,7 @@ class ShopPageCheckout extends Component {
                           value={billing.deliveryTime}
                           name={"country"}
                           onChange={(e) => {
-                            this.setState({ deliveryTime: e.target.value });
+                            this.setState({deliveryTime: e.target.value});
                             this.handleShipmentCalculation(e);
                           }}
                         >
@@ -1085,8 +1202,8 @@ class ShopPageCheckout extends Component {
                           }}
                           style={
                             !this.state.deliveryTime
-                              ? { pointerEvents: "none", opacity: "0.7" }
-                              : { cursor: "pointer" }
+                              ? {pointerEvents: "none", opacity: "0.7"}
+                              : {cursor: "pointer"}
                           }
                           className="text-center border-bottom mt-3 w-100"
                         >
@@ -1109,6 +1226,7 @@ class ShopPageCheckout extends Component {
                           open={this.state.collapse}
                           isLoading={this.state.sloading}
                           calculations={calculations}
+                          totalShip={this.state.shippingTotal}
                         />
                       </div>
 
@@ -1131,12 +1249,12 @@ class ShopPageCheckout extends Component {
                                 }
                                 id="checkout-terms"
                               />
-                              <span className="input-check__box" />
-                              <Check9x7Svg className="input-check__icon" />
+                              <span className="input-check__box"/>
+                              <Check9x7Svg className="input-check__icon"/>
                             </span>
                           </span>
                           <label
-                            style={{ fontSize: "13px", fontWeight: "bold" }}
+                            style={{fontSize: "13px", fontWeight: "bold"}}
                             className="form-check-label"
                             htmlFor="checkout-terms"
                           >
@@ -1161,11 +1279,11 @@ class ShopPageCheckout extends Component {
                       )}
 
                       {this.state.payment === "stripe" &&
-                        (this.state.submitLoading ? (
-                          <div className="text-center my-1">
-                            <CircularLoader />
-                          </div>
-                        ) : null)}
+                      (this.state.submitLoading ? (
+                        <div className="text-center my-1">
+                          <CircularLoader/>
+                        </div>
+                      ) : null)}
 
                       <div
                         className={

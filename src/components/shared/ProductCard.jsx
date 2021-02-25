@@ -17,6 +17,7 @@ import { Wishlist16Svg, Wishlist16SvgRed } from "../../svg";
 import AsyncAction from "./AsyncAction";
 import Currency from "./Currency";
 import Rating from "./Rating";
+import {sortBy} from "lodash";
 
 function ProductCard(props) {
   const {
@@ -179,7 +180,10 @@ function ProductCard(props) {
 
   const handleOptionValues = (options) => {
     let SelectOptions;
-    if (options && options.length) {
+    if (options && options.length)
+    {
+      options = sortBy(options, (option) => option.name);
+
       SelectOptions = options.map((item) => (
         <option value={item.optionValueId}>{item.name}</option>
       ));
@@ -348,7 +352,8 @@ function ProductCard(props) {
                     disabled={
                       slectedPr.optionQuantity
                         ? !(slectedPr.optionQuantity >= product.minimumQuantity)
-                        : !(product.quantity >= product.minimumQuantity)
+                        : !(product.quantity >= product.minimumQuantity) ||
+                        product.stockStatusId === 5
                     }
                     className={classNames(
                       "btn btn-primary product-card__addtocart"
@@ -421,15 +426,21 @@ function ProductCard(props) {
             }}
             render={({ run, loading }) => (
               <React.Fragment>
-                <div
+                <button
                   type="button"
+                  disabled={
+                    slectedPr.optionQuantity
+                        ? !(slectedPr.optionQuantity >= product.minimumQuantity)
+                        : !(product.quantity >= product.minimumQuantity) ||
+                        product.stockStatusId === 5
+                  }
                   onClick={() => {
                     handleProductWithOptions(product.id, run);
                   }}
                   className={"btn btn-primary product-card__addtocart"}
                 >
                   Add to cart
-                </div>
+                </button>
                 <Link
                   type="button"
                   onClick={run}

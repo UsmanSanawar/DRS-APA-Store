@@ -12,8 +12,10 @@ export function productObjectConverter(item) {
       } else {
         if (image.name.startsWith("catalog")) {
           images.push(`${IMAGE_URL}/${image.name}`);
-        } else {
+        } else if(image.name !== '') {
           images.push(`${IMAGE_URL}/images/${image.name}`);
+        } else {
+          images.push(`${IMAGE_URL}/default/defaultproductpng_22Feb21033359PM.png`);
         }
       }
     });
@@ -31,6 +33,7 @@ export function productObjectConverter(item) {
   item.rating = item.totalRating;
   item.reviews = item.totalReviewsCount;
   item.availability = item.stockStatusName;
+  item.stockStatusId = item.stockStatusId;
   item.weight = item.weight;
   item.weightUnit = item.weightUnitName;
   item.length = item.length;

@@ -30,7 +30,6 @@ function ChangePassword(props) {
         setLoading(false);
 
         if (res.data.status === "success") {
-          RestService.activateUserByCode(activationCode).then(res => setSubmitted(false));
           return props.history.push("/store/login");
         } else {
           toast.error("Link is expired");
@@ -106,7 +105,7 @@ function ChangePassword(props) {
                     }}
                     disabled={submitted}
                   >
-                    {'Change Password'}
+                    {"Change Password"}
                   </button>
                 )}
               </div>

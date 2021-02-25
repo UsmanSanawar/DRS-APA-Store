@@ -87,8 +87,9 @@ function Search(props) {
                 style={{
                   zIndex: 110000,
                   maxHeight: 500,
-                  minHeight: 200,
+                  minHeight: "fit-content",
                   maxWidth: 611,
+                  minWidth: 611,
                   overflowY: "scroll",
                   overflowX: "hidden",
                   backgroundColor: "#929394d9",

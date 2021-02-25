@@ -97,7 +97,7 @@ function Layout(props) {
         <meta name="description" content={theme.fullName} />
       </Helmet>
 
-      <ToastContainer autoClose={5000} hideProgressBar />
+      <ToastContainer autoClose={2000} hideProgressBar />
 
       <Quickview />
 

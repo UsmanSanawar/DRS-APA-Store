@@ -11,6 +11,7 @@ import Pagination from "../shared/Pagination";
 import "./orders.css";
 import BlogForm from "./AccountBlogForm";
 import { toast } from "react-toastify";
+import Parser from "html-react-parser";
 
 class AccountPageBlogs extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class AccountPageBlogs extends Component {
       page: 1,
       open: false,
       showForm: false,
-      blogId: null
+      blogId: null,
     };
   }
 
@@ -34,20 +35,20 @@ class AccountPageBlogs extends Component {
   handleEvent = (id, evt) => {
     if (evt === "edit") {
       this.setState({
-        blogId: id
-      })
+        blogId: id,
+      });
       this.handleForm(true);
-    } 
-    
-    if(evt === 'delete'){
-      RestService.deleteBlogPost(id).then(res => {
-        toast[res.data.status](res.data.message)
+    }
+
+    if (evt === "delete") {
+      RestService.deleteBlogPost(id).then((res) => {
+        toast[res.data.status](res.data.message);
       });
     }
   };
 
   handleGetBlogsByCustomerId = (page, pageSize = 15) => {
-    RestService.getBlogPosts(
+    RestService.getBlogPostsByCustomerId(
       page,
       pageSize,
       this.props.customer.customerId
@@ -135,7 +136,7 @@ class AccountPageBlogs extends Component {
       <tr key={blog.id}>
         <td>{`#${blog.blogId}`}</td>
         <td>{blog.title}</td>
-        <td>{blog.blog}</td>
+        <td>{Parser(blog.blog)}</td>
         <td>{blog.status}</td>
         <td>{blog.total}</td>
       </tr>
@@ -151,14 +152,21 @@ class AccountPageBlogs extends Component {
           <div>
             <div className="card-header">
               <div className="row col-md-12">
+                <div className="mr-auto">
+                  <h5 className="mt-2">My Blogs</h5>
+                </div>
 
-                  <div className="mr-auto">
-                    <h5 className="mt-2">My Blogs</h5>
-                  </div>
-
-                  <div className="ml-auto">
-                      <button onClick={() => {this.handleForm(true); this.setState({blogId: null})}} className="btn btn-success">Create Blog</button>
-                  </div>
+                <div className="ml-auto">
+                  <button
+                    onClick={() => {
+                      this.handleForm(true);
+                      this.setState({ blogId: null });
+                    }}
+                    className="btn btn-success"
+                  >
+                    Create Blog
+                  </button>
+                </div>
               </div>
             </div>
             <div className="card-divider" />

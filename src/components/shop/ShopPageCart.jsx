@@ -31,7 +31,7 @@ class ShopPageCart extends Component {
 
   getSeletedOptionValue = (option) => {
     let index = option.optionValues.findIndex(
-      (item) => item.optionValueId === option.value
+      (item) => parseInt(item.optionValueId) === parseInt(option.value)
     );
     if (index > -1) {
       return option.optionValues[index].name;

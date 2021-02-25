@@ -25,8 +25,8 @@ export default function AccountPageLogin(props) {
   ];
   useEffect(() => {
     if (props.accountLogut) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('identity');
+      localStorage.removeItem("token");
+      localStorage.removeItem("identity");
     } else {
       if (
         localStorage.getItem("token") &&
@@ -39,6 +39,7 @@ export default function AccountPageLogin(props) {
 
   const [loginFormData, setLoginFormData] = useState({});
   const [open, setOpen] = useState(false);
+  const [mesg, setMesg] = useState(false);
   const [activeTab, setActiveTab] = useState("1");
 
   const toggle = (tab) => {
@@ -55,23 +56,35 @@ export default function AccountPageLogin(props) {
           toast.success("User authenticated");
 
           props.history.push("/store");
-          await RestService.getCustomerByToken().then((res) => {
-            if (res.data.status === "success") {
-              dispatch({ type: "SIGNIN_USER_SUCCESS", payload: res.data.data });
-            }
-          }).catch(err => {
-            if (err.message.includes('403') || err.message.includes('401')) {
-              localStorage.clear();
-              return window.location.href.replace("#/store/login")
-            }
-          });
+          await RestService.getCustomerByToken()
+            .then((res) => {
+              if (res.data.status === "success") {
+                dispatch({
+                  type: "SIGNIN_USER_SUCCESS",
+                  payload: res.data.data,
+                });
+              }
+            })
+            .catch((err) => {
+              if (err.message.includes("403") || err.message.includes("401")) {
+                localStorage.clear();
+                return window.location.href.replace("#/store/login");
+              }
+            });
 
           setLoginFormData({});
         } else {
           toast.error("Invald credentials");
         }
       })
-      .catch(err => { console.log(err, "asdadsadsadasd"); return toast.error('Invalid credentials') })
+      .catch((err) => {
+        if (err.message.includes("400")) {
+          setOpen(true);
+          setMesg(true);
+        } else {
+          return toast.error("Invalid credentials");
+        }
+      });
   };
 
   const initAddress = {
@@ -87,7 +100,7 @@ export default function AccountPageLogin(props) {
     zipCode: "",
     latitude: "",
     longitude: "",
-  }
+  };
 
   const [registerFormData, setRegisterFormData] = useState({
     shipping: { ...initAddress },
@@ -116,9 +129,13 @@ export default function AccountPageLogin(props) {
 
     RestService.userregistration(registerFormData).then((res) => {
       toast[res.data.status](res.data.message);
-      setRegisterFormData({ ...registerFormData, shipping: { ...initAddress }, billing: { ...initAddress } });
-      if (res.data.status === 'success') {
-        props.history.push("/store/email-confirm")
+      setRegisterFormData({
+        ...registerFormData,
+        shipping: { ...initAddress },
+        billing: { ...initAddress },
+      });
+      if (res.data.status === "success") {
+        props.history.push("/store/email-confirm");
       }
     });
   };
@@ -135,13 +152,20 @@ export default function AccountPageLogin(props) {
     let shipping = registerFormData.shipping;
     let billingAddressId = 0;
     if (registerFormData.billing.customerAddressId) {
-      billingAddressId = registerFormData.billing.customerAddressId
+      billingAddressId = registerFormData.billing.customerAddressId;
     }
 
-    registerFormData.billing = { ...shipping, customerAddressId: billingAddressId, addressType: 'billing' };
+    registerFormData.billing = {
+      ...shipping,
+      customerAddressId: billingAddressId,
+      addressType: "billing",
+    };
 
-    setRegisterFormData({ ...registerFormData, billing: registerFormData.billing })
-  }
+    setRegisterFormData({
+      ...registerFormData,
+      billing: registerFormData.billing,
+    });
+  };
 
   return (
     <React.Fragment>
@@ -150,7 +174,7 @@ export default function AccountPageLogin(props) {
           style={{ borderBottom: "1px solid lightgray" }}
           className="content pt-3 pl-4"
         >
-          <h4>Forgot Password</h4>
+          <h4>{mesg ? "Change Password" : "Forgot Password"}</h4>
         </div>
         <div className="quickview pt-4">
           <div className="form-row">
@@ -173,9 +197,19 @@ export default function AccountPageLogin(props) {
             className="btn btn-sm btn-primary float-right"
           />
 
-          <small><span className="text-danger">*</span>Enter the email you used to register your account. We’ll email you instructions on how
-          to reset your password.
-          </small>
+          {mesg ? (
+            <small className="my-2 text-info">
+              <span className="text-danger">*</span> We have changed our system
+              for security reasons please reset your password to resume service,
+              Thank you.
+            </small>
+          ) : (
+            <small className="my-2">
+              <span className="text-danger">*</span>Enter the email you used to
+              change your account. We’ll email you instructions on how to reset
+              your password.
+            </small>
+          )}
         </div>
       </Modal>
 
@@ -198,9 +232,6 @@ export default function AccountPageLogin(props) {
                       handleSubmitLogin();
                     }}
                   >
-                    <div className="form-group">
-                      <p className="text-danger">*We have changed our system for security reasons please <span onClick={() => setOpen(true)} style={{cursor: "pointer", color: 'blue'}}>click here</span> to reset your password and resume service, Thank you.</p>
-                    </div>
                     <div className="form-group">
                       <label htmlFor="login-email">Email</label>
                       <input
@@ -237,11 +268,20 @@ export default function AccountPageLogin(props) {
                         value={loginFormData.password || ""}
                       />
                       <small className="form-text text-muted">
-                        <a onClick={() => setOpen(true)} href="void:0">
+                        <a
+                          onClick={() => {
+                            setOpen(true);
+                            setMesg(false);
+                          }}
+                          href="void:0"
+                        >
                           Forgotten Password?
                         </a>
 
-                        <a className='float-right' href="http://77.68.93.42:85/#/">
+                        <a
+                          className="float-right"
+                          href="http://77.68.93.42:85/#/"
+                        >
                           Login as Admin?
                         </a>
                       </small>
@@ -435,7 +475,6 @@ export default function AccountPageLogin(props) {
                             </div>
                           </div>
 
-
                           <div className="form-group">
                             <div className="form-check">
                               <span className="form-check-input input-check">
@@ -450,7 +489,9 @@ export default function AccountPageLogin(props) {
                                         newsletter: event.target.checked,
                                       })
                                     }
-                                    checked={registerFormData.newsletter || false}
+                                    checked={
+                                      registerFormData.newsletter || false
+                                    }
                                     className="input-check__input"
                                   />
                                   <span className="input-check__box" />
@@ -480,7 +521,9 @@ export default function AccountPageLogin(props) {
                                         termPolicy: event.target.checked,
                                       })
                                     }
-                                    checked={registerFormData.termPolicy || false}
+                                    checked={
+                                      registerFormData.termPolicy || false
+                                    }
                                     className="input-check__input"
                                   />
                                   <span className="input-check__box" />
@@ -491,7 +534,14 @@ export default function AccountPageLogin(props) {
                                 className="form-check-label"
                                 htmlFor="login-remember"
                               >
-                                <span className="text-danger">*</span> Agree to <Link to={"/terms-condition"}>terms & condition</Link> and <Link to={'/privacy-policy'}>privacy policy</Link>
+                                <span className="text-danger">*</span> Agree to{" "}
+                                <Link to={"/terms-condition"}>
+                                  terms & condition
+                                </Link>{" "}
+                                and{" "}
+                                <Link to={"/privacy-policy"}>
+                                  privacy policy
+                                </Link>
                               </label>
                             </div>
                           </div>
@@ -503,8 +553,7 @@ export default function AccountPageLogin(props) {
                             className="btn btn-primary mt-2 mt-md-3 mt-lg-4"
                           >
                             Next
-                           </button>
-
+                          </button>
                         </div>
                       </TabPane>
 
@@ -516,7 +565,9 @@ export default function AccountPageLogin(props) {
 
                           <div className="form-row">
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">First Name<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                First Name<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="firstName"
                                 type="text"
@@ -540,7 +591,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Last Name<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                Last Name<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="lastName"
                                 type="text"
@@ -580,7 +633,9 @@ export default function AccountPageLogin(props) {
                                     },
                                   })
                                 }
-                                value={registerFormData.shipping.companyName || ""}
+                                value={
+                                  registerFormData.shipping.companyName || ""
+                                }
                               />
                             </div>
 
@@ -606,7 +661,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Email<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                Email<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="email"
                                 type="email"
@@ -628,7 +685,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Street<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                Street<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="street"
                                 type="text"
@@ -650,7 +709,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">City<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                City<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="city"
                                 type="text"
@@ -672,7 +733,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">State<span className="text-danger">*</span></label>
+                              <label htmlFor="state">
+                                State<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="state"
                                 type="text"
@@ -694,7 +757,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Country<span className="text-danger">*</span></label>
+                              <label htmlFor="state">
+                                Country<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="country"
                                 type="text"
@@ -716,7 +781,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Zip Code<span className="text-danger">*</span></label>
+                              <label htmlFor="state">
+                                Zip Code<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="zipCode"
                                 type="text"
@@ -769,7 +836,9 @@ export default function AccountPageLogin(props) {
 
                           <div className="form-row">
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">First Name<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                First Name<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="firstName"
                                 type="text"
@@ -791,7 +860,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Last Name<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                Last Name<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="lastName"
                                 type="text"
@@ -831,7 +902,9 @@ export default function AccountPageLogin(props) {
                                     },
                                   })
                                 }
-                                value={registerFormData.billing.companyName || ""}
+                                value={
+                                  registerFormData.billing.companyName || ""
+                                }
                               />
                             </div>
 
@@ -857,7 +930,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Email<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                Email<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="email"
                                 type="email"
@@ -879,7 +954,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">Street<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                Street<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="street"
                                 type="text"
@@ -901,7 +978,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="name">City<span className="text-danger">*</span></label>
+                              <label htmlFor="name">
+                                City<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="city"
                                 type="text"
@@ -923,7 +1002,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">State<span className="text-danger">*</span></label>
+                              <label htmlFor="state">
+                                State<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="state"
                                 type="text"
@@ -945,7 +1026,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Country<span className="text-danger">*</span></label>
+                              <label htmlFor="state">
+                                Country<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="country"
                                 type="text"
@@ -967,7 +1050,9 @@ export default function AccountPageLogin(props) {
                             </div>
 
                             <div className="col-sm-12 col-md-6 form-group">
-                              <label htmlFor="state">Zip Code<span className="text-danger">*</span></label>
+                              <label htmlFor="state">
+                                Zip Code<span className="text-danger">*</span>
+                              </label>
                               <input
                                 id="zipCode"
                                 type="text"
@@ -995,11 +1080,10 @@ export default function AccountPageLogin(props) {
                             className="btn btn-primary mt-2 mt-md-3 mt-lg-4"
                           >
                             Register
-                    </button>
+                          </button>
                         </div>
                       </TabPane>
                     </TabContent>
-
                   </form>
                 </div>
               </div>
