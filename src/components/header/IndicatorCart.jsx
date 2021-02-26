@@ -58,13 +58,10 @@ function IndicatorCart(props) {
       let options;
       let image;
 
-      console.log(item, "===item")
-
       if (item.options) {
         options = (
           <ul className="dropcart__product-options">
             {item.options.map((option, index) => {
-
               return (
                 <li key={index}>{`${option.optionName}:  ${
                   option.optionTypeId === 1 || option.optionTypeId === 2
@@ -84,7 +81,6 @@ function IndicatorCart(props) {
           </ul>
         );
       }
-
 
       if (
         item.product &&

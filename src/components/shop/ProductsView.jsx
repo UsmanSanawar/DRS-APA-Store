@@ -3,17 +3,22 @@
 import classNames from "classnames";
 import { filter } from "lodash";
 import PropTypes from "prop-types";
-import React, {Component} from "react";
+import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import CircularLoader from "../../assets/loaders";
-import {productObjectConverter} from "../../constant/helpers";
+import { productObjectConverter } from "../../constant/helpers";
 import RestService from "../../store/restService/restService";
-import {sidebarOpen} from "../../store/sidebar";
-import {Filters16Svg, LayoutGrid16x16Svg, LayoutGridWithDetails16x16Svg, LayoutList16x16Svg} from "../../svg";
+import { sidebarOpen } from "../../store/sidebar";
+import {
+  Filters16Svg,
+  LayoutGrid16x16Svg,
+  LayoutGridWithDetails16x16Svg,
+  LayoutList16x16Svg,
+} from "../../svg";
 // application
 import ProductCard from "../shared/ProductCard";
-
+import { uniqBy } from "lodash";
 
 class ProductsView extends Component {
   constructor(props) {
@@ -22,33 +27,30 @@ class ProductsView extends Component {
     this.state = {
       itemLength: 20,
       products: [],
-      pagination: {currentPage: 1, totalCount: 10},
-      allCategories: []
+      pagination: { currentPage: 1, totalCount: 0 },
+      allCategories: [],
     };
   }
 
   setLayout = (layout) => {
-    this.setState(() => ({layout}));
+    this.setState(() => ({ layout }));
   };
 
-
-  
-
-  
   componentDidMount() {
-    RestService.getAllCategories().then(res => {
-      if(res.data.status === "success") {
+    RestService.getAllCategories().then((res) => {
+      if (res.data.status === "success") {
         this.setState({
-          allCategories: res.data.data
-        })
+          allCategories: res.data.data,
+        });
       }
-    })
+    });
 
-    let filters = {...this.props.sideFilters, category: this.props.match.params.id}
-    
+    let filters = {
+      ...this.props.sideFilters,
+      category: this.props.match.params.id,
+    };
+
     this.handleGetProducts(1, 10, filters);
-
-
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -67,13 +69,12 @@ class ProductsView extends Component {
     RestService.getProductsByPageAndFilter(pageNumber, itemLength, filter).then(
       (res) => {
         if (res.data.status === "success") {
-
           res.data.data.length > 0 &&
-          res.data.data.map((item) => {
-            if (item.image === '' || item.image === null) {
-              item.image = "default/defaultproductpng_22Feb21033359PM.png";
-            }
-          });
+            res.data.data.map((item) => {
+              if (item.image === "" || item.image === null) {
+                item.image = "default/defaultproductpng_22Feb21033359PM.png";
+              }
+            });
 
           let data = res.data.data;
           let array = [];
@@ -81,12 +82,13 @@ class ProductsView extends Component {
             array.push(productObjectConverter(item));
           });
 
+          console.log(data, "data", data.length);
+          console.log(res.data.data, "res.data.data", res.data.data.length);
 
           this.setState({
-            products: [...this.state.products, ...array].filter(
-              (v, i, a) =>
-                a.findIndex((t) => JSON.stringify(t) === JSON.stringify(v)) ===
-                i
+            products: uniqBy(
+              [...this.state.products, ...array],
+              (item) => item.id
             ),
             pagination: JSON.parse(res.headers["x-pagination"]),
           });
@@ -96,11 +98,12 @@ class ProductsView extends Component {
   };
 
   handleGetProducts = (pageNumber, itemLength, filter, didUpdate) => {
+    let searchString =
+      (window.location.href.split("?").length > 1 &&
+        window.location.href.split("?")[1]) ||
+      "";
 
-    let searchString = (window.location.href.split("?").length > 1 &&
-    window.location.href.split("?")[1]) || "";
-
-    filter = {...filter, searchString: searchString}
+    filter = { ...filter, searchString: searchString };
 
     if (didUpdate) {
       this.setState({
@@ -125,19 +128,32 @@ class ProductsView extends Component {
   };
 
   render() {
-    const {grid, offcanvas, sideFilters, layout: propsLayout, sidebarOpen} = this.props;
-    const {page, layout: stateLayout, products, pagination, allCategories} = this.state;
+    const {
+      grid,
+      offcanvas,
+      sideFilters,
+      layout: propsLayout,
+      sidebarOpen,
+    } = this.props;
+    const {
+      page,
+      layout: stateLayout,
+      products,
+      pagination,
+      allCategories,
+    } = this.state;
     const layout = stateLayout || propsLayout;
 
+    console.log(this.state.products.length, "aaaaaaaaaaaaaaa");
 
     let viewModes = [
-      {key: "grid", title: "Grid", icon: <LayoutGrid16x16Svg/>},
+      { key: "grid", title: "Grid", icon: <LayoutGrid16x16Svg /> },
       {
         key: "grid-with-features",
         title: "Grid With Features",
-        icon: <LayoutGridWithDetails16x16Svg/>,
+        icon: <LayoutGridWithDetails16x16Svg />,
       },
-      {key: "list", title: "List", icon: <LayoutList16x16Svg/>},
+      { key: "list", title: "List", icon: <LayoutList16x16Svg /> },
     ];
 
     viewModes = viewModes.map((viewMode) => {
@@ -164,12 +180,14 @@ class ProductsView extends Component {
     });
 
     const handleCategory = () => {
-      let {category} = sideFilters;
-      let selectedCat = allCategories.filter(item => item.productCategoryId === parseInt(category))
+      let { category } = sideFilters;
+      let selectedCat = allCategories.filter(
+        (item) => item.productCategoryId === parseInt(category)
+      );
       if (selectedCat.length > 0) {
-        return selectedCat[0].name
+        return selectedCat[0].name;
       }
-    }
+    };
 
     return (
       <div className="products-view">
@@ -181,7 +199,7 @@ class ProductsView extends Component {
                 className="filters-button"
                 onClick={() => sidebarOpen()}
               >
-                <Filters16Svg className="filters-button__icon"/>
+                <Filters16Svg className="filters-button__icon" />
                 <span className="filters-button__title">Filters</span>
                 <span className="filters-button__counter">3</span>
               </button>
@@ -192,14 +210,16 @@ class ProductsView extends Component {
               </div>
             </div>
 
-            <div className="view-options__divider"/>
+            <div className="view-options__divider" />
             <div className="view-options__control">
               <div>
                 <span>Store</span>
                 <span> {">"} </span>
                 <span>Products</span>
                 <span> {">"} </span>
-                <span><b>{handleCategory() || ""}</b></span>
+                <span>
+                  <b>{handleCategory() || ""}</b>
+                </span>
               </div>
             </div>
           </div>
@@ -213,19 +233,24 @@ class ProductsView extends Component {
             layout === "grid-with-features" ? "true" : "false"
           }
         >
+          {console.log(
+            this.state.products.length,
+            "wertaaaaaa",
+            pagination.totalCount
+          )}
           <InfiniteScroll
-            style={{overflowX: "hidden"}}
+            style={{ overflowX: "hidden" }}
             dataLength={this.state.products.length} //it needs to be setted to the current data we have
             next={this.fetchMoreData}
             hasMore={!(this.state.products.length === pagination.totalCount)}
             loader={
-              <div style={{textAlign: "center", marginTop: 75}}>
-                <CircularLoader/>
+              <div style={{ textAlign: "center", marginTop: 75 }}>
+                <CircularLoader />
               </div>
             }
             // scrollableTarget={'InfinityJinx'}
             endMessage={
-              <p style={{textAlign: "center", marginTop: 75}}>
+              <p style={{ textAlign: "center", marginTop: 75 }}>
                 {/*<b>No further records found !</b>*/}
               </p>
             }
@@ -233,7 +258,7 @@ class ProductsView extends Component {
             <div className="products-list__body">
               {products.map((product) => (
                 <div key={product.id} className="products-list__item">
-                  <ProductCard product={product}/>
+                  <ProductCard product={product} />
                 </div>
               ))}
             </div>

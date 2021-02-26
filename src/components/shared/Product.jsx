@@ -20,6 +20,7 @@ import { wishlistAddItem } from "../../store/wishlist";
 import RestService from "../../store/restService/restService";
 import { FormGroup, Input, Label } from "reactstrap";
 import { toast } from "react-toastify";
+import { IMAGE_URL } from "../../constant/constants";
 
 class Product extends Component {
   constructor(props) {
@@ -62,7 +63,21 @@ class Product extends Component {
         let { data } = res.data;
 
         let array = data && data.productPhotos;
-        array.unshift({ name: data.image });
+        if (
+          data.image !== "" &&
+          data.image !== null &&
+          data.image !== undefined
+        ) {
+          array.unshift({ name: data.image });
+        }
+
+        if (array.length === 0) {
+          array.push({
+            name: `default/defaultproductpng_22Feb21033359PM.png`,
+          });
+        }
+
+        console.log(array, "arrayarrayarray");
 
         this.setState({
           productPhotos: array,
@@ -210,8 +225,6 @@ class Product extends Component {
       customer,
     } = this.props;
 
-    console.log(product, "asdasdasdsadsad");
-
     const { quantity } = this.state;
 
     const handleOptionValues = (options) => {
@@ -350,8 +363,6 @@ class Product extends Component {
     return (
       <div className={`product product--layout--${layout}`}>
         <div className="product__content">
-          {console.log(this.state.productPhotos, "this.state.productPhotos")}
-
           <ProductGallery
             style={{ width: 700 }}
             layout={layout}

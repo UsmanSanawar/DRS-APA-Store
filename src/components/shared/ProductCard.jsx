@@ -105,7 +105,6 @@ function ProductCard(props) {
       <ul className="product-card__features-list">
         {product.features.map((feature, index) => {
 
-          console.log(feature, "dadasdsadsadasdsadsadsa")
 
          return <li key={index}>{`${feature.name}: ${feature.value}`}</li>
         })}

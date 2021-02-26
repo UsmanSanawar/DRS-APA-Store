@@ -1,5 +1,4 @@
 import { IMAGE_URL } from "./constants";
-import RestService from "../store/restService/restService";
 
 export function productObjectConverter(item) {
   let images = [];
@@ -12,10 +11,12 @@ export function productObjectConverter(item) {
       } else {
         if (image.name.startsWith("catalog")) {
           images.push(`${IMAGE_URL}/${image.name}`);
-        } else if(image.name !== '') {
+        } else if (image.name !== "") {
           images.push(`${IMAGE_URL}/images/${image.name}`);
         } else {
-          images.push(`${IMAGE_URL}/default/defaultproductpng_22Feb21033359PM.png`);
+          images.push(
+            `${IMAGE_URL}/default/defaultproductpng_22Feb21033359PM.png`
+          );
         }
       }
     });
@@ -44,9 +45,7 @@ export function productObjectConverter(item) {
     { name: "Height", value: parseFloat(item.height).toFixed(2) + " cm" },
     {
       name: "Weight",
-      value:
-        parseFloat(item.weight).toFixed(2) +
-        " Kg"
+      value: parseFloat(item.weight).toFixed(2) + " Kg",
     },
   ];
   item.options = item.productOptions;
