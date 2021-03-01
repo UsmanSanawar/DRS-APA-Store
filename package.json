@@ -1,5 +1,5 @@
 {
-  "name": "stroyka.react",
+  "name": "apa.store",
   "version": "1.1.0",
   "private": true,
   "dependencies": {
@@ -43,7 +43,7 @@
     "webpack": "4.39.1"
   },
   "scripts": {
-    "start": "set PORT=3000 && react-scripts start",
+    "start": "set PORT=2500 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

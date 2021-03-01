@@ -69,15 +69,15 @@ export default class PondUpload extends React.Component {
             }
           }}
           maxFiles={1}
-          // server={`${BASE_URL}/api/DRS.APA/common/Uploads?type=blogs`}
           server={{
             url: `${BASE_URL}/api/DRS.APA/common/Uploads?type=blogs`,
-            headers: { "Access-Control-Allow-Origin": "*" },
             load: (source, load, error, progress, abort, headers) => {
-              var myRequest = new Request("https://cors-anywhere.herokuapp.com/"+source);
+              var myRequest = new Request(
+                "https://cors-anywhere.herokuapp.com/" + source
+              );
 
               fetch(myRequest, {
-                mode:'cors',
+                mode: "cors",
                 headers: new Headers({
                   "Access-Control-Allow-Origin": "*",
                   "Content-Type": "*",
@@ -87,7 +87,7 @@ export default class PondUpload extends React.Component {
                   load(myBlob);
                 });
               });
-            }
+            },
           }}
           name="files"
           oninit={() => this.handleInit()}
