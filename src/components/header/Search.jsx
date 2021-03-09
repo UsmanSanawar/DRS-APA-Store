@@ -30,7 +30,7 @@ function Search(props) {
           });
 
         setResults(res.data.data);
-        setHide(false)
+        setHide(false);
       }
     });
   };
@@ -115,7 +115,9 @@ function Search(props) {
                       <div className="col-10">
                         {/* <Link style={{color: '#f6965c'}} to={`/store/product/${item.productId}`}> */}
                         <p className="mb-0">
-                          <b>{item.productName}</b>
+                          <Link to={`/store/product/${item.productId}`}>
+                            <b>{item.productName}</b>
+                          </Link>
                         </p>
                         {/* </Link> */}
                         <p className="text-success">£{item.price}</p>

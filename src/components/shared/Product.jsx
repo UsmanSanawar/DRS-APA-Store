@@ -77,7 +77,6 @@ class Product extends Component {
           });
         }
 
-        console.log(array, "arrayarrayarray");
 
         this.setState({
           productPhotos: array,

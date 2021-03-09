@@ -81,17 +81,18 @@ class ShopPageCart extends Component {
     let product = item.product;
     let discountedPrice = 0;
     let discountThatMayApply = [];
-    product.discountProducts.length > 0 && product.discountProducts.map((p) => {
-      p.discount.discountCustomerGroups !== null &&
-        p.discount.discountCustomerGroups.map((discountGroup) => {
-          if (
-            discountGroup.customerGroupId ===
-            this.props.customer.customerGroupId
-          ) {
-            discountThatMayApply.push(p.discount.discountPercentage);
-          }
-        });
-    });
+    // product.discountProducts.length > 0 &&
+    //   product.discountProducts.map((p) => {
+    //     p.discount.discountCustomerGroups !== null &&
+    //       p.discount.discountCustomerGroups.map((discountGroup) => {
+    //         if (
+    //           discountGroup.customerGroupId ===
+    //           this.props.customer.customerGroupId
+    //         ) {
+    //           discountThatMayApply.push(p.discount.discountPercentage);
+    //         }
+    // });
+    // });
 
     let discountPercentageToBeApplied = !isNaN(
       Math.max(...discountThatMayApply)
@@ -108,7 +109,7 @@ class ShopPageCart extends Component {
     let taxClass = item.product.taxClass;
     let taxApply = 0;
     let rates = [];
-    if(taxClass && taxClass.taxRates.length > 0){
+    if (taxClass && taxClass.taxRates.length > 0) {
       for (let tax of taxClass.taxRates) {
         if (
           tax.taxRatesCustomerGroups.some(
@@ -165,18 +166,19 @@ class ShopPageCart extends Component {
         options = (
           <ul className="cart-table__options">
             {item.options.map((option, index) => (
-              <li key={index}>{`${option.optionName}:  ${option.optionTypeId === 1 || option.optionTypeId === 2
+              <li key={index}>{`${option.optionName}:  ${
+                option.optionTypeId === 1 || option.optionTypeId === 2
                   ? this.getSeletedOptionValue(option)
                   : option.optionTypeId === 3
-                    ? !(option.value === undefined || option.value === false)
-                    : option.optionTypeId === 6
+                  ? !(option.value === undefined || option.value === false)
+                  : option.optionTypeId === 6
+                  ? option.value
+                    ? option.value
                       ? option.value
-                        ? option.value
-                          ? option.value
-                          : ""
-                        : ""
                       : ""
-                }`}</li>
+                    : ""
+                  : ""
+              }`}</li>
             ))}
           </ul>
         );
@@ -223,7 +225,6 @@ class ShopPageCart extends Component {
             className="cart-table__column cart-table__column--quantity"
             data-title="Quantity"
           >
-
             {this.getItemQuantity(item)}
             {/* <InputNumber
               onChange={(quantity) => {
@@ -342,16 +343,16 @@ class ShopPageCart extends Component {
               <tr className="cart-table__row">
                 <th className="cart-table__column cart-table__column--image">
                   Image
-              </th>
+                </th>
                 <th className="cart-table__column cart-table__column--product">
                   Product
-              </th>
+                </th>
                 <th className="cart-table__column cart-table__column--price">
                   Price
-              </th>
+                </th>
                 <th className="cart-table__column cart-table__column--quantity">
                   Quantity
-              </th>
+                </th>
                 {/* <th className="cart-table__column cart-table__column--quantity">
                   Discount
               </th>
@@ -360,7 +361,7 @@ class ShopPageCart extends Component {
               </th> */}
                 <th className="cart-table__column cart-table__column--total">
                   Total
-              </th>
+                </th>
                 <th
                   className="cart-table__column cart-table__column--remove"
                   aria-label="Remove"
@@ -392,27 +393,27 @@ class ShopPageCart extends Component {
                     {this.renderTotals()}
                     <tfoot className="cart__totals-footer">
                       {this.props.customer.customerId &&
-                        this.props.customer.customerGroupId ? (
-                          <>
-                            <tr style={{ fontSize: "15px" }}>
-                              <th>Total Discount</th>
-                              <td>
-                                -<Currency value={cart.totalDiscounts} />
-                              </td>
-                            </tr>
-                            <tr style={{ fontSize: "15px" }}>
-                              <th>Total Tax</th>
-                              <td>
-                                <Currency value={cart.totalTaxs} />
-                              </td>
-                            </tr>
-                          </>
-                        ) : (
-                          <p style={{ fontSize: 14, width: "100%" }}>
-                            <span className="text-danger">*</span> Login to see
-                        discount and taxes.
-                          </p>
-                        )}
+                      this.props.customer.customerGroupId ? (
+                        <>
+                          <tr style={{ fontSize: "15px" }}>
+                            <th>Total Discount</th>
+                            <td>
+                              -<Currency value={cart.totalDiscounts} />
+                            </td>
+                          </tr>
+                          <tr style={{ fontSize: "15px" }}>
+                            <th>Total Tax</th>
+                            <td>
+                              <Currency value={cart.totalTaxs} />
+                            </td>
+                          </tr>
+                        </>
+                      ) : (
+                        <p style={{ fontSize: 14, width: "100%" }}>
+                          <span className="text-danger">*</span> Login to see
+                          discount and taxes.
+                        </p>
+                      )}
                       <tr>
                         <th>Total</th>
                         <td>
@@ -420,9 +421,11 @@ class ShopPageCart extends Component {
                         </td>
                       </tr>
 
-                    <tr>
-                      <small style={{ fontSize: "13px", marginTop: 10 }}>(excluding shipping, tax & discounts )</small>
-                    </tr>
+                      <tr>
+                        <small style={{ fontSize: "13px", marginTop: 10 }}>
+                          (excluding shipping, tax & discounts )
+                        </small>
+                      </tr>
                     </tfoot>
                   </table>
                   <Link

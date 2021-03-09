@@ -82,9 +82,6 @@ class ProductsView extends Component {
             array.push(productObjectConverter(item));
           });
 
-          console.log(data, "data", data.length);
-          console.log(res.data.data, "res.data.data", res.data.data.length);
-
           this.setState({
             products: uniqBy(
               [...this.state.products, ...array],
@@ -143,8 +140,6 @@ class ProductsView extends Component {
       allCategories,
     } = this.state;
     const layout = stateLayout || propsLayout;
-
-    console.log(this.state.products.length, "aaaaaaaaaaaaaaa");
 
     let viewModes = [
       { key: "grid", title: "Grid", icon: <LayoutGrid16x16Svg /> },
@@ -233,11 +228,7 @@ class ProductsView extends Component {
             layout === "grid-with-features" ? "true" : "false"
           }
         >
-          {console.log(
-            this.state.products.length,
-            "wertaaaaaa",
-            pagination.totalCount
-          )}
+
           <InfiniteScroll
             style={{ overflowX: "hidden" }}
             dataLength={this.state.products.length} //it needs to be setted to the current data we have

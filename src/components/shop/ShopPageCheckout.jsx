@@ -1,21 +1,22 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable react/no-direct-mutation-state */
 // react
-import _ from "lodash";
-import React, {Component} from "react";
-import {Helmet} from "react-helmet";
+import _, { uniq, uniqBy } from "lodash";
+import React, { Component } from "react";
+import { Helmet } from "react-helmet";
 // third-party
-import {connect} from "react-redux";
-import {Link} from "react-router-dom";
-import {toast} from "react-toastify";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { bindActionCreators } from "redux";
 import CircularLoader from "../../assets/loaders";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
-import {postSaleOrder, resetCartPaid} from "../../store/cart";
+import { postSaleOrder, resetCartPaid } from "../../store/cart";
 import RestService from "../../store/restService/restService";
-import {getAllCountries} from "../../store/webView";
-import {Check9x7Svg} from "../../svg";
+import { getAllCountries } from "../../store/webView";
+import { Check9x7Svg } from "../../svg";
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
@@ -47,8 +48,8 @@ class ShopPageCheckout extends Component {
     this.state = {
       payment: "",
       formValues: {
-        billing: {...initAddr, addressType: "billing"},
-        shipping: {...initAddr, addressType: "shipping"},
+        billing: { ...initAddr, addressType: "billing" },
+        shipping: { ...initAddr, addressType: "shipping" },
       },
       loading: false,
       orderNote: "",
@@ -71,7 +72,9 @@ class ShopPageCheckout extends Component {
       totalTaxes: 0,
       totalDiscounts: 0,
       totalUnitPrice: 0,
-      perLineTotal: []
+      perLineTotal: [],
+      discountsAppliedPerProduct: [],
+      customerGroup: null,
     };
   }
 
@@ -80,7 +83,7 @@ class ShopPageCheckout extends Component {
     RestService.getCustomerByToken()
       .then((res) => {
         if (res.data.status === "success") {
-          let {customerAddress} = res.data.data;
+          let { customerAddress } = res.data.data;
           if (customerAddress.length > 0) {
             let shipping;
             let billing;
@@ -102,8 +105,8 @@ class ShopPageCheckout extends Component {
             });
             this.setState({
               formValues: {
-                billing: {...initAddr, ...billing},
-                shipping: {...initAddr, ...shipping},
+                billing: { ...initAddr, ...billing },
+                shipping: { ...initAddr, ...shipping },
               },
             });
           }
@@ -129,23 +132,26 @@ class ShopPageCheckout extends Component {
     });
   }
 
-
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.cart.items !== this.props.cart.items) {
-      if(this.props.cart.items.length > 0){
-      this.state.deliveryTime && this.handleShipmentCalculation(this.state.deliveryTime);}
+      if (this.props.cart.items.length > 0) {
+        this.state.deliveryTime &&
+          this.handleShipmentCalculation(this.state.deliveryTime);
+      }
       this.handleOrdereCalculations();
     }
   }
-  
 
   handleOrdereCalculations = async () => {
-    let {items} = JSON.parse(localStorage.getItem("state")).cart;
+    let { items } = JSON.parse(localStorage.getItem("state")).cart;
     //customerGroupId
     let customerGroup = await RestService.getCustomerByToken(
       JSON.parse(localStorage.getItem("token"))
     ).then((res) => {
       if (res.data.status === "success") {
+        this.setState({
+          customerGroup: res.data.data.customerGroupId,
+        });
         return res.data.data.customerGroupId;
       } else {
         return null;
@@ -158,10 +164,11 @@ class ShopPageCheckout extends Component {
     let discountThatMayApply = [];
     let perProductDiscountAndTax = [];
     let perLineTotal = [];
+    let discountsAppliedPerProduct = [];
     if (items.length > 0) {
       for (let index = 0; index < items.length; index++) {
+        let innerdiscount = {};
         let totalPerLine = 0;
-debugger;
         let aTax = 0;
         let discount = 0;
         let innerTotal = 0;
@@ -170,22 +177,43 @@ debugger;
 
         unitPriceTotal = unitPriceTotal + lineTotal;
         innerTotal = lineTotal;
-        let {taxClass} = items[index].product;
+        let { taxClass } = items[index].product;
 
         let discountPercentage = 0;
+        let applieddiscounts = [];
+
         items[index].product.discountProducts.map((p) => {
-          p.discount.discountCustomerGroups !== undefined &&
-          p.discount.discountCustomerGroups !== null &&
-          p.discount.discountCustomerGroups.map((discountGroup) => {
-            if (discountGroup.customerGroupId === customerGroup) {
-              discountPercentage = p.discount.discountPercentage || 0;
-              discountThatMayApply.push({
-                discountId: p.discount.discountId,
-                discountName: p.discount.name,
-                discountPercentage: p.discount.discountPercentage,
-              });
-            }
-          });
+          p.discount &&
+            p.discount.discountCustomerGroups &&
+            p.discount.discountCustomerGroups !== undefined &&
+            p.discount.discountCustomerGroups !== null &&
+            p.discount.discountCustomerGroups.map((discountGroup) => {
+              if (discountGroup.customerGroupId === customerGroup) {
+                discountPercentage = p.discount.discountPercentage || 0;
+
+                applieddiscounts.push({
+                  discountId: p.discount.discountId,
+                  discountName: p.discount.name,
+                  discountPercentage: p.discount.discountPercentage,
+                });
+
+                discountThatMayApply.push({
+                  discountId: p.discount.discountId,
+                  discountName: p.discount.name,
+                  discountPercentage: p.discount.discountPercentage,
+                });
+              }
+            });
+        });
+
+        console.log(applieddiscounts, "asdasdsadsadsadsa");
+
+        discountsAppliedPerProduct.push({
+          discount: _.maxBy(
+            applieddiscounts,
+            (item) => item.discountPercentage
+          ),
+          productId: items[index].product.productId,
         });
 
         discount = (innerTotal * discountPercentage) / 100;
@@ -193,9 +221,9 @@ debugger;
 
         let taxPerRateLine = 0;
         if (taxClass && taxClass.taxRates.length > 0) {
-          let {taxRates} = taxClass;
+          let { taxRates } = taxClass;
           for (const taxRate of taxRates) {
-            let {taxRatesCustomerGroups} = taxRate;
+            let { taxRatesCustomerGroups } = taxRate;
             if (
               taxRatesCustomerGroups &&
               taxRatesCustomerGroups.some(
@@ -214,12 +242,12 @@ debugger;
         }
         aTax = (taxPerRateLine * innerTotal) / 100;
 
-
-        totalPerLine = innerTotal + aTax
+        totalPerLine = innerTotal + aTax;
         perLineTotal.push({
           total: totalPerLine,
-          productId: items[index].product.productId
-        })
+          productId: items[index].product.productId,
+        });
+
         perProductDiscountAndTax.push({
           aTax,
           discount,
@@ -229,27 +257,26 @@ debugger;
     } else {
       this.setState({
         calculations: {},
-        shippingTotal: 0
-      })
+        shippingTotal: 0,
+      });
     }
-
 
     let totalDiscounts = 0;
     let totalTaxes = 0;
 
-    console.log(taxRateArray, "perProductDiscountAndTax");
-
     for (const itm of perProductDiscountAndTax) {
+      console.log(itm, "aaaabb1");
+
       totalDiscounts = totalDiscounts + itm.discount;
       totalTaxes = totalTaxes + parseFloat(itm.aTax);
     }
-
-    console.log(totalDiscounts, "aaaaaaaaa", totalTaxes);
 
     let appliedDiscount = _.maxBy(
       discountThatMayApply,
       (obj) => obj.discountPercentage
     );
+
+    console.log(appliedDiscount, "aaaabb2");
 
     let totalTaxRates = 0;
     for (let index = 0; index < taxRateArray.length; index++) {
@@ -263,9 +290,9 @@ debugger;
       totalTaxes,
       perLineTotal,
       totalUnitPrice: unitPriceTotal,
+      discountsAppliedPerProduct,
     });
-  }
-
+  };
 
   getAllDeliveryTimeOptions = () => {
     RestService.getAllParcelDeliveries().then((r) => {
@@ -278,36 +305,81 @@ debugger;
   };
 
   handleOrderAmountWithTaxAndDiscountFreeEligible = (items) => {
-    let orderAmountWithTaxAndDiscountF = 0;
+    let total = 0;
     items = items ? items : [];
-    items.map(
-      (item) =>
-        (orderAmountWithTaxAndDiscountF =
-          orderAmountWithTaxAndDiscountF + (item.ukFreeDeliverPrices || 0))
-    );
 
-    return orderAmountWithTaxAndDiscountF;
+    items.map(({ product }) => {
+      let discountThatMayApply = [];
+      let { taxClass } = product;
+      let taxrate = 0;
+
+      product.discountProducts.map((p) => {
+        p.discount &&
+          p.discount.discountCustomerGroups &&
+          p.discount.discountCustomerGroups !== undefined &&
+          p.discount.discountCustomerGroups !== null &&
+          p.discount.discountCustomerGroups.map((discountGroup) => {
+            if (discountGroup.customerGroupId === this.state.customerGroup) {
+              discountThatMayApply.push({
+                discountId: p.discount.discountId,
+                discountName: p.discount.name,
+                discountPercentage: p.discount.discountPercentage,
+              });
+            }
+          });
+      });
+
+      let discount = _.maxBy(
+        discountThatMayApply,
+        (item) => item.discountPercentage
+      );
+
+      if (taxClass && taxClass.taxRates.length > 0) {
+        let { taxRates } = taxClass;
+        for (const taxRate of taxRates) {
+          let { taxRatesCustomerGroups } = taxRate;
+          if (
+            taxRatesCustomerGroups &&
+            taxRatesCustomerGroups.some(
+              (row) => row.customerGroupId === this.state.customerGroup
+            )
+          ) {
+            taxrate = taxrate + taxRate.rate;
+          }
+        }
+      }
+
+      let unitPrice = product.price;
+
+      console.log(taxrate, "adasdasdaaaaaaa");
+
+      let unitDiscount =
+        (unitPrice * (discount && discount.discountPercentage)) / 100 || 0;
+      unitPrice = unitPrice - unitDiscount;
+      let unitTax = (unitPrice * taxrate) / 100;
+      unitPrice = unitPrice + unitTax;
+      total = total + unitPrice;
+    });
+
+    return total;
   };
 
   handleOrderTotalAmount = () => {
-    let TotalAmount = _.sumBy(this.state.perLineTotal, 'total') || 0;
+    let TotalAmount = _.sumBy(this.state.perLineTotal, "total") || 0;
     return TotalAmount + this.state.shippingTotal;
-
-  }
+  };
 
   hanldePerOrderLinePrice = (productId) => {
     let lineTotals = this.state.perLineTotal;
-    let index = lineTotals.findIndex(item => item.productId === productId);
+    let index = lineTotals.findIndex((item) => item.productId === productId);
     if (index > -1) {
-      console.log(lineTotals[index].total, "sdsadasdasdsad")
+      console.log(lineTotals[index].total, "sdsadasdasdsad");
 
-      return lineTotals[index].total
+      return lineTotals[index].total;
     } else {
-      return 0
+      return 0;
     }
-
-
-  }
+  };
 
   handleSaleorderObject = () => {
     let saleOrder = {
@@ -335,26 +407,38 @@ debugger;
       orderStatusCode: "",
     };
 
-    let shipping = {...this.state.formValues.shipping};
+    let shipping = { ...this.state.formValues.shipping };
     shipping.addressType = "shipping";
     shipping.orderAddressId = null;
 
-    let billing = {...this.state.formValues.billing};
+    let billing = { ...this.state.formValues.billing };
     billing.orderAddressId = null;
     billing.addressType = "billing";
 
     saleOrder.orderAddress.push(shipping);
     saleOrder.orderAddress.push(billing);
 
+    const handleDiscountbyLine = (productId, evt) => {
+      let data = this.state.discountsAppliedPerProduct || [];
 
-
+      for (const disc of data) {
+        if (disc.discount) {
+          if (disc.productId === productId) {
+            return disc.discount[evt];
+          }
+        }
+      }
+    };
     for (let item of this.props.cart.items) {
       let line = {
         orderId: 0,
         orderLinesId: null,
-        discountId: this.state.discount.discountId || null,
-        discountName: this.state.discount.discountName || "",
-        discountPercentage: this.state.discount.discountPercentage || 0,
+        discountId: handleDiscountbyLine(item.product.id, "discountId"),
+        discountName: handleDiscountbyLine(item.product.id, "discountName"),
+        discountPercentage: handleDiscountbyLine(
+          item.product.id,
+          "discountPercentage"
+        ),
         isActive: true,
         isProductReturn: false,
         orderLineProductOptions: [],
@@ -375,7 +459,7 @@ debugger;
         item.product.selectedProductOption &&
         item.product.selectedProductOption.productId
       ) {
-        let SelectedProduct = {...item.product.selectedProductOption};
+        let SelectedProduct = { ...item.product.selectedProductOption };
         SelectedProduct.orderLineProductOptionsId = 0;
         SelectedProduct.orderLineProductOptionCombinations =
           SelectedProduct.productOptionCombination;
@@ -388,34 +472,33 @@ debugger;
         line.orderLineProductOptions = [SelectedProduct];
       }
 
+      console.log(this.state.taxRates, "asddddddd");
+
       if (this.state.taxRates && this.state.taxRates.length > 0) {
         let taxratesArray = [];
 
         let taxrates = this.state.taxRates;
-        (taxrates && taxrates.length > 0) && taxrates.map(rate => {
-          let {taxRates} = rate;
-          if (rate.productId === item.product.productId) {
-            for (const rate of taxRates) {
 
-              console.log(rate, "finaleRate")
+        console.log(taxrates, "sadsadasdasdsadasaaaa");
 
-              taxratesArray.push({
-                orderLineTaxRateId: 0,
-                orderLineTaxRateName: rate.taxRateName,
-                orderTaxRate: rate.rate,
-                orderLineTaxRateCode: rate.taxRateCode,
-                orderLinesId: null,
+        for (const taxting of taxrates) {
+          if (taxting.productId === item.product.id) {
+            taxting.taxRates.length > 0 &&
+              taxting.taxRates.map((rtes) => {
+                taxratesArray.push({
+                  orderLineTaxRateId: 0,
+                  orderLineTaxRateName: rtes.taxRateName,
+                  orderTaxRate: rtes.rate,
+                  orderLineTaxRateCode: rtes.taxRateCode,
+                  orderLinesId: null,
+                });
               });
-
-            }
-
           }
-        })
+        }
+        let hazel = uniqBy(taxratesArray, "orderLineTaxRateCode");
 
-        console.log(taxrates, taxratesArray, "dasdasdasdasdasdsadsad")
-
-        line.orderLineTaxRates = taxratesArray;
-        line.taxPercentage = _.sumBy(taxratesArray, "orderTaxRate");
+        line.orderLineTaxRates = hazel;
+        line.taxPercentage = _.sumBy(hazel, "orderTaxRate");
       }
 
       saleOrder.orderLines.push(line);
@@ -446,7 +529,7 @@ debugger;
         RestService.postSaleOrder(saleOrder).then((r) => {
           toast[r.data.status](r.data.message);
           if (r.data.status === "success") {
-            this.setState({orderState: r.data.data});
+            this.setState({ orderState: r.data.data });
           } else {
             this.handleSubmitLoading(false);
           }
@@ -476,18 +559,18 @@ debugger;
       // eslint-disable-next-line react/no-direct-mutation-state
       this.state.formValues[addressType][name] = event.target.value;
 
-      this.setState({formValues: this.state.formValues});
+      this.setState({ formValues: this.state.formValues });
     }
   };
 
   handlePaymentChange = (event) => {
     if (event.target.checked) {
-      this.setState({payment: event.target.value});
+      this.setState({ payment: event.target.value });
     }
   };
 
   renderTotals() {
-    const {cart} = this.props;
+    const { cart } = this.props;
     if (cart.extraLines.length <= 0) {
       return null;
     }
@@ -496,7 +579,7 @@ debugger;
       <tr key={index}>
         <th>{extraLine.title}</th>
         <td>
-          <Currency value={extraLine.price}/>
+          <Currency value={extraLine.price} />
         </td>
       </tr>
     ));
@@ -504,26 +587,26 @@ debugger;
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
-        <tr>
-          <th>Subtotal</th>
-          <td>
-            <Currency value={cart.subtotal}/>
-          </td>
-        </tr>
-        {extraLines}
+          <tr>
+            <th>Subtotal</th>
+            <td>
+              <Currency value={cart.subtotal} />
+            </td>
+          </tr>
+          {extraLines}
         </tbody>
       </React.Fragment>
     );
   }
 
   renderCart() {
-    const {cart} = this.props;
+    const { cart } = this.props;
 
     const items = cart.items.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.name} × ${item.quantity}`}</td>
         <td>
-          <Currency value={item.total}/>
+          <Currency value={item.total} />
         </td>
       </tr>
     ));
@@ -531,59 +614,61 @@ debugger;
     return (
       <table className="checkout__totals">
         <thead className="checkout__totals-header">
-        <tr>
-          <th>Product</th>
-          <th>Total</th>
-        </tr>
+          <tr>
+            <th>Product</th>
+            <th>Total</th>
+          </tr>
         </thead>
         <tbody className="checkout__totals-products">{items}</tbody>
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
-        <tr style={{fontSize: 15}}>
-          <th>Total Discount</th>
-          <td>
-            -<Currency value={this.state.totalDiscounts}/>
-          </td>
-        </tr>
-        <tr style={{fontSize: 15}}>
-          <th>Total Tax</th>
-          <td>
-            <Currency value={this.state.totalTaxes}/>
-          </td>
-        </tr>
-        <tr style={{fontSize: 15}}>
-          <th>Total Shipping</th>
-          <td>
-            <Currency value={this.state.shippingTotal}/>
-          </td>
-        </tr>
-        <tr>
-          <th>Total</th>
-          <td>
-            <Currency
-              value={
-                this.state.totalUnitPrice -
-                this.state.totalDiscounts +
-                this.state.totalTaxes +
-                this.state.shippingTotal
-              }
-            />
-          </td>
-        </tr>
+          <tr style={{ fontSize: 15 }}>
+            <th>Total Discount</th>
+            <td>
+              -<Currency value={this.state.totalDiscounts} />
+            </td>
+          </tr>
+          <tr style={{ fontSize: 15 }}>
+            <th>Total Tax</th>
+            <td>
+              <Currency value={this.state.totalTaxes} />
+            </td>
+          </tr>
+          <tr style={{ fontSize: 15 }}>
+            <th>Total Shipping</th>
+            <td>
+              <Currency value={this.state.shippingTotal} />
+            </td>
+          </tr>
+          <tr>
+            <th>Total</th>
+            <td>
+              <Currency
+                value={
+                  this.state.totalUnitPrice -
+                  this.state.totalDiscounts +
+                  this.state.totalTaxes +
+                  this.state.shippingTotal
+                }
+              />
+            </td>
+          </tr>
         </tfoot>
       </table>
     );
   }
 
   handleShipmentCalculation = async (e) => {
-    this.setState({sloading: true});
+    this.setState({ sloading: true });
     let formDataSaleOrders = this.handleSaleorderObject();
-    let data = {...formDataSaleOrders};
-    data.uK_DeliveryDurationId = parseInt(e.target ? e.target.value : this.state.deliveryTime);
+    let data = { ...formDataSaleOrders };
+    data.uK_DeliveryDurationId = parseInt(
+      e.target ? e.target.value : this.state.deliveryTime
+    );
 
-    await RestService.calculateSaleOrderShipment({...data})
+    await RestService.calculateSaleOrderShipment({ ...data })
       .then((res) => {
-        this.setState({sloading: false});
+        this.setState({ sloading: false });
         if (res.data.error === "") {
           this.setState({
             calculations: res.data.order,
@@ -596,10 +681,10 @@ debugger;
   };
 
   renderPaymentsList() {
-    const {payment: currentPayment} = this.state;
+    const { payment: currentPayment } = this.state;
 
     const payments = this.payments.map((payment) => {
-      const renderPayment = ({setItemRef, setContentRef}) => (
+      const renderPayment = ({ setItemRef, setContentRef }) => (
         <li className="payment-methods__item" ref={setItemRef}>
           <label className="payment-methods__item-header">
             <span className="payment-methods__item-radio input-radio">
@@ -612,7 +697,7 @@ debugger;
                   checked={currentPayment === payment.key}
                   onChange={this.handlePaymentChange}
                 />
-                <span className="input-radio__circle"/>
+                <span className="input-radio__circle" />
               </span>
             </span>
             <span className="payment-methods__item-title">{payment.title}</span>
@@ -715,8 +800,8 @@ debugger;
   };
 
   render() {
-    const {cart, allCountries} = this.props;
-    const {billing, shipping} = this.state.formValues;
+    const { cart, allCountries } = this.props;
+    const { billing, shipping } = this.state.formValues;
     const {
       showPaypal,
       payment,
@@ -726,12 +811,10 @@ debugger;
     } = this.state;
 
     const breadcrumb = [
-      {title: "Home", url: ""},
-      {title: "Shopping Cart", url: "/store/cart"},
-      {title: "Checkout", url: ""},
+      { title: "Home", url: "" },
+      { title: "Shopping Cart", url: "/store/cart" },
+      { title: "Checkout", url: "" },
     ];
-
-    console.log(this.state.ta, "taxRatestaxRatestaxRates");
 
     return (
       <React.Fragment>
@@ -739,7 +822,7 @@ debugger;
           <title>{`Checkout — ${theme.name}`}</title>
         </Helmet>
 
-        <PageHeader header="Checkout" breadcrumb={breadcrumb}/>
+        <PageHeader header="Checkout" breadcrumb={breadcrumb} />
 
         <div className="checkout block">
           <div className="container">
@@ -815,13 +898,13 @@ debugger;
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                            allCountries.map((item) => {
-                              return (
-                                <option value={item.countryName}>
-                                  {item.countryName}
-                                </option>
-                              );
-                            })}
+                              allCountries.map((item) => {
+                                return (
+                                  <option value={item.countryName}>
+                                    {item.countryName}
+                                  </option>
+                                );
+                              })}
                           </select>
                         </div>
 
@@ -927,7 +1010,7 @@ debugger;
                         </div>
                       </div>
                     </div>
-                    <div className="card-divider"/>
+                    <div className="card-divider" />
                     <div className="card-body">
                       <h3 className="card-title">Shipping Details</h3>
 
@@ -941,8 +1024,8 @@ debugger;
                                 id="checkout-different-address"
                                 onChange={this.handleAddressToggle}
                               />
-                              <span className="input-check__box"/>
-                              <Check9x7Svg className="input-check__icon"/>
+                              <span className="input-check__box" />
+                              <Check9x7Svg className="input-check__icon" />
                             </span>
                           </span>
                           <label
@@ -1023,13 +1106,13 @@ debugger;
                           >
                             <option>Select a country...</option>
                             {allCountries &&
-                            allCountries.map((item) => {
-                              return (
-                                <option value={item.countryName}>
-                                  {item.countryName}
-                                </option>
-                              );
-                            })}
+                              allCountries.map((item) => {
+                                return (
+                                  <option value={item.countryName}>
+                                    {item.countryName}
+                                  </option>
+                                );
+                              })}
                           </select>
                         </div>
 
@@ -1143,8 +1226,8 @@ debugger;
                         </div>
                       </div>
 
-                      <div className="card-divider"/>
-                      <br/>
+                      <div className="card-divider" />
+                      <br />
 
                       <div className="form-group">
                         <label htmlFor="shipping-comment">
@@ -1156,7 +1239,7 @@ debugger;
                           className="form-control"
                           rows="4"
                           onChange={(e) =>
-                            this.setState({orderNote: e.target.value})
+                            this.setState({ orderNote: e.target.value })
                           }
                         />
                       </div>
@@ -1171,7 +1254,7 @@ debugger;
                       <div className="form-group">
                         <label htmlFor="checkout-country">
                           Delivery Time Options{" "}
-                          <i style={{color: "red"}}>*</i>
+                          <i style={{ color: "red" }}>*</i>
                         </label>
                         <select
                           required
@@ -1180,7 +1263,7 @@ debugger;
                           value={billing.deliveryTime}
                           name={"country"}
                           onChange={(e) => {
-                            this.setState({deliveryTime: e.target.value});
+                            this.setState({ deliveryTime: e.target.value });
                             this.handleShipmentCalculation(e);
                           }}
                         >
@@ -1202,8 +1285,8 @@ debugger;
                           }}
                           style={
                             !this.state.deliveryTime
-                              ? {pointerEvents: "none", opacity: "0.7"}
-                              : {cursor: "pointer"}
+                              ? { pointerEvents: "none", opacity: "0.7" }
+                              : { cursor: "pointer" }
                           }
                           className="text-center border-bottom mt-3 w-100"
                         >
@@ -1249,12 +1332,12 @@ debugger;
                                 }
                                 id="checkout-terms"
                               />
-                              <span className="input-check__box"/>
-                              <Check9x7Svg className="input-check__icon"/>
+                              <span className="input-check__box" />
+                              <Check9x7Svg className="input-check__icon" />
                             </span>
                           </span>
                           <label
-                            style={{fontSize: "13px", fontWeight: "bold"}}
+                            style={{ fontSize: "13px", fontWeight: "bold" }}
                             className="form-check-label"
                             htmlFor="checkout-terms"
                           >
@@ -1279,11 +1362,11 @@ debugger;
                       )}
 
                       {this.state.payment === "stripe" &&
-                      (this.state.submitLoading ? (
-                        <div className="text-center my-1">
-                          <CircularLoader/>
-                        </div>
-                      ) : null)}
+                        (this.state.submitLoading ? (
+                          <div className="text-center my-1">
+                            <CircularLoader />
+                          </div>
+                        ) : null)}
 
                       <div
                         className={
